@@ -237,9 +237,6 @@ nav.navbar {
   background: #DC042A; }
   nav.navbar .navbar-collapse {
     flex-grow: 0; }
-    @media only screen and (max-width: 992px) {
-      nav.navbar .navbar-collapse {
-        display: none; } }
   nav.navbar ul.navbar-nav {
     flex-direction: row;
     flex-wrap: inherit;
