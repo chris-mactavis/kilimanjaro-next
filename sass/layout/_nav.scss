@@ -1,0 +1,55 @@
+nav.navbar {
+  padding: 15px 70px;
+  background: $primary;
+
+  .navbar-collapse {
+    flex-grow: 0;
+
+    @media only screen and (max-width: $desktop_width) {
+      display: none;
+    }
+  }
+
+  ul.navbar-nav {
+    flex-direction: row;
+    flex-wrap: inherit;
+    align-items: center;
+    padding-left: 1rem;
+
+    li.nav-item {
+      margin-right: 3rem;
+
+      .nav-link {
+        font-family: $ffn;
+        font-size: 15px;
+        font-weight: $bold;
+        text-transform: uppercase;
+      }
+    }
+
+    .nav-bg-white {
+      background: #fff;
+      padding: 5px 20px;
+
+      .nav-link {
+        color: $primary;
+      }
+    }
+  }
+
+  .navbar-toggler {
+
+    &:focus {
+      outline: none;
+    }
+
+    .navbar-toggler-icon {
+      width: 2.5em;
+      height: 2.5em;
+    }
+  }
+
+ 
+}
+
+

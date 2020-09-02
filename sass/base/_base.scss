@@ -1,0 +1,64 @@
+html, body {
+  overflow-x: hidden;
+  font-size: 62.5%;
+}
+
+body {
+  font-family: $ffb;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 200px;
+}
+
+*, *:active, *:focus{
+  outline: none !important;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+%heading{
+  font-family: $ffh;
+  line-height: 1.5;
+  font-weight: $bold;
+  color: $light-black;
+}
+
+h1 {
+  @extend %heading;
+  font-size: 64px;
+}
+
+h2 {
+  @extend %heading;
+  font-size: 48px;
+}
+
+h3 {
+  @extend %heading;
+  font-size: 40px;
+}
+
+h4 {
+  @extend %heading;
+  font-size: 32px;
+}
+
+h5 {
+  @extend %heading;
+  font-family: $ffn;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+h6 {
+  @extend %heading;
+  font-size: 24px;
+}
