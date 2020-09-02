@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <Layout>
       <div>
-        Hello Kilimanjaro
+        Hello Mactavis.
       </div>
     </Layout>
   )
