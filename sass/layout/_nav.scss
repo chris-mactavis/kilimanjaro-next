@@ -4,10 +4,6 @@ nav.navbar {
 
   .navbar-collapse {
     flex-grow: 0;
-
-    @media only screen and (max-width: $desktop_width) {
-      display: none;
-    }
   }
 
   ul.navbar-nav {
