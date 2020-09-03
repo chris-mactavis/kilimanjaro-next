@@ -55,7 +55,7 @@ section {
         transform: translateX(-50%);
         width: 70%;
         height: 1.3px;
-        background-color: #DC042A;
+        background-color: $primary;
       }
 
     .mv-down {
@@ -64,7 +64,7 @@ section {
   }
 
   &.how-it-works {
-    padding: 30px 0;
+    padding: 70px 0;
     
     h2 {
         margin-bottom: 30px;
@@ -77,6 +77,31 @@ section {
     .text-red {
         color: $primary;
         font-weight: 600;
+    }
+  }
+
+  &.download-mobile-app {
+    padding: 80px 0;
+    background-color: $primary;
+
+    p {
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .img1 {
+        max-width: 150px;
+        margin-right: 15px;
+    }
+
+    .img2 {
+        max-width: 150px;
+    }
+    
+    .app-img {
+        max-width: 450px;
+        position: absolute;
+        top: -100%;
     }
   }
 

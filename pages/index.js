@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
 import CouponSection from '../components/couponSection/CouponSection';
+import MobileAppDownload from '../components/MobileAppDownload/mobileAppDownload';
 
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <MobileAppDownload />
       </Layout>
     </>
   )
