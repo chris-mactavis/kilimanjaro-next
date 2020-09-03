@@ -7,7 +7,10 @@ body {
   font-family: $ffb;
   font-size: 18px;
   line-height: 1.5;
-  margin-bottom: 200px;
+  // margin-bottom: 200px;
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.527), rgba(255, 255, 255, 0.527)),
+    url('/images/background-cover.jpg');
 }
 
 *, *:active, *:focus{
@@ -26,14 +29,14 @@ a {
 
 %heading{
   font-family: $ffh;
-  line-height: 1.5;
-  font-weight: $bold;
+  // line-height: 1.5;
+  font-weight: $semi-bold;
   color: $light-black;
 }
 
 h1 {
   @extend %heading;
-  font-size: 64px;
+  font-size: 50px;
 }
 
 h2 {

@@ -3,6 +3,45 @@ main{
 }
 
 section {
-  
+  &.header-content {
+    height: 90vh;
+    padding: 150px 0;
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-weight:  $semi-bold;
+        margin-bottom: 15px;
+    }
+
+    .headtext-container {
+        padding: 100px 0 0 100px;
+    }
+
+    .left-banner-image {
+        width: auto;
+        height: 100%;
+        position: absolute;
+        left: -20%;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+
+    .right-banner-image {
+        width: auto;
+        height: 100%;
+        position: absolute;
+        right: -20%;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+
+    }
+  }
+
+
 
 }

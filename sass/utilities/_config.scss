@@ -24,6 +24,7 @@
 
 @include do-font-face('Lato', 'Lato-Regular', '/fonts/', 'ttf', normal, normal);
 @include do-font-face('Lato', 'Lato-Bold', '/fonts/', 'ttf', bold, normal);
+@include do-font-face('Lato', 'Lato-Semibold', '/fonts/', 'ttf', 600, normal);
 
 $lato          : 'Lato', sans-serif;
 
@@ -33,6 +34,7 @@ $ffn            : $lato;
 
 $normal         : normal;
 $bold           : bold;
+$semi-bold      :600;
 
 // Colors
 $primary: #DC042A;
