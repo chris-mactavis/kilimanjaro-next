@@ -1,6 +1,6 @@
 import Select from 'react-select';
 
-const HeaderContent = () => {
+const HeaderContent = (props) => {
     const states = [
         {value: 'Lagos', label: 'Lagos'}
     ];
@@ -23,8 +23,8 @@ const HeaderContent = () => {
                             </h1>
                             <p>Ordering from:</p>
                             <form className="select-state">
-                                <Select options={states} className="select-tool" placeholder='Select State' />
-                                <Select options={restaurants} className="select-tool" placeholder='Select Restaurant' />
+                                <Select options={states} className="select-tool" placeholder='Select State' instanceId="stateId" />
+                                <Select options={restaurants} className="select-tool" placeholder='Select Restaurant' instanceId="restaurantId" />
                             </form>
                         </div>
                     </div>
