@@ -220,7 +220,7 @@ h1 {
   font-size: 50px; }
 
 h2 {
-  font-size: 48px; }
+  font-size: 40px; }
 
 h3 {
   font-size: 40px; }
@@ -236,22 +236,6 @@ h5 {
 h6 {
   font-size: 24px; }
 
-form.select-state select {
-  width: 80%;
-  margin-bottom: 20px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-position: 98% 50%;
-  background-repeat: no-repeat;
-  background-image: url(/images/icon/down-red-arrow.svg);
-  padding: 10px 20px;
-  border-radius: 3px;
-  background-color: transparent;
-  border: 1.2px solid #DC042A;
-  color: #DC042A;
-  outline: none;
-  background-size: 13px;
-  font-size: 15px; }
 form.select-state .select-tool {
   width: 80%;
   margin-bottom: 20px;
@@ -276,7 +260,7 @@ form.select-state .css-yk16xz-control {
     border-color: #DC042A; }
 
 section.header-content {
-  height: 90vh;
+  height: 100vh;
   padding: 150px 0; }
   section.header-content h1 {
     margin-bottom: 10px; }
@@ -284,7 +268,7 @@ section.header-content {
     font-weight: 600;
     margin-bottom: 15px; }
   section.header-content .headtext-container {
-    padding: 100px 0 0 100px; }
+    padding: 200px 0 0 100px; }
   section.header-content .left-banner-image {
     width: auto;
     height: 100%;
@@ -301,10 +285,36 @@ section.header-content {
     top: 0;
     bottom: 0;
     z-index: -1; }
+section.coupon-products {
+  padding: 50px 0;
+  position: relative; }
+  section.coupon-products::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 1.3px;
+    background-color: #DC042A; }
+  section.coupon-products .mv-down {
+    margin-top: 32px; }
+section.how-it-works {
+  padding: 30px 0; }
+  section.how-it-works h2 {
+    margin-bottom: 30px; }
+  section.how-it-works img {
+    margin-bottom: 20px; }
+  section.how-it-works .text-red {
+    color: #DC042A;
+    font-weight: 600; }
 
 nav.navbar {
   padding: 15px 70px;
-  background: #DC042A; }
+  background: #DC042A;
+  position: fixed;
+  width: 100%;
+  z-index: 1; }
   nav.navbar .navbar-collapse {
     flex-grow: 0; }
   nav.navbar ul.navbar-nav {
