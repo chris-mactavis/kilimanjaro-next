@@ -21,7 +21,7 @@ const Layout = ({children}) => {
     return (
         <> 
             <Head>
-                <title>Kilimanjaro</title>
+                {/* <title>Kilimanjaro</title> */}
                  <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
 
