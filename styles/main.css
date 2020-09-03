@@ -9,6 +9,11 @@
   src: url(/fonts/Lato-Bold.ttf) format("truetype");
   font-weight: bold;
   font-style: normal; }
+@font-face {
+  font-family: "Lato";
+  src: url(/fonts/Lato-Semibold.ttf) format("truetype");
+  font-weight: 600;
+  font-style: normal; }
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -194,7 +199,7 @@ body {
   font-family: "Lato", sans-serif;
   font-size: 18px;
   line-height: 1.5;
-  margin-bottom: 200px; }
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.527), rgba(255, 255, 255, 0.527)), url("/images/background-cover.jpg"); }
 
 *, *:active, *:focus {
   outline: none !important; }
@@ -208,12 +213,11 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Lato", sans-serif;
-  line-height: 1.5;
-  font-weight: bold;
+  font-weight: 600;
   color: #383838; }
 
 h1 {
-  font-size: 64px; }
+  font-size: 50px; }
 
 h2 {
   font-size: 48px; }
@@ -231,6 +235,72 @@ h5 {
 
 h6 {
   font-size: 24px; }
+
+form.select-state select {
+  width: 80%;
+  margin-bottom: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: 98% 50%;
+  background-repeat: no-repeat;
+  background-image: url(/images/icon/down-red-arrow.svg);
+  padding: 10px 20px;
+  border-radius: 3px;
+  background-color: transparent;
+  border: 1.2px solid #DC042A;
+  color: #DC042A;
+  outline: none;
+  background-size: 13px;
+  font-size: 15px; }
+form.select-state .select-tool {
+  width: 80%;
+  margin-bottom: 20px;
+  color: #DC042A;
+  background-size: 13px;
+  font-size: 15px;
+  border-radius: 5px;
+  outline: none; }
+form.select-state .css-1wa3eu0-placeholder {
+  color: #DC042A; }
+form.select-state .css-1okebmr-indicatorSeparator {
+  background-color: transparent; }
+form.select-state .css-6q0nyr-Svg {
+  color: #DC042A; }
+form.select-state .css-1pahdxg-control:hover {
+  border-color: #DC042A;
+  box-shadow: none; }
+form.select-state .css-yk16xz-control {
+  border-color: #DC042A;
+  border: 1.2px solid #DC042A; }
+  form.select-state .css-yk16xz-control:hover {
+    border-color: #DC042A; }
+
+section.header-content {
+  height: 90vh;
+  padding: 150px 0; }
+  section.header-content h1 {
+    margin-bottom: 10px; }
+  section.header-content p {
+    font-weight: 600;
+    margin-bottom: 15px; }
+  section.header-content .headtext-container {
+    padding: 100px 0 0 100px; }
+  section.header-content .left-banner-image {
+    width: auto;
+    height: 100%;
+    position: absolute;
+    left: -20%;
+    top: 0;
+    bottom: 0;
+    z-index: -1; }
+  section.header-content .right-banner-image {
+    width: auto;
+    height: 100%;
+    position: absolute;
+    right: -20%;
+    top: 0;
+    bottom: 0;
+    z-index: -1; }
 
 nav.navbar {
   padding: 15px 70px;

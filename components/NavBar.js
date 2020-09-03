@@ -7,7 +7,7 @@ const NavBar = () => {
             <nav className="navbar navbar-expand-lg">
                 <Link href="/">
                     <a className="navbar-brand">
-                        <img src="/images/logo.png" alt="Kilimanjaro-logo" />
+                        <img src="/images/logo.svg" alt="Kilimanjaro-logo" />
                     </a>
                 </Link>
 
