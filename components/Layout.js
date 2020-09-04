@@ -3,6 +3,8 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 
 import NavBar from '../components/NavBar';
+import Footer from './Footer';
+
 
 Router.onRouterChangeStart = url => {
     console.log(url);
@@ -17,7 +19,7 @@ Router.onRouterChangeError = ()  => {
     return NProgress.done();
 };
 
-const Layout = ({children}) => {
+const Layout = ({children, showSecFooter}) => {
     return (
         <> 
             <Head>
@@ -28,7 +30,7 @@ const Layout = ({children}) => {
 
             {children}
 
-            {/* <Footer /> */}
+            <Footer showSecFooter={showSecFooter} />
         </>
     );
 
