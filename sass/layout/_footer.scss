@@ -1,3 +1,22 @@
 footer {
-  
+  &.footer {
+      background: #000;
+      padding: 15px 0;
+
+      p {
+          color: #fff;
+      }
+
+      .footer-body {
+        display: flex;
+        justify-content: space-between; 
+        flex-wrap: wrap;  
+        
+        .social-media {
+            a:not(:last-child) {
+                margin-right: 15px;
+            }
+        }
+      }
+  }
 }

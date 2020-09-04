@@ -3,13 +3,13 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
 import CouponSection from '../components/couponSection/CouponSection';
-import MobileAppDownload from '../components/MobileAppDownload/mobileAppDownload';
+// import MobileAppDownload from '../components/MobileAppDownload/mobileAppDownload';
 
 
 export default function Home() {
   return (
     <>
-      <Layout>
+      <Layout showSecFooter>
         <Head>
           <title>Kilimanjaro</title>
         </Head>
@@ -43,7 +43,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <MobileAppDownload />
       </Layout>
     </>
   )
