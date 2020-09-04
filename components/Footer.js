@@ -12,8 +12,8 @@ const Footer = ({showSecFooter}) => {
                                     in store or have it delivered to their doorstep.
                             </p>
                                 <div className="mobile-link-container">
-                                    <a href=""><img src="/images/playstore.png" alt="" className="img1" /></a>
-                                    <a href=""><img src="/images/appstore.png" alt="" className="img2" /></a>
+                                    <a href=""><img src="/images/playstore.png" alt="" /></a>
+                                    <a href=""><img src="/images/appstore.png" alt="" /></a>
                                 </div>
                             </div>
                             <div className="col-md-5">
