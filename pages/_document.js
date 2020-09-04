@@ -14,8 +14,8 @@ class document extends Document  {
                     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png" />
                     <link rel="stylesheet" href="/css/bootstrap.min.css" />
 
-                    {/* <link rel="stylesheet" type="text/css" href="/slick/slick.css" />
-                    <link rel="stylesheet" type="text/css" href="/slick/slick-theme.css" /> */}
+                    <link rel="stylesheet" type="text/css" href="/slick/slick.css" />
+                    <link rel="stylesheet" type="text/css" href="/slick/slick-theme.css" />
 
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="

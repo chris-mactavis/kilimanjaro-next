@@ -1,3 +1,32 @@
 header {
- 
+    &.menu-header {
+
+        .slick-dotted.slick-slider {
+            margin-bottom: 0;
+        }
+
+        .slick-dots {
+            width: auto;
+            bottom: 50px;
+            right: 50px;
+
+            li.slick-active button:before {
+                color: $primary;
+            }
+
+            li {
+                button {
+                    border: 1px solid #fff;
+                    border-radius: 50%;
+
+                    &:before {
+                        font-size: 20px;
+                        line-height: 22px;
+                        color: #fff;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
 }
