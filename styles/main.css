@@ -419,4 +419,21 @@ footer.footer {
         background: #fff;
         border: 1px solid #DC042A; }
 
+header.menu-header .slick-dotted.slick-slider {
+  margin-bottom: 0; }
+header.menu-header .slick-dots {
+  width: auto;
+  bottom: 50px;
+  right: 50px; }
+  header.menu-header .slick-dots li.slick-active button:before {
+    color: #DC042A; }
+  header.menu-header .slick-dots li button {
+    border: 1px solid #fff;
+    border-radius: 50%; }
+    header.menu-header .slick-dots li button:before {
+      font-size: 20px;
+      line-height: 22px;
+      color: #fff;
+      opacity: 1; }
+
 /*# sourceMappingURL=main.css.map */
