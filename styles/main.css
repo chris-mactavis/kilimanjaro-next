@@ -211,6 +211,12 @@ a {
   a:hover {
     color: #fff; }
 
+p {
+  color: #383838; }
+
+li {
+  color: #383838; }
+
 h1, h2, h3, h4, h5, h6 {
   font-family: "Lato", sans-serif;
   font-weight: 600;
@@ -226,7 +232,7 @@ h3 {
   font-size: 40px; }
 
 h4 {
-  font-size: 32px; }
+  font-size: 30px; }
 
 h5 {
   font-family: "Lato", sans-serif;
@@ -271,6 +277,13 @@ form.select-state .css-yk16xz-control {
   .btn:hover {
     box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #DC042A;
     color: #fff; }
+
+.btn-grey {
+  background-color: #dddddd;
+  color: #707070; }
+  .btn-grey:hover {
+    box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #dddddd;
+    color: #707070; }
 
 section.header-content {
   height: 100vh;
@@ -414,6 +427,144 @@ section.select-restaurant {
         text-transform: uppercase;
         font-size: 15px;
         padding: 15px 0; }
+section.products {
+  padding: 20px 0; }
+  section.products h4 {
+    text-transform: uppercase;
+    color: #DC042A;
+    font-weight: 600;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 0; }
+    section.products h4::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background-color: #DC042A;
+      border-radius: 50%; }
+  section.products .single-product {
+    margin-bottom: 10px;
+    padding: 20px 0;
+    border-bottom: 1px solid #A5A5A5; }
+    section.products .single-product p {
+      margin-bottom: 0; }
+    section.products .single-product .product-name {
+      font-size: 20px;
+      text-transform: uppercase;
+      font-weight: 600; }
+    section.products .single-product .product-qty {
+      margin-right: 10px; }
+    section.products .single-product .product-description {
+      font-size: 15px; }
+    section.products .single-product input {
+      width: 50px;
+      padding: 3px;
+      font-size: 15px; }
+    section.products .single-product input[type=number]::-webkit-inner-spin-button,
+    section.products .single-product input[type=number]::-webkit-outer-spin-button {
+      opacity: 1; }
+  section.products .cart {
+    width: 50%; }
+    section.products .cart .cart-container {
+      background: #DC042A;
+      border-radius: 45px 0 0 45px;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px; }
+      section.products .cart .cart-container .cart-icon-container {
+        position: relative; }
+        section.products .cart .cart-container .cart-icon-container button {
+          border-color: transparent;
+          background: transparent; }
+        section.products .cart .cart-container .cart-icon-container img {
+          height: 40px;
+          width: auto; }
+        section.products .cart .cart-container .cart-icon-container .product-count {
+          position: absolute;
+          top: -13px;
+          right: -8px;
+          text-align: center;
+          width: 23px;
+          height: 23px;
+          padding: 0px;
+          background: #fff;
+          font-size: 11px;
+          border-radius: 50%;
+          line-height: 2.2; }
+      section.products .cart .cart-container .cart-text {
+        width: 100%;
+        background: #fff;
+        color: red;
+        padding: 2px 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        border-radius: 5px 0 0 5px;
+        margin-bottom: 0; }
+    section.products .cart .cart-product-list {
+      padding: 40px 40px 10px; }
+      section.products .cart .cart-product-list .product-list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #A5A5A5; }
+        section.products .cart .cart-product-list .product-list img {
+          max-width: 100px; }
+        section.products .cart .cart-product-list .product-list input {
+          width: 50px; }
+        section.products .cart .cart-product-list .product-list p {
+          font-size: 20px;
+          margin-bottom: 0; }
+        section.products .cart .cart-product-list .product-list p.bold {
+          font-weight: 600; }
+        section.products .cart .cart-product-list .product-list button {
+          padding: 0px 8px;
+          color: #A5A5A5;
+          border-color: transparent;
+          border: 1.5px solid #A5A5A5;
+          outline-color: transparent;
+          background: transparent; }
+        section.products .cart .cart-product-list .product-list input[type=number]::-webkit-inner-spin-button,
+        section.products .cart .cart-product-list .product-list input[type=number]::-webkit-outer-spin-button {
+          opacity: 1; }
+      section.products .cart .cart-product-list .cart-button-actions {
+        margin-top: 20px; }
+        section.products .cart .cart-product-list .cart-button-actions .round {
+          position: relative; }
+        section.products .cart .cart-product-list .cart-button-actions .round label {
+          background-color: #fff;
+          border: 1px solid #ccc;
+          border-radius: 50%;
+          cursor: pointer;
+          height: 28px;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 28px; }
+        section.products .cart .cart-product-list .cart-button-actions .round label:after {
+          border: 2px solid #fff;
+          border-top: none;
+          border-right: none;
+          content: "";
+          height: 6px;
+          left: 7px;
+          opacity: 0;
+          position: absolute;
+          top: 8px;
+          transform: rotate(-45deg);
+          width: 12px; }
+        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"] {
+          visibility: hidden; }
+        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"]:checked + label {
+          background-color: #66bb6a;
+          border-color: #66bb6a; }
+        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"]:checked + label:after {
+          opacity: 1; }
 
 nav.navbar {
   padding: 15px 70px;
