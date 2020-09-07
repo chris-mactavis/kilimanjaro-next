@@ -2,6 +2,8 @@ import Layout from '../../components/Layout';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import Select from 'react-select';
+import Slider from 'react-slick';
+
 
 
 const Menu = () => {
@@ -13,19 +15,12 @@ const Menu = () => {
         {value: 'Food Court, PH', label: 'Food Court, PH'}
     ];
 
-    useEffect(() => {
-        if (process.env) {
-            $('document').ready(function () {
-                $('.menu-header-slider').slick({
-                    dots: true,
-                    autoplay: true,
-                    speed: 1000,
-                    autoplaySpeed: 3000,
-                });
-            });
-        }
-        
-    }, []);
+    var settings = {
+        dots: true,
+        autoplay: true,
+        speed: 1000,
+        autoplaySpeed: 3000,
+    };
 
     return (
         <>
@@ -34,13 +29,13 @@ const Menu = () => {
                     <title>Menu | Kilimanjaro</title>
                 </Head>
                 <header className="menu-header">
-                    <div className="menu-header-slider">
+                    <Slider {...settings}>
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
-                    </div>
+                    </Slider>
                 </header>
                 <section className="select-restaurant">
                     <div className="container">
