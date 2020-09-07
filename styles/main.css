@@ -360,6 +360,60 @@ section.orders {
       font-size: 16px; }
     section.orders .orders-container .bold-text {
       font-weight: bold; }
+section.select-restaurant {
+  padding: 20px 0 0 0;
+  box-shadow: 0 2px 9px -3px grey; }
+  section.select-restaurant .d-flex {
+    width: 50%; }
+  section.select-restaurant p {
+    margin-bottom: 0;
+    margin-right: 20px;
+    text-transform: uppercase;
+    font-weight: 600; }
+  section.select-restaurant .css-2b097c-container {
+    width: 35%; }
+    section.select-restaurant .css-2b097c-container .css-yk16xz-control {
+      background-color: #DC042A;
+      font-size: 16px; }
+      section.select-restaurant .css-2b097c-container .css-yk16xz-control .css-1wa3eu0-placeholder {
+        color: #fff; }
+    section.select-restaurant .css-2b097c-container .css-1pahdxg-control {
+      box-shadow: 0 0 0 1px #DC042A;
+      font-size: 16px; }
+      section.select-restaurant .css-2b097c-container .css-1pahdxg-control:hover {
+        border-color: #DC042A !important; }
+    section.select-restaurant .css-2b097c-container .css-1okebmr-indicatorSeparator {
+      display: none; }
+    section.select-restaurant .css-2b097c-container .css-tlfecz-indicatorContainer {
+      color: #fff; }
+    section.select-restaurant .css-2b097c-container span.css-1laao21-a11yText {
+      background-color: #DC042A !important; }
+      section.select-restaurant .css-2b097c-container span.css-1laao21-a11yText p {
+        color: #DC042A !important; }
+  section.select-restaurant ul.product-cat {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+    margin-bottom: 0;
+    flex-wrap: wrap; }
+    section.select-restaurant ul.product-cat .active {
+      position: relative; }
+      section.select-restaurant ul.product-cat .active::before {
+        content: '';
+        position: absolute;
+        width: 90%;
+        height: 10px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #DC042A; }
+    section.select-restaurant ul.product-cat a {
+      margin-right: 30px; }
+      section.select-restaurant ul.product-cat a li.product-cat-list {
+        list-style: none;
+        text-transform: uppercase;
+        font-size: 15px;
+        padding: 15px 0; }
 
 nav.navbar {
   padding: 15px 70px;
