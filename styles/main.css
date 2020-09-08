@@ -374,6 +374,7 @@ section.orders {
     section.orders .orders-container .bold-text {
       font-weight: bold; }
 section.select-restaurant {
+  background-color: #fff;
   padding: 20px 0 0 0;
   box-shadow: 0 2px 9px -3px grey; }
   section.select-restaurant .d-flex {
@@ -428,7 +429,8 @@ section.select-restaurant {
         font-size: 15px;
         padding: 15px 0; }
 section.products {
-  padding: 20px 0; }
+  padding: 40px 0;
+  position: relative; }
   section.products h4 {
     text-transform: uppercase;
     color: #DC042A;
@@ -467,14 +469,26 @@ section.products {
     section.products .single-product input[type=number]::-webkit-inner-spin-button,
     section.products .single-product input[type=number]::-webkit-outer-spin-button {
       opacity: 1; }
+  section.products .active-cart {
+    box-shadow: -2px 3px 11px -7px rgba(0, 0, 0, 0.75);
+    right: 0 !important; }
+    section.products .active-cart .cart-product-list {
+      padding: 40px 40px 40px !important;
+      display: block !important; }
   section.products .cart {
-    width: 50%; }
+    background: #fff;
+    width: 36%;
+    border-radius: 44px 0px 0px;
+    position: absolute;
+    top: 40px;
+    right: -470px;
+    transition: all .3s; }
     section.products .cart .cart-container {
       background: #DC042A;
       border-radius: 45px 0 0 45px;
       display: flex;
       align-items: flex-end;
-      padding: 20px; }
+      padding: 20px 0 20px 20px; }
       section.products .cart .cart-container .cart-icon-container {
         position: relative; }
         section.products .cart .cart-container .cart-icon-container button {
@@ -505,7 +519,7 @@ section.products {
         border-radius: 5px 0 0 5px;
         margin-bottom: 0; }
     section.products .cart .cart-product-list {
-      padding: 40px 40px 10px; }
+      display: none; }
       section.products .cart .cart-product-list .product-list {
         display: flex;
         align-items: center;
@@ -533,38 +547,61 @@ section.products {
         section.products .cart .cart-product-list .product-list input[type=number]::-webkit-outer-spin-button {
           opacity: 1; }
       section.products .cart .cart-product-list .cart-button-actions {
-        margin-top: 20px; }
-        section.products .cart .cart-product-list .cart-button-actions .round {
-          position: relative; }
-        section.products .cart .cart-product-list .cart-button-actions .round label {
-          background-color: #fff;
-          border: 1px solid #ccc;
-          border-radius: 50%;
+        margin-top: 20px;
+        /* Hide the browser's default checkbox */
+        /* Create a custom checkbox */
+        /* On mouse-over, add a grey background color */
+        /* When the checkbox is checked, add a blue background */
+        /* Create the checkmark/indicator (hidden when not checked) */
+        /* Style the checkmark/indicator */ }
+        section.products .cart .cart-product-list .cart-button-actions .container {
+          display: block;
+          position: relative;
+          padding-left: 20px;
           cursor: pointer;
-          height: 28px;
-          left: 0;
+          font-size: 12px;
+          margin-bottom: 0;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          text-transform: uppercase;
+          color: #DC042A;
+          font-weight: 600; }
+        section.products .cart .cart-product-list .cart-button-actions .container input {
           position: absolute;
-          top: 0;
-          width: 28px; }
-        section.products .cart .cart-product-list .cart-button-actions .round label:after {
-          border: 2px solid #fff;
-          border-top: none;
-          border-right: none;
-          content: "";
-          height: 6px;
-          left: 7px;
           opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0; }
+        section.products .cart .cart-product-list .cart-button-actions .checkmark {
           position: absolute;
-          top: 8px;
-          transform: rotate(-45deg);
-          width: 12px; }
-        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"] {
-          visibility: hidden; }
-        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"]:checked + label {
-          background-color: #66bb6a;
-          border-color: #66bb6a; }
-        section.products .cart .cart-product-list .cart-button-actions .round input[type="checkbox"]:checked + label:after {
-          opacity: 1; }
+          top: 2px;
+          left: 0;
+          height: 13px;
+          width: 13px;
+          border-radius: 50%;
+          background-color: transparent;
+          border: 1px solid grey; }
+        section.products .cart .cart-product-list .cart-button-actions .container:hover input ~ .checkmark {
+          background-color: #ccc; }
+        section.products .cart .cart-product-list .cart-button-actions .container input:checked ~ .checkmark {
+          background-color: #DC042A;
+          border: 1px solid #DC042A; }
+        section.products .cart .cart-product-list .cart-button-actions .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none; }
+        section.products .cart .cart-product-list .cart-button-actions .container .checkmark:after {
+          left: 9px;
+          top: 5px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg); }
 
 nav.navbar {
   padding: 15px 70px;

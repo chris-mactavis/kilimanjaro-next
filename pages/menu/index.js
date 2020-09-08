@@ -17,14 +17,29 @@ const Menu = (props) => {
 
     const [ Productquantity, changeQuantity ] = useState({
         quantity: 0
-    })
+    });
 
-    var settings = {
+    const [ addClass, changeClass ] = useState({
+        active: false
+    });
+
+    const settings = {
         dots: true,
         autoplay: true,
         speed: 1000,
         autoplaySpeed: 3000,
     };
+
+    const toggleActiveClass = () => {
+        changeClass({
+            active: !addClass.active
+        });
+    };
+
+    let cartClasses = ['cart'];
+    if(addClass.active) {
+        cartClasses.push('active-cart');
+    }
 
 
     return (
@@ -91,16 +106,34 @@ const Menu = (props) => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-md-4">
-                                
+                                <div className="single-product">
+                                    <div className="row">
+                                        <div className="col-md-4 text-center mb-5 mb-sm-0">
+                                            <img className="img-fluid" src="/images/food-order-image.png" alt="" />
+                                        </div>
+                                        <div className="col-md-8">
+                                            <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                                <p className="product-name">Small Body</p>
+                                                <div className="d-flex">
+                                                    <p className="product-qty">Quantity</p>
+                                                    <input type='number' pattern='[0-9]{0,5}'/>
+                                                </div>
+                                            </div>
+                                            <p className="product-description">Excepteur sint occaecat cupidatat non proident, sunt in.</p>
+                                            <div className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                                <button className="btn">Add to cart</button>
+                                                <p className="amount">N1000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="cart">
+                    <div className={cartClasses.join(' ')}>
                         <div className="cart-container">
                             <div className="cart-icon-container">
-                                <button><img src="/images/icon/cart-icon.svg" alt=""/></button>
+                                <button onClick={toggleActiveClass}> <img src="/images/icon/cart-icon.svg" alt=""/></button>
                                 <p className="product-count">1</p>
                             </div>
                             <p className="cart-text">Cart</p>
@@ -115,10 +148,10 @@ const Menu = (props) => {
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex">
-                                <div class="round">
-                                    <input type="checkbox" id="checkbox" />
-                                    <label for="checkbox">Save</label>
-                                </div>
+                                    <label className="container">Save Basket
+                                        <input type="checkbox" />
+                                        <span className="checkmark"></span>
+                                    </label>
                                 </div>
                                 <div>
                                     <button className="btn btn-grey mr-4">View/Edit Cart</button>
