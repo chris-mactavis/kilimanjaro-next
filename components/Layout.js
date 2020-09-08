@@ -6,18 +6,14 @@ import NavBar from '../components/NavBar';
 import Footer from './Footer';
 
 
-Router.onRouterChangeStart = url => {
+Router.onRouteChangeStart = url => {
     console.log(url);
     NProgress.start();
 };
 
-Router.onRouterChangeComplete = ()  => {
-    return NProgress.done();
-};
+Router.onRouteChangeComplete = ()  => NProgress.done();
 
-Router.onRouterChangeError = ()  => {
-    return NProgress.done();
-};
+Router.onRouteChangeError = ()  => NProgress.done();
 
 const Layout = ({children, showSecFooter}) => {
     return (

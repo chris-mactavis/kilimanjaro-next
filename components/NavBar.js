@@ -4,7 +4,7 @@ import Nav from './Nav';
 const NavBar = () => {
     return (
         <>
-            <nav className="navbar navbar-expand-lg">
+            <nav id="navbar_top" className="navbar navbar-expand-lg">
                 <Link href="/">
                     <a className="navbar-brand">
                         <img src="/images/logo.svg" alt="Kilimanjaro-logo" />

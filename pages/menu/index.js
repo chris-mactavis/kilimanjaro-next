@@ -1,8 +1,9 @@
 import Layout from '../../components/Layout';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
 import Slider from 'react-slick';
+import Router from 'next/router';
 
 
 
@@ -15,9 +16,9 @@ const Menu = (props) => {
         {value: 'Food Court, PH', label: 'Food Court, PH'}
     ];
 
-    const [ Productquantity, changeQuantity ] = useState({
-        quantity: 0
-    });
+    // const [ Productquantity, changeQuantity ] = useState({
+    //     quantity: 0
+    // });
 
     const [ addClass, changeClass ] = useState({
         active: false
@@ -154,8 +155,8 @@ const Menu = (props) => {
                                     </label>
                                 </div>
                                 <div>
-                                    <button className="btn btn-grey mr-4">View/Edit Cart</button>
-                                    <button className="btn">Proceed to Checkout</button>
+                                    <button className="btn btn-grey mr-4" onClick={() => Router.push('/menu/shopping-cart')}>View/Edit Cart</button>
+                                    <button className="btn" onClick={() => Router.push('/menu/checkout')}>Proceed to Checkout</button>
                                 </div>
                             </div>
                         </div>
