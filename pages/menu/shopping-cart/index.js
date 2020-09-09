@@ -92,8 +92,44 @@ const ShoppingCart = () => {
                         </div>
                     </div>
                 </section>
-                {/* Realted Product */}
-
+                {/* Related Product */}
+                <section className="other-related-products shopping-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <h4>Goes well with</h4>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-3">
+                               <div className="card text-center">
+                                   <img className="img-fluid" src="/images/coke.svg" alt=""/>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Small Body</h5>
+                                        <p class="card-text">Excepteur sint occaecat cupidatat non.</p>
+                                        <div className="d-flex align-items-center justify-content-between">
+                                            <p>N1000</p>
+                                            <div className="d-flex">
+                                                <p className="product-qty">Quantity</p>
+                                                <input type='number' pattern='[0-9]{0,5}' />
+                                            </div>
+                                        </div>
+                                        <button className="btn">Add to cart</button>
+                                    </div>
+                               </div>
+                            </div>
+                            <div className="col-md-3">
+                                product-2
+                            </div>
+                            <div className="col-md-3">
+                                product-3
+                            </div>
+                            <div className="col-md-3">
+                                product-4
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </Layout>
         </>
     );
