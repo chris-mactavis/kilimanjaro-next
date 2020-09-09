@@ -288,14 +288,12 @@ section {
             }
 
             input {
-                width: 50px;
-                padding: 3px;
-                font-size: 15px;
+                @include input-number-style;
             }
 
             input[type="number"]::-webkit-inner-spin-button,
             input[type="number"]::-webkit-outer-spin-button {
-                opacity: 1;
+                @include input-number-icon-show;
             }
         }
 
@@ -382,7 +380,7 @@ section {
                     }
 
                     input {
-                        width: 50px;
+                        @include input-number-style;
                     }
 
                     p {
@@ -405,7 +403,7 @@ section {
 
                     input[type="number"]::-webkit-inner-spin-button,
                     input[type="number"]::-webkit-outer-spin-button {
-                        opacity: 1;
+                        @include input-number-icon-show;
                     }
                 }
 
@@ -487,22 +485,30 @@ section {
     &.shopping-cart {
         padding: 40px 0;
 
-        h5 {
+        h1 {
             background: $primary;
             width: max-content;
             text-align: center;
             padding: 14px 50px;
             margin: 0 auto;
             color: #fff;
+            font-size: 18px;
             border-radius: 4px;
             margin-bottom: 30px;
+        }
+
+        h4 {
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 15px;
         }
 
         .mid-line {
             position: relative;
 
             &::before {
-                content: '';
+                content: "";
                 background: $primary;
                 right: 60px;
                 top: 28%;
@@ -512,7 +518,7 @@ section {
             }
 
             &::after {
-                content: '';
+                content: "";
                 background: $primary;
                 left: 60px;
                 top: 28%;
@@ -520,11 +526,9 @@ section {
                 height: 2px;
                 width: 217px;
             }
-            
         }
 
         .number-container {
-
             .active-number {
                 background: $primary;
                 color: #fff !important;
@@ -542,7 +546,7 @@ section {
                 border-radius: 50%;
                 font-size: 15px;
                 margin-bottom: 10px;
-                border: 1px solid #95989A;
+                border: 1px solid #95989a;
             }
 
             .number-text {
@@ -550,6 +554,102 @@ section {
                 text-transform: uppercase;
                 color: #707070;
             }
+        }
+
+        .order-review {
+            padding: 20px 20px;
+            border: 1px solid #a5a5a5;
+            margin-bottom: 10px;
+            background: #fff;
+
+            p {
+                margin-bottom: 0;
+            }
+
+            button {
+                border: transparent;
+                background: transparent;
+                color: #a5a5a5;
+                text-transform: uppercase;
+
+                span {
+                    color: $light-black;
+                    margin-right: 5px;
+                }
+            }
+
+            img {
+                max-width: 100px;
+            }
+
+            .product-name {
+                text-transform: uppercase;
+                font-weight: $semi-bold;
+            }
+
+            .product-qty {
+                margin-right: 5px;
+            }
+
+            input {
+                @include input-number-style;
+            }
+
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                @include input-number-icon-show;
+            }
+        }
+
+        .coupon-delivery-sect {
+            margin: 15px 0;
+
+            label {
+                text-transform: uppercase;
+                margin-bottom: 0;
+                color: $primary;
+                font-size: 15px;
+            }
+
+            input[type="text"] {
+                width: 65%;
+                font-size: 16px;
+                border: 2px solid #dddddd;
+                padding: 6px 4px;
+            }
+
+            input[type="radio"] {
+                margin-right: 8px;
+                height: 10px;
+            }
+
+            input[type="radio"]:after {
+                @include radio-btn;
+            }
+
+            input[type="radio"]:checked:after {
+                @include radio-btn;
+                background-color: $primary;
+            }
+
+            p {
+                margin-bottom: 0;
+                text-transform: uppercase;
+                font-size: 15px;
+                font-weight: $semi-bold;
+            }
+        }
+
+        .price-review {
+            margin: 21px 0 35px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid #dddddd;
         }
     }
 }

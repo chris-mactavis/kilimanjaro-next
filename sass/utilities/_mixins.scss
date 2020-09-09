@@ -27,7 +27,7 @@
         @media only screen and (max-width: $wide_width) {
             @content;
         }
-    }    
+    }
 }
 
 @mixin abs-center {
@@ -37,8 +37,31 @@
     transform: translate(-50%, -50%);
 }
 
+@mixin input-number-icon-show {
+    opacity: 1;
+}
+
+@mixin input-number-style {
+    width: 50px;
+    padding: 3px;
+    font-size: 15px;
+}
+
+@mixin radio-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    top: -4px;
+    left: 1px;
+    position: relative;
+    background-color: transparent;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+}
+
 $wide_width: 1300px;
 $medium_width: 1200px;
 $desktop_width: 992px;
-$tablet_width:  767px;
+$tablet_width: 767px;
 $mobile_width: 576px;

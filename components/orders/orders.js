@@ -1,4 +1,4 @@
-import Order from '../order/order';
+import Order from './order/order';
 
 const Orders = () => {
     return (
