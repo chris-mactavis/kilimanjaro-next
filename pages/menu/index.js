@@ -96,7 +96,7 @@ const Menu = (props) => {
                                                 <p className="product-name">Small Body</p>
                                                 <div className="d-flex">
                                                     <p className="product-qty">Quantity</p>
-                                                    <input type='number' pattern='[0-9]{0,5}'/>
+                                                    <input type='number' />
                                                 </div>
                                             </div>
                                             <p className="product-description">Excepteur sint occaecat cupidatat non proident, sunt in.</p>
@@ -117,7 +117,7 @@ const Menu = (props) => {
                                                 <p className="product-name">Small Body</p>
                                                 <div className="d-flex">
                                                     <p className="product-qty">Quantity</p>
-                                                    <input type='number' pattern='[0-9]{0,5}'/>
+                                                    <input type='number' />
                                                 </div>
                                             </div>
                                             <p className="product-description">Excepteur sint occaecat cupidatat non proident, sunt in.</p>
