@@ -770,6 +770,8 @@ section.shopping-cart {
         margin-left: 5px; }
         section.shopping-cart .card .card-body input::-webkit-inner-spin-button {
           opacity: 1; }
+section.checkout-section h4 {
+  text-align: left; }
 
 nav.navbar {
   padding: 15px 70px;
@@ -788,7 +790,6 @@ nav.navbar {
       nav.navbar ul.navbar-nav li.nav-item .nav-link {
         font-family: "Lato", sans-serif;
         font-size: 15px;
-        font-weight: bold;
         text-transform: uppercase; }
     nav.navbar ul.navbar-nav .nav-bg-white {
       background: #fff;
