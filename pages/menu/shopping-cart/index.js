@@ -1,8 +1,16 @@
 import Layout from '../../../components/Layout';
 import Head from 'next/head';
 import Router from 'next/router';
+import RelatedProducts from '../../../components/relatedProducts/relatedProducts';
 
 const ShoppingCart = () => {
+    const drinks = [
+        {url : '/images/coke.svg', id: 0},
+        { url: '/images/5alive.svg', id: 1 },
+        { url: '/images/fanta.svg', id: 2 },
+        {url : '/images/coke.svg', id: 3}
+    ];
+
     return (
         <>
             <Layout>
@@ -93,7 +101,7 @@ const ShoppingCart = () => {
                     </div>
                 </section>
                 {/* Related Product */}
-                <section className="other-related-products shopping-cart">
+                <section className="shopping-cart">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
@@ -101,32 +109,7 @@ const ShoppingCart = () => {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-3">
-                               <div className="card text-center">
-                                   <img className="img-fluid" src="/images/coke.svg" alt=""/>
-                                    <div class="card-body">
-                                        <h5 class="card-title">Small Body</h5>
-                                        <p class="card-text">Excepteur sint occaecat cupidatat non.</p>
-                                        <div className="d-flex align-items-center justify-content-between">
-                                            <p>N1000</p>
-                                            <div className="d-flex">
-                                                <p className="product-qty">Quantity</p>
-                                                <input type='number' pattern='[0-9]{0,5}' />
-                                            </div>
-                                        </div>
-                                        <button className="btn">Add to cart</button>
-                                    </div>
-                               </div>
-                            </div>
-                            <div className="col-md-3">
-                                product-2
-                            </div>
-                            <div className="col-md-3">
-                                product-3
-                            </div>
-                            <div className="col-md-3">
-                                product-4
-                            </div>
+                            {drinks.map((drink) => <RelatedProducts url={drink.url} key={drink.id} />)}
                         </div>
                     </div>
                 </section>

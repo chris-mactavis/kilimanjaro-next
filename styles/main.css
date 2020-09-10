@@ -272,7 +272,7 @@ form.select-state .css-yk16xz-control {
   border-radius: 3px;
   text-transform: uppercase;
   font-size: 13px;
-  padding: 5px 16px;
+  padding: 8px 16px;
   transition: all .3s; }
   .btn:hover {
     box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #DC042A;
@@ -742,6 +742,36 @@ section.shopping-cart {
     padding: 10px;
     font-size: 15px;
     border: 2px solid #dddddd; }
+  section.shopping-cart .card {
+    padding: 20px 0;
+    border: none;
+    transition: all .3s; }
+    section.shopping-cart .card:hover {
+      box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.55); }
+    section.shopping-cart .card img {
+      max-width: 50%;
+      margin: 0 auto; }
+    section.shopping-cart .card p {
+      margin-bottom: 0;
+      font-size: 16px; }
+    section.shopping-cart .card .card-body {
+      padding: 1.25rem 1.25rem 0; }
+      section.shopping-cart .card .card-body h5 {
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: 600; }
+      section.shopping-cart .card .card-body .card-text {
+        font-size: 13px;
+        border-bottom: 1px solid #707070;
+        padding-bottom: 10px; }
+      section.shopping-cart .card .card-body input {
+        width: 50px;
+        padding: 3px;
+        font-size: 15px;
+        margin-left: 5px; }
+      section.shopping-cart .card .card-body input[type="number"]::-webkit-inner-spin-button,
+      section.shopping-cart .card .card-body input[type="number"]::-webkit-outer-spin-button {
+        opacity: 1; }
 
 nav.navbar {
   padding: 15px 70px;

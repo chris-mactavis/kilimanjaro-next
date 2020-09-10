@@ -1,4 +1,4 @@
-const CouponSection = () => {
+const CouponProduct = () => {
     return <>
          <div className="container">
             <div className="row">
@@ -33,4 +33,4 @@ const CouponSection = () => {
     </>
 };
 
-export default CouponSection;
+export default CouponProduct;
