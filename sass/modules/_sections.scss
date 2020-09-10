@@ -597,11 +597,10 @@ section {
 
             input {
                 @include input-number-style;
-            }
 
-            input[type="number"]::-webkit-inner-spin-button,
-            input[type="number"]::-webkit-outer-spin-button {
-                @include input-number-icon-show;
+                &::-webkit-inner-spin-button{
+                    @include input-number-icon-show;  
+                }
             }
         }
 
@@ -693,11 +692,10 @@ section {
                 input {
                     @include input-number-style;
                     margin-left: 5px;
-                }
 
-                input[type="number"]::-webkit-inner-spin-button,
-                input[type="number"]::-webkit-outer-spin-button {
-                    @include input-number-icon-show;
+                    &::-webkit-inner-spin-button{
+                        @include input-number-icon-show;  
+                    }
                 }
             }
         }

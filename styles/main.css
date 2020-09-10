@@ -688,9 +688,8 @@ section.shopping-cart {
       width: 50px;
       padding: 3px;
       font-size: 15px; }
-    section.shopping-cart .order-review input[type="number"]::-webkit-inner-spin-button,
-    section.shopping-cart .order-review input[type="number"]::-webkit-outer-spin-button {
-      opacity: 1; }
+      section.shopping-cart .order-review input::-webkit-inner-spin-button {
+        opacity: 1; }
   section.shopping-cart .coupon-delivery-sect {
     margin: 15px 0; }
     section.shopping-cart .coupon-delivery-sect label {
@@ -769,9 +768,8 @@ section.shopping-cart {
         padding: 3px;
         font-size: 15px;
         margin-left: 5px; }
-      section.shopping-cart .card .card-body input[type="number"]::-webkit-inner-spin-button,
-      section.shopping-cart .card .card-body input[type="number"]::-webkit-outer-spin-button {
-        opacity: 1; }
+        section.shopping-cart .card .card-body input::-webkit-inner-spin-button {
+          opacity: 1; }
 
 nav.navbar {
   padding: 15px 70px;

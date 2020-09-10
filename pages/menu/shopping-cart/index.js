@@ -48,11 +48,11 @@ const ShoppingCart = () => {
                                 <h4>Review Your Order</h4>
                                 <div className="order-review d-flex align-items-center justify-content-between flex-wrap">
                                     <button><span>X</span>Remove</button>
-                                    <img src="/images/food-order-image.png" alt=""/>
+                                    <img src="/images/food-order-image.png" alt="" />
                                     <p className="product-name">Small Body</p>
                                     <div className="d-flex">
                                         <p className="product-qty">Quantity</p>
-                                        <input type='number' pattern='[0-9]{0,5}' />
+                                        <input type='number' />
                                     </div>
                                     <p>N1000</p>
                                 </div>
