@@ -1,5 +1,5 @@
 
-const reviewOrder = () => {
+const reviewOrder = ({checkoutOrder}) => {
 
     return (
         <>
@@ -52,7 +52,7 @@ const reviewOrder = () => {
                                 <p>N2000</p>
                             </div>
                         </div>
-                        <button className="btn btn-order w-100">Checkout</button>
+                        <button onClick={checkoutOrder} className="btn btn-order w-100">Checkout</button>
                     </div>
                 </div>
             </div>

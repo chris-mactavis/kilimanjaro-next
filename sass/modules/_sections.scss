@@ -483,7 +483,7 @@ section {
     }
 
     &.shopping-cart {
-        padding: 40px 0;
+        padding: 50px 0;
 
         h1 {
             background: $primary;
@@ -699,12 +699,133 @@ section {
                 }
             }
         }
-    }
 
-    &.checkout-section {
+        // Checkout Section
+        .checkout-section {
 
-        h4 {
-            text-align: left;
+            h4 {
+                text-align: left;
+            }
+    
+            label {
+                color: $light-black !important;
+                border: 1px solid #707070;
+                padding: 10px 20px;
+                border-radius: 3px;
+    
+                &:not(:last-child) {
+                    margin-right: 30px;
+                }
+            }
+
+            // Contact details 
+            .contact-info {
+                border: 1px solid #A5A5A5;
+                background: #fff;
+                margin-bottom: 20px;
+
+                .contact-details {
+                    padding: 20px;
+
+                    p {
+                        font-weight: $semi-bold;
+                        text-transform: uppercase;
+
+                        span {
+                            font-weight: normal;
+                            text-transform: initial;
+                            margin-left: 5px;
+                        }
+                    }
+
+                    input {
+                        width: 100%;
+                        padding: 7px;
+                        border: 1px solid #707070;
+                        font-size: 15px;
+                        margin-top: 10px;
+                    }
+
+                    .delivery-text {
+                        font-weight: normal;
+                        text-transform: initial;
+                        font-size: 15px;
+                        margin-bottom: 0;
+                    }
+                }
+
+                .account-change {
+                    padding: 10px 20px;
+                    background: #F5F5F5;
+
+                    P {
+                        margin-bottom: 0;
+                        color: $primary;
+                        text-transform: uppercase;
+                        font-size: 17px;
+                        // font-weight: normal;
+                    }
+
+                    button {
+                        border: transparent;
+                        background: transparent;
+                        color: $primary;
+                        text-transform: uppercase;
+                        font-weight: $semi-bold;                    
+                    }
+                }
+            }
+
+            // Order details
+            .order-details {
+                margin-bottom: 20px;
+
+                p {
+                    margin-bottom: 0;
+                }
+
+                h4 {
+                    color: $primary;
+                }
+
+                .order-details-list {
+                    padding: 40px 50px;
+                    background: #F2F2F2;
+
+                    .order-prod {
+                        p:first-child {
+                            width: 80%;
+                            text-align: left;
+                            font-weight: $semi-bold;
+
+                            span {
+                                font-weight: normal;
+                            }
+                        }
+                    }
+
+                    .total-order-details {
+                        padding-top: 15px;
+                        border-top: 1px solid #A5A5A5;
+                        margin-top: 15px;
+                        
+                        p:first-child {
+                            font-weight: $semi-bold;
+                        }
+                    }
+                }
+            }
+        }
+
+        .complete-order {
+            p {
+                font-size: 35px;
+                text-transform: uppercase;
+                text-align: center;
+                color: $primary;
+                font-weight: $semi-bold;
+            }
         }
     }
+
 }
