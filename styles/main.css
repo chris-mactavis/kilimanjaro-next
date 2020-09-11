@@ -277,6 +277,8 @@ form.select-state .css-yk16xz-control {
   .btn:hover {
     box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #DC042A;
     color: #fff; }
+  .btn:focus {
+    box-shadow: none; }
 
 .btn-grey {
   background-color: #dddddd;
@@ -287,6 +289,12 @@ form.select-state .css-yk16xz-control {
 
 .btn-order {
   padding: 14px 16px; }
+
+.btn-place-order {
+  font-size: 18px;
+  padding: 15px 16px;
+  width: 70%;
+  margin-top: 25px; }
 
 section.header-content {
   height: 100vh;
@@ -608,7 +616,7 @@ section.products {
           -ms-transform: rotate(45deg);
           transform: rotate(45deg); }
 section.shopping-cart {
-  padding: 40px 0; }
+  padding: 50px 0; }
   section.shopping-cart h1 {
     background: #DC042A;
     width: max-content;
@@ -770,8 +778,80 @@ section.shopping-cart {
         margin-left: 5px; }
         section.shopping-cart .card .card-body input::-webkit-inner-spin-button {
           opacity: 1; }
-section.checkout-section h4 {
-  text-align: left; }
+  section.shopping-cart .checkout-section h4 {
+    text-align: left; }
+  section.shopping-cart .checkout-section label {
+    color: #383838 !important;
+    border: 1px solid #707070;
+    padding: 10px 20px;
+    border-radius: 3px; }
+    section.shopping-cart .checkout-section label:not(:last-child) {
+      margin-right: 30px; }
+  section.shopping-cart .checkout-section .contact-info {
+    border: 1px solid #A5A5A5;
+    background: #fff;
+    margin-bottom: 20px; }
+    section.shopping-cart .checkout-section .contact-info .contact-details {
+      padding: 20px; }
+      section.shopping-cart .checkout-section .contact-info .contact-details p {
+        font-weight: 600;
+        text-transform: uppercase; }
+        section.shopping-cart .checkout-section .contact-info .contact-details p span {
+          font-weight: normal;
+          text-transform: initial;
+          margin-left: 5px; }
+      section.shopping-cart .checkout-section .contact-info .contact-details input {
+        width: 100%;
+        padding: 7px;
+        border: 1px solid #707070;
+        font-size: 15px;
+        margin-top: 10px; }
+      section.shopping-cart .checkout-section .contact-info .contact-details .delivery-text {
+        font-weight: normal;
+        text-transform: initial;
+        font-size: 15px;
+        margin-bottom: 0; }
+    section.shopping-cart .checkout-section .contact-info .account-change {
+      padding: 10px 20px;
+      background: #F5F5F5; }
+      section.shopping-cart .checkout-section .contact-info .account-change P {
+        margin-bottom: 0;
+        color: #DC042A;
+        text-transform: uppercase;
+        font-size: 17px; }
+      section.shopping-cart .checkout-section .contact-info .account-change button {
+        border: transparent;
+        background: transparent;
+        color: #DC042A;
+        text-transform: uppercase;
+        font-weight: 600; }
+  section.shopping-cart .checkout-section .order-details {
+    margin-bottom: 20px; }
+    section.shopping-cart .checkout-section .order-details p {
+      margin-bottom: 0; }
+    section.shopping-cart .checkout-section .order-details h4 {
+      color: #DC042A; }
+    section.shopping-cart .checkout-section .order-details .order-details-list {
+      padding: 40px 50px;
+      background: #F2F2F2; }
+      section.shopping-cart .checkout-section .order-details .order-details-list .order-prod p:first-child {
+        width: 80%;
+        text-align: left;
+        font-weight: 600; }
+        section.shopping-cart .checkout-section .order-details .order-details-list .order-prod p:first-child span {
+          font-weight: normal; }
+      section.shopping-cart .checkout-section .order-details .order-details-list .total-order-details {
+        padding-top: 15px;
+        border-top: 1px solid #A5A5A5;
+        margin-top: 15px; }
+        section.shopping-cart .checkout-section .order-details .order-details-list .total-order-details p:first-child {
+          font-weight: 600; }
+  section.shopping-cart .complete-order p {
+    font-size: 35px;
+    text-transform: uppercase;
+    text-align: center;
+    color: #DC042A;
+    font-weight: 600; }
 
 nav.navbar {
   padding: 15px 70px;
