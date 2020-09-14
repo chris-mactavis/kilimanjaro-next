@@ -858,12 +858,29 @@ section.shopping-cart {
         margin-top: 15px; }
         section.shopping-cart .checkout-section .order-details .order-details-list .total-order-details p:first-child {
           font-weight: 600; }
-  section.shopping-cart .complete-order p {
+  section.shopping-cart .complete-order h2 {
     font-size: 35px;
     text-transform: uppercase;
     text-align: center;
     color: #DC042A;
-    font-weight: 600; }
+    font-weight: 600;
+    margin-bottom: 50px; }
+  section.shopping-cart .complete-order .orders-info-container {
+    border: 1px solid #A5A5A5;
+    padding: 15px 30px;
+    border-radius: 5px; }
+    section.shopping-cart .complete-order .orders-info-container .details {
+      border-bottom: 1px solid #A5A5A5; }
+    section.shopping-cart .complete-order .orders-info-container .order-details h5 {
+      font-size: 22px;
+      text-transform: uppercase; }
+    section.shopping-cart .complete-order .orders-info-container .order-details .red {
+      color: #DC042A; }
+    section.shopping-cart .complete-order .orders-info-container .order-details p {
+      font-size: 12px; }
+    section.shopping-cart .complete-order .orders-info-container .order-details .amt {
+      font-size: 40px;
+      font-weight: bold; }
 
 nav.navbar {
   padding: 15px 70px;
