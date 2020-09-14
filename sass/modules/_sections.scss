@@ -409,74 +409,8 @@ section {
 
                 .cart-button-actions {
                     margin-top: 20px;
-
-                    .container {
-                        display: block;
-                        position: relative;
-                        padding-left: 20px;
-                        cursor: pointer;
-                        font-size: 12px;
-                        margin-bottom: 0;
-                        -webkit-user-select: none;
-                        -moz-user-select: none;
-                        -ms-user-select: none;
-                        user-select: none;
-                        text-transform: uppercase;
-                        color: $primary;
-                        font-weight: $semi-bold;
-                    }
-
-                    /* Hide the browser's default checkbox */
-                    .container input {
-                        position: absolute;
-                        opacity: 0;
-                        cursor: pointer;
-                        height: 0;
-                        width: 0;
-                    }
-
-                    /* Create a custom checkbox */
-                    .checkmark {
-                        position: absolute;
-                        top: 2px;
-                        left: 0;
-                        height: 13px;
-                        width: 13px;
-                        border-radius: 50%;
-                        background-color: transparent;
-                        border: 1px solid grey;
-                    }
-
-                    /* On mouse-over, add a grey background color */
-                    .container:hover input ~ .checkmark {
-                        background-color: #ccc;
-                    }
-
-                    /* When the checkbox is checked, add a blue background */
-                    .container input:checked ~ .checkmark {
-                        background-color: $primary;
-                        border: 1px solid $primary;
-                    }
-
-                    /* Create the checkmark/indicator (hidden when not checked) */
-                    .checkmark:after {
-                        content: "";
-                        position: absolute;
-                        display: none;
-                    }
-
-                    /* Style the checkmark/indicator */
-                    .container .checkmark:after {
-                        left: 9px;
-                        top: 5px;
-                        width: 5px;
-                        height: 10px;
-                        border: solid white;
-                        border-width: 0 3px 3px 0;
-                        -webkit-transform: rotate(45deg);
-                        -ms-transform: rotate(45deg);
-                        transform: rotate(45deg);
-                    }
+                    // Checkbox on cart page
+                    @include checkbox-btn;
                 }
             }
         }
@@ -858,6 +792,82 @@ section {
                         font-weight: $bold;
                     }
                 }
+            }
+        }
+    }
+
+    &.signup {
+        padding: 50px 0;
+
+        h3 {
+            font-family: $ubuntu;
+            color: $primary;
+        }
+
+        p {
+            color: #7F7F7F;
+        }
+
+        .other-signin-option {
+
+            button {
+                border: 1px solid #707070;
+                font-size: 13px;
+                text-transform: uppercase;
+                padding: 6px 30px 6px 10px;
+                display: inline-flex;
+                align-items: center;
+                background-color: #fff;
+                font-family: $ubuntu;
+
+                &:not(:last-child) {
+                    margin-right: 20px;
+                }
+
+                img {
+                    max-height: 20px;
+                    margin-right: 10px;
+                }
+            }
+
+            .fb-btn {
+                background-color: #435A9B;
+                color: #fff;
+                border: none;
+            }
+        }
+
+        .or-text {
+            width: 40px;
+            height: 40px;
+            border: 2px solid $primary;
+            color: $primary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+
+            &::before {
+                content: '';
+                position: absolute;
+                width: 2px;
+                background: $primary;
+                height: 140px;
+                top: 38px;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                background: $primary;
+                height: 140px;
+                bottom: 38px;
             }
         }
     }

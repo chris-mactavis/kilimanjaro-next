@@ -14,6 +14,16 @@
   src: url(/fonts/Lato-Semibold.ttf) format("truetype");
   font-weight: 600;
   font-style: normal; }
+@font-face {
+  font-family: "Ubuntu";
+  src: url(/fonts/Ubuntu-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: "Ubuntu";
+  src: url(/fonts/Ubuntu-Bold.ttf) format("truetype");
+  font-weight: bold;
+  font-style: normal; }
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -276,6 +286,115 @@ form.select-state .css-yk16xz-control {
   border: 1.2px solid #DC042A; }
   form.select-state .css-yk16xz-control:hover {
     border-color: #DC042A; }
+form.signup-form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600; }
+form.signup-form .textbox {
+  padding: 1px;
+  position: relative;
+  background: #ccc;
+  z-index: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+  line-height: 0;
+  width: 100%; }
+form.signup-form input {
+  color: #383838;
+  box-sizing: border-box;
+  font-size: 15px;
+  outline: none;
+  border: none;
+  z-index: 2;
+  padding: 7px 10px;
+  border-radius: 3px;
+  width: 100%; }
+  form.signup-form input:focus ~ .border {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    top: 0; }
+form.signup-form .border {
+  position: absolute;
+  content: '';
+  top: -4px;
+  left: 0;
+  width: 0%;
+  height: 0%;
+  border: 1px solid transparent !important;
+  background: #DC042A;
+  z-index: -1;
+  -webkit-transition: height 0.3s, width 0.3s 0.1s;
+  transition: height 0.3s, width 0.3s 0.1s; }
+form .remember-account {
+  margin-bottom: 15px;
+  /* Hide the browser's default checkbox */
+  /* Create a custom checkbox */
+  /* On mouse-over, add a grey background color */
+  /* When the checkbox is checked, add a blue background */
+  /* Create the checkmark/indicator (hidden when not checked) */
+  /* Style the checkmark/indicator */ }
+  form .remember-account .contain {
+    display: block;
+    position: relative;
+    padding-left: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-bottom: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-transform: uppercase;
+    color: #DC042A;
+    font-weight: 600; }
+  form .remember-account .contain input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0; }
+  form .remember-account .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid grey; }
+  form .remember-account .contain:hover input ~ .checkmark {
+    background-color: #ccc; }
+  form .remember-account .contain input:checked ~ .checkmark {
+    background-color: #DC042A;
+    border: 1px solid #DC042A; }
+  form .remember-account .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none; }
+  form .remember-account .contain .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg); }
+  form .remember-account label {
+    margin-top: 10px;
+    text-transform: capitalize !important;
+    font-size: 15px !important;
+    font-weight: normal !important; }
+  form .remember-account .checkmark {
+    top: 5px; }
+  form .remember-account button {
+    border: none;
+    background: transparent;
+    color: #DC042A;
+    font-size: 15px; }
 
 .btn {
   background-color: #DC042A;
@@ -307,6 +426,9 @@ form.select-state .css-yk16xz-control {
   padding: 15px 16px;
   width: 70%;
   margin-top: 25px; }
+
+.btn-login {
+  padding: 8px 30px; }
 
 section.header-content {
   height: 100vh;
@@ -579,7 +701,7 @@ section.products {
         /* When the checkbox is checked, add a blue background */
         /* Create the checkmark/indicator (hidden when not checked) */
         /* Style the checkmark/indicator */ }
-        section.products .cart .cart-product-list .cart-button-actions .container {
+        section.products .cart .cart-product-list .cart-button-actions .contain {
           display: block;
           position: relative;
           padding-left: 20px;
@@ -593,7 +715,7 @@ section.products {
           text-transform: uppercase;
           color: #DC042A;
           font-weight: 600; }
-        section.products .cart .cart-product-list .cart-button-actions .container input {
+        section.products .cart .cart-product-list .cart-button-actions .contain input {
           position: absolute;
           opacity: 0;
           cursor: pointer;
@@ -608,16 +730,16 @@ section.products {
           border-radius: 50%;
           background-color: transparent;
           border: 1px solid grey; }
-        section.products .cart .cart-product-list .cart-button-actions .container:hover input ~ .checkmark {
+        section.products .cart .cart-product-list .cart-button-actions .contain:hover input ~ .checkmark {
           background-color: #ccc; }
-        section.products .cart .cart-product-list .cart-button-actions .container input:checked ~ .checkmark {
+        section.products .cart .cart-product-list .cart-button-actions .contain input:checked ~ .checkmark {
           background-color: #DC042A;
           border: 1px solid #DC042A; }
         section.products .cart .cart-product-list .cart-button-actions .checkmark:after {
           content: "";
           position: absolute;
           display: none; }
-        section.products .cart .cart-product-list .cart-button-actions .container .checkmark:after {
+        section.products .cart .cart-product-list .cart-button-actions .contain .checkmark:after {
           left: 9px;
           top: 5px;
           width: 5px;
@@ -881,6 +1003,59 @@ section.shopping-cart {
     section.shopping-cart .complete-order .orders-info-container .order-details .amt {
       font-size: 40px;
       font-weight: bold; }
+section.signup {
+  padding: 50px 0; }
+  section.signup h3 {
+    font-family: "Ubuntu", sans-serif;
+    color: #DC042A; }
+  section.signup p {
+    color: #7F7F7F; }
+  section.signup .other-signin-option button {
+    border: 1px solid #707070;
+    font-size: 13px;
+    text-transform: uppercase;
+    padding: 6px 30px 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    background-color: #fff;
+    font-family: "Ubuntu", sans-serif; }
+    section.signup .other-signin-option button:not(:last-child) {
+      margin-right: 20px; }
+    section.signup .other-signin-option button img {
+      max-height: 20px;
+      margin-right: 10px; }
+  section.signup .other-signin-option .fb-btn {
+    background-color: #435A9B;
+    color: #fff;
+    border: none; }
+  section.signup .or-text {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #DC042A;
+    color: #DC042A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%; }
+    section.signup .or-text::before {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background: #DC042A;
+      height: 140px;
+      top: 38px; }
+    section.signup .or-text::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background: #DC042A;
+      height: 140px;
+      bottom: 38px; }
 
 nav.navbar {
   padding: 15px 70px;
