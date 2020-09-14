@@ -73,10 +73,10 @@ const ShoppingCart = () => {
                                 </div>
                             </div>
                             {/* Display the review order section */}
-                            { displayOrderProcess.showReviewOrder && <ReviewOrder checkoutOrder={checkoutOrderHandler} /> }
+                            { displayOrderProcess.showReviewOrder && <ReviewOrder checkoutOrder={checkoutOrderHandler } /> }
                         </div>
                         {/* Checkout component display */}
-                        { displayOrderProcess.showPaymentOrder && <Checkout submitOrder={submitOrderHandler} /> }
+                        { displayOrderProcess.showPaymentOrder && <Checkout submitOrder={submitOrderHandler } /> }
 
                         {/* complete order component display */}
                         { displayOrderProcess.showOrderComplete && <OrderComplete /> }
