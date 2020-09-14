@@ -149,7 +149,7 @@ const Menu = (props) => {
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex">
-                                    <label className="container">Save Basket
+                                    <label className="contain">Save Basket
                                         <input type="checkbox" />
                                         <span className="checkmark"></span>
                                     </label>
