@@ -5,7 +5,6 @@ import CouponProduct from '../components/couponProduct/CouponProduct';
 import Orders from '../components/orders/orders';
 
 
-
 export default function Home() {
   const hasToken = false;
 

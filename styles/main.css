@@ -250,6 +250,18 @@ form.select-state .select-tool {
   font-size: 15px;
   border-radius: 5px;
   outline: none; }
+form.select-state .select-disabled {
+  pointer-events: none; }
+  form.select-state .select-disabled .css-yk16xz-control {
+    border-color: #A5A5A5;
+    border: 1.2px solid #A5A5A5;
+    background: #F5F5F5; }
+    form.select-state .select-disabled .css-yk16xz-control:hover {
+      border-color: #A5A5A5; }
+  form.select-state .select-disabled .css-1wa3eu0-placeholder {
+    color: #A5A5A5; }
+  form.select-state .select-disabled .css-6q0nyr-Svg {
+    color: #A5A5A5; }
 form.select-state .css-1wa3eu0-placeholder {
   color: #DC042A; }
 form.select-state .css-1okebmr-indicatorSeparator {

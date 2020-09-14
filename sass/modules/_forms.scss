@@ -1,13 +1,35 @@
 form {
   &.select-state {
     .select-tool {
-    width: 80%;
-    margin-bottom: 20px;
-    color: $primary;
-    background-size: 13px;
-    font-size: 15px;
-    border-radius: 5px;
-    outline: none;
+        width: 80%;
+        margin-bottom: 20px;
+        color: $primary;
+        background-size: 13px;
+        font-size: 15px;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .select-disabled {
+        pointer-events: none;
+
+        .css-yk16xz-control {
+            border-color:  #A5A5A5;
+            border: 1.2px solid #A5A5A5;
+            background: #F5F5F5;
+    
+            &:hover {
+                border-color:  #A5A5A5;
+            }
+        }
+
+        .css-1wa3eu0-placeholder {
+            color: #A5A5A5;
+        }
+
+        .css-6q0nyr-Svg {
+            color: #A5A5A5;
+        }
     }
 
     .css-1wa3eu0-placeholder {
@@ -23,7 +45,7 @@ form {
     }
 
     .css-1pahdxg-control:hover {
-        border-color:  $primary;
+        border-color: $primary;
         box-shadow: none;
     }
 
