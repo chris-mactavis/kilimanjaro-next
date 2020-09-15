@@ -252,149 +252,158 @@ h5 {
 h6 {
   font-size: 24px; }
 
-form.select-state .select-tool {
-  width: 80%;
-  margin-bottom: 20px;
-  color: #DC042A;
-  background-size: 13px;
-  font-size: 15px;
-  border-radius: 5px;
-  outline: none; }
-form.select-state .select-disabled {
-  pointer-events: none; }
-  form.select-state .select-disabled .css-yk16xz-control {
-    border-color: #A5A5A5;
-    border: 1.2px solid #A5A5A5;
-    background: #F5F5F5; }
-    form.select-state .select-disabled .css-yk16xz-control:hover {
-      border-color: #A5A5A5; }
-  form.select-state .select-disabled .css-1wa3eu0-placeholder {
-    color: #A5A5A5; }
-  form.select-state .select-disabled .css-6q0nyr-Svg {
-    color: #A5A5A5; }
-form.select-state .css-1wa3eu0-placeholder {
-  color: #DC042A; }
-form.select-state .css-1okebmr-indicatorSeparator {
-  background-color: transparent; }
-form.select-state .css-6q0nyr-Svg {
-  color: #DC042A; }
-form.select-state .css-1pahdxg-control:hover {
-  border-color: #DC042A;
-  box-shadow: none; }
-form.select-state .css-yk16xz-control {
-  border-color: #DC042A;
-  border: 1.2px solid #DC042A; }
-  form.select-state .css-yk16xz-control:hover {
-    border-color: #DC042A; }
-form.signup-form label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: 600; }
-form.signup-form .textbox {
-  padding: 1px;
-  position: relative;
-  background: #ccc;
-  z-index: 1;
-  border-radius: 3px;
-  overflow: hidden;
-  margin: 0.5rem 0;
-  line-height: 0;
-  width: 100%; }
-form.signup-form input {
-  color: #383838;
-  box-sizing: border-box;
-  font-size: 15px;
-  outline: none;
-  border: none;
-  z-index: 2;
-  padding: 7px 10px;
-  border-radius: 3px;
-  width: 100%; }
-  form.signup-form input:focus ~ .border {
-    width: 100%;
-    height: 100%;
-    border-radius: 4px;
-    top: 0; }
-form.signup-form .border {
-  position: absolute;
-  content: '';
-  top: -4px;
-  left: 0;
-  width: 0%;
-  height: 0%;
-  border: 1px solid transparent !important;
-  background: #DC042A;
-  z-index: -1;
-  -webkit-transition: height 0.3s, width 0.3s 0.1s;
-  transition: height 0.3s, width 0.3s 0.1s; }
-form .remember-account {
-  margin-bottom: 15px;
-  /* Hide the browser's default checkbox */
-  /* Create a custom checkbox */
-  /* On mouse-over, add a grey background color */
-  /* When the checkbox is checked, add a blue background */
-  /* Create the checkmark/indicator (hidden when not checked) */
-  /* Style the checkmark/indicator */ }
-  form .remember-account .contain {
+form {
+  /* Chrome, Safari, Edge, Opera */
+  /* Firefox */ }
+  form.select-state .select-tool {
+    width: 80%;
+    margin-bottom: 20px;
+    color: #DC042A;
+    background-size: 13px;
+    font-size: 15px;
+    border-radius: 5px;
+    outline: none; }
+  form.select-state .select-disabled {
+    pointer-events: none; }
+    form.select-state .select-disabled .css-yk16xz-control {
+      border-color: #A5A5A5;
+      border: 1.2px solid #A5A5A5;
+      background: #F5F5F5; }
+      form.select-state .select-disabled .css-yk16xz-control:hover {
+        border-color: #A5A5A5; }
+    form.select-state .select-disabled .css-1wa3eu0-placeholder {
+      color: #A5A5A5; }
+    form.select-state .select-disabled .css-6q0nyr-Svg {
+      color: #A5A5A5; }
+  form.select-state .css-1wa3eu0-placeholder {
+    color: #DC042A; }
+  form.select-state .css-1okebmr-indicatorSeparator {
+    background-color: transparent; }
+  form.select-state .css-6q0nyr-Svg {
+    color: #DC042A; }
+  form.select-state .css-1pahdxg-control:hover {
+    border-color: #DC042A;
+    box-shadow: none; }
+  form.select-state .css-yk16xz-control {
+    border-color: #DC042A;
+    border: 1.2px solid #DC042A; }
+    form.select-state .css-yk16xz-control:hover {
+      border-color: #DC042A; }
+  form.signup-form label {
     display: block;
-    position: relative;
-    padding-left: 20px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-bottom: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-transform: uppercase;
-    color: #DC042A;
+    margin-bottom: 10px;
     font-weight: 600; }
-  form .remember-account .contain input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0; }
-  form .remember-account .checkmark {
-    position: absolute;
-    top: 2px;
-    left: 0;
-    height: 13px;
-    width: 13px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: 1px solid grey; }
-  form .remember-account .contain:hover input ~ .checkmark {
-    background-color: #ccc; }
-  form .remember-account .contain input:checked ~ .checkmark {
-    background-color: #DC042A;
-    border: 1px solid #DC042A; }
-  form .remember-account .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none; }
-  form .remember-account .contain .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg); }
-  form .remember-account label {
-    margin-top: 10px;
-    text-transform: capitalize !important;
-    font-size: 15px !important;
-    font-weight: normal !important; }
-  form .remember-account .checkmark {
-    top: 5px; }
-  form .remember-account button {
+  form.signup-form .textbox {
+    padding: 1px;
+    position: relative;
+    background: #ccc;
+    z-index: 1;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 10px 0;
+    line-height: 0;
+    width: 100%; }
+  form.signup-form input {
+    color: #383838;
+    box-sizing: border-box;
+    font-size: 15px;
+    outline: none;
     border: none;
-    background: transparent;
-    color: #DC042A;
-    font-size: 15px; }
+    z-index: 2;
+    padding: 7px 10px;
+    border-radius: 3px;
+    width: 100%; }
+    form.signup-form input:focus ~ .border {
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+      top: 0; }
+  form.signup-form .border {
+    position: absolute;
+    content: '';
+    top: -4px;
+    left: 0;
+    width: 0%;
+    height: 0%;
+    border: 1px solid transparent !important;
+    background: #DC042A;
+    z-index: -1;
+    -webkit-transition: height 0.3s, width 0.3s 0.1s;
+    transition: height 0.3s, width 0.3s 0.1s; }
+  form .remember-account {
+    margin-bottom: 15px;
+    /* Hide the browser's default checkbox */
+    /* Create a custom checkbox */
+    /* On mouse-over, add a grey background color */
+    /* When the checkbox is checked, add a blue background */
+    /* Create the checkmark/indicator (hidden when not checked) */
+    /* Style the checkmark/indicator */ }
+    form .remember-account .contain {
+      display: block;
+      position: relative;
+      padding-left: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-bottom: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      text-transform: uppercase;
+      color: #DC042A;
+      font-weight: 600; }
+    form .remember-account .contain input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0; }
+    form .remember-account .checkmark {
+      position: absolute;
+      top: 2px;
+      left: 0;
+      height: 13px;
+      width: 13px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 1px solid grey; }
+    form .remember-account .contain:hover input ~ .checkmark {
+      background-color: #ccc; }
+    form .remember-account .contain input:checked ~ .checkmark {
+      background-color: #DC042A;
+      border: 1px solid #DC042A; }
+    form .remember-account .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none; }
+    form .remember-account .contain .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg); }
+    form .remember-account label {
+      margin-top: 10px;
+      text-transform: capitalize !important;
+      font-size: 15px !important;
+      font-weight: normal !important; }
+    form .remember-account .checkmark {
+      top: 5px; }
+    form .remember-account button {
+      border: none;
+      background: transparent;
+      color: #DC042A;
+      font-size: 15px; }
+  form input::-webkit-outer-spin-button,
+  form input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; }
+  form input[type=number] {
+    -moz-appearance: textfield; }
 
 .btn {
   background-color: #DC042A;
@@ -428,7 +437,7 @@ form .remember-account {
   margin-top: 25px; }
 
 .btn-login {
-  padding: 8px 30px; }
+  padding: 7px 30px; }
 
 section.header-content {
   height: 100vh;
@@ -1004,7 +1013,7 @@ section.shopping-cart {
       font-size: 40px;
       font-weight: bold; }
 section.signup {
-  padding: 50px 0; }
+  padding: 80px 0; }
   section.signup h3 {
     font-family: "Ubuntu", sans-serif;
     color: #DC042A; }
@@ -1012,7 +1021,7 @@ section.signup {
     color: #7F7F7F; }
   section.signup .other-signin-option button {
     border: 1px solid #707070;
-    font-size: 13px;
+    font-size: 10px;
     text-transform: uppercase;
     padding: 6px 30px 6px 10px;
     display: inline-flex;
@@ -1022,7 +1031,7 @@ section.signup {
     section.signup .other-signin-option button:not(:last-child) {
       margin-right: 20px; }
     section.signup .other-signin-option button img {
-      max-height: 20px;
+      max-height: 15px;
       margin-right: 10px; }
   section.signup .other-signin-option .fb-btn {
     background-color: #435A9B;
@@ -1061,7 +1070,7 @@ nav.navbar {
   padding: 15px 70px;
   background: #DC042A;
   width: 100%;
-  z-index: 1; }
+  z-index: 2; }
   nav.navbar .navbar-collapse {
     flex-grow: 0; }
   nav.navbar ul.navbar-nav {
