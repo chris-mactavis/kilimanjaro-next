@@ -318,6 +318,9 @@ form {
       height: 100%;
       border-radius: 4px;
       top: 0; }
+  form.signup-form .error {
+    color: #DC042A;
+    font-size: 12px; }
   form.signup-form .border {
     position: absolute;
     content: '';
@@ -326,10 +329,12 @@ form {
     width: 0%;
     height: 0%;
     border: 1px solid transparent !important;
-    background: #DC042A;
+    background: #18A91F;
     z-index: -1;
     -webkit-transition: height 0.3s, width 0.3s 0.1s;
     transition: height 0.3s, width 0.3s 0.1s; }
+  form.signup-form .border-error {
+    background: #DC042A; }
   form .remember-account {
     margin-bottom: 15px;
     /* Hide the browser's default checkbox */
@@ -393,7 +398,7 @@ form {
       font-weight: normal !important; }
     form .remember-account .checkmark {
       top: 5px; }
-    form .remember-account button {
+    form .remember-account a {
       border: none;
       background: transparent;
       color: #DC042A;
@@ -1013,7 +1018,8 @@ section.shopping-cart {
       font-size: 40px;
       font-weight: bold; }
 section.signup {
-  padding: 80px 0; }
+  padding: 80px 0;
+  background: #fff; }
   section.signup h3 {
     font-family: "Ubuntu", sans-serif;
     color: #DC042A; }
