@@ -797,7 +797,7 @@ section {
     }
 
     &.signup {
-        padding: 50px 0;
+        padding: 80px 0;
 
         h3 {
             font-family: $ubuntu;
@@ -812,7 +812,7 @@ section {
 
             button {
                 border: 1px solid #707070;
-                font-size: 13px;
+                font-size: 10px;
                 text-transform: uppercase;
                 padding: 6px 30px 6px 10px;
                 display: inline-flex;
@@ -825,7 +825,7 @@ section {
                 }
 
                 img {
-                    max-height: 20px;
+                    max-height: 15px;
                     margin-right: 10px;
                 }
             }
