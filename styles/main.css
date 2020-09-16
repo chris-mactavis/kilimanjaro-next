@@ -1198,5 +1198,7 @@ header.store-header {
   background-size: cover;
   background-position: center center;
   height: 60vh; }
+header.contact-us {
+  background-image: url("/images/about-kilimanjaro.png"); }
 
 /*# sourceMappingURL=main.css.map */

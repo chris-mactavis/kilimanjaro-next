@@ -10,6 +10,10 @@ const Nav = () => {
                     </li>
 
                     <li className="nav-item">
+                        <Link href="/about"><a className="nav-link">About</a></Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link href="/store-location"><a className="nav-link">Store Location</a></Link>
                     </li>
 
