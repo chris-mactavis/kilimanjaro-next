@@ -5,10 +5,13 @@ import FormInput from "../formInput/formInput";
 
 const Login = () => {
 
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors , reset} = useForm();
 
     const loginHandler = (data) =>  {
-        console.log(data);
+        if (data) {
+            console.log(data);
+        }
+        reset({});
     };
 
     return (
