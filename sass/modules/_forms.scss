@@ -120,6 +120,25 @@ form {
         .border-error {
             background: $primary;
         }
+
+        textarea {
+            padding: 7px 10px;
+            font-size: 15px;
+            width: 100%;
+            height: 150px;
+            border-radius: 3px;
+            border-color: #ccc;
+            margin-bottom: 20px;
+            resize: none;
+        }
+
+        .textarea-error {
+            border-color: $primary;
+        }
+
+        textarea:focus-within {
+            border-color: #18A91F;
+        }
     }
 
     .remember-account {

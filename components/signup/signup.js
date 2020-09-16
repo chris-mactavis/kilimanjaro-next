@@ -4,10 +4,13 @@ import FormInput from '../formInput/formInput';
 
 const Signup = () => {
 
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors, reset } = useForm();
 
     const signupHandler = (data) =>  {
-        console.log(data);
+        if (data) {
+            console.log(data);
+        }
+        reset({});
     };
 
     return (

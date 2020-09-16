@@ -335,6 +335,19 @@ form {
     transition: height 0.3s, width 0.3s 0.1s; }
   form.signup-form .border-error {
     background: #DC042A; }
+  form.signup-form textarea {
+    padding: 7px 10px;
+    font-size: 15px;
+    width: 100%;
+    height: 150px;
+    border-radius: 3px;
+    border-color: #ccc;
+    margin-bottom: 20px;
+    resize: none; }
+  form.signup-form .textarea-error {
+    border-color: #DC042A; }
+  form.signup-form textarea:focus-within {
+    border-color: #18A91F; }
   form .remember-account {
     margin-bottom: 15px;
     /* Hide the browser's default checkbox */
@@ -1055,7 +1068,7 @@ section.signup {
     margin: 0 auto;
     position: absolute;
     transform: translate(-50%, -50%);
-    top: 50%;
+    top: 35%;
     left: 50%; }
     section.signup .or-text::before {
       content: '';
@@ -1071,6 +1084,41 @@ section.signup {
       background: #DC042A;
       height: 140px;
       bottom: 38px; }
+section.store-location {
+  padding: 50px 0;
+  background: #fff; }
+  section.store-location .container {
+    padding-bottom: 60px;
+    border-bottom: 1px solid #5D5D5D; }
+  section.store-location h4 {
+    color: #DC042A;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 25px;
+    font-family: "Ubuntu", sans-serif; }
+  section.store-location ul {
+    padding-left: 0; }
+    section.store-location ul li {
+      list-style: none;
+      margin-bottom: 10px;
+      font-size: 17px; }
+section.contact-us h4 {
+  text-transform: initial;
+  font-family: "Lato", sans-serif; }
+section.contact-us .container {
+  padding-bottom: 0;
+  border-bottom: none; }
+section.contact-us .line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #DC042A;
+  width: 1px;
+  height: 75%; }
+section.contact-us a.link-to-hr {
+  color: #DC042A; }
 
 nav.navbar {
   padding: 15px 70px;
@@ -1144,5 +1192,11 @@ header.menu-header .slick-dots {
       line-height: 22px;
       color: #fff;
       opacity: 1; }
+header.store-header {
+  background-image: url("/images/store-location-2.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 60vh; }
 
 /*# sourceMappingURL=main.css.map */

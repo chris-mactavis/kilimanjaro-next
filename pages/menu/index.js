@@ -7,7 +7,7 @@ import Router from 'next/router';
 
 
 
-const Menu = (props) => {
+const Menu = () => {
     const cities = [
         {value: 'Food Court, Abia Mall', label: 'Food Court, Abia Mall'},
         {value: 'Food Court, Lagos', label: 'Food Court, Lagos'},

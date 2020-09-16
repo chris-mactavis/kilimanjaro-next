@@ -850,7 +850,7 @@ section {
             margin: 0 auto;
             position: absolute;
             transform: translate(-50%, -50%);
-            top: 50%;
+            top: 35%;
             left: 50%;
 
             &::before {
@@ -870,6 +870,64 @@ section {
                 height: 140px;
                 bottom: 38px;
             }
+        }
+    }
+
+    &.store-location {
+        padding: 50px 0;
+        background: #fff;
+
+        .container {
+            padding-bottom: 60px;
+            border-bottom: 1px solid #5D5D5D;
+        }
+
+        h4 {
+            color: $primary;
+            text-transform: uppercase;
+            font-weight: $bold;
+            margin-bottom: 25px;
+            font-family: $ubuntu;
+        }
+
+        ul {
+            padding-left: 0;
+
+            li {
+                list-style: none;
+                margin-bottom: 10px;
+                font-size: 17px;
+            }
+        }
+    }
+
+    &.contact-us {
+        h4 {
+            text-transform: initial;
+            font-family: $lato;
+        }
+
+        .container {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .line {
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: $primary;
+                width: 1px;
+                height: 75%;
+            }
+        }
+
+        a.link-to-hr {
+            color: $primary;
         }
     }
 
