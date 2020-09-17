@@ -1200,5 +1200,7 @@ header.store-header {
   height: 60vh; }
 header.contact-us {
   background-image: url("/images/about-kilimanjaro.png"); }
+header.about-us {
+  background-image: url("/images/about-us.png"); }
 
 /*# sourceMappingURL=main.css.map */
