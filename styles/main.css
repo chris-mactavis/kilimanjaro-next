@@ -1119,6 +1119,10 @@ section.contact-us .line::after {
   height: 75%; }
 section.contact-us a.link-to-hr {
   color: #DC042A; }
+section.about .slide-images img {
+  padding: 0 12px; }
+section.about .slide-images .slick-slide.slick-active.slick-center.slick-center img {
+  opacity: 1; }
 
 nav.navbar {
   padding: 15px 70px;

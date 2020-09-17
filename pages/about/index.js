@@ -1,15 +1,55 @@
 import Layout from "../../components/Layout";
 import Head from "next/head";
+import Slider from 'react-slick';
 
 
 const About = () => {
+
+    const settings = {
+        autoplay: true,
+        speed: 1000,
+        autoplaySpeed: 3000,
+        centerMode: true,
+        centerPadding: '100px',
+        slidesToShow: 3,
+        responsive: [
+            {
+             breakpoint: 992,
+             settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 2
+             }
+            },
+            {
+              breakpoint: 768,
+              settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 1
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 1
+              }
+            }
+        ]
+    };
+
     return (
         <Layout>
             <Head>
                 <title>About | Kilimanjaro</title>
             </Head>
             <header className="store-header about-us"></header>
-            <section className="contact-us store-location">
+            <section className="contact-us store-location about">
                 <div className="container">
                     <div className="row">
                         <div className="col-12 text-center">
@@ -31,6 +71,20 @@ const About = () => {
                             <p>
                                 We are working to ensure there is a Kilimanjaro restaurant in every major city in the country.
                             </p>    
+                        </div>
+                    </div>
+                    <div className="mt-5 slide-images">
+                        <div className="row">
+                            <div className="col-12">
+                                <Slider {...settings}>
+                                    <img className="img-fluid" src="/images/about-slide-img-1.jpg" alt="" />
+                                    <img className="img-fluid" src="/images/about-slide-img-2.jpg" alt="" />
+                                    <img className="img-fluid" src="/images/about-slide-img-3.jpg" alt="" />
+                                    <img className="img-fluid" src="/images/about-slide-img-2.jpg" alt="" />
+                                    <img className="img-fluid" src="/images/about-slide-img-3.jpg" alt="" />
+                                    <img className="img-fluid" src="/images/about-slide-img-1.jpg" alt="" />
+                                </Slider>
+                            </div>
                         </div>
                     </div>
                 </div>
