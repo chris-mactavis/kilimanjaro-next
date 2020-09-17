@@ -931,4 +931,16 @@ section {
         }
     }
 
+    &.about {
+        .slide-images {
+            img {
+                padding: 0 12px;
+            }
+
+            .slick-slide.slick-active.slick-center.slick-center img {
+                opacity: 1;
+            }
+        }
+    }
+
 }
