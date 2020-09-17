@@ -11,9 +11,7 @@ const Contact = () => {
             <Head>
             <title>Contact Us| Kilimanjaro</title>
             </Head>
-            <header className="store-header contact-us">
-                {/* <img className="img-fluid" src="/images/store-location-2.png" alt=""/> */}
-            </header>
+            <header className="store-header contact-us"></header>
             <ContactUs />
         </Layout>
         </>

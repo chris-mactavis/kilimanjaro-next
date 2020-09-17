@@ -12,9 +12,7 @@ const StoreLocation = () => {
                     <title>Store Location | Kilimanjaro</title>
                 </Head>
 
-                <header className="store-header">
-                    {/* <img className="img-fluid" src="/images/store-location-2.png" alt=""/> */}
-                </header>
+                <header className="store-header"></header>
                 <section className="store-location">
                     <div className="container">
                         <div className="row">
