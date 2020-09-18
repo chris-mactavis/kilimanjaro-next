@@ -753,6 +753,7 @@ section {
 
         // Complete order section
         .complete-order {
+            position: relative;
 
             h2 {
                 font-size: 35px;
@@ -791,6 +792,20 @@ section {
                         font-size: 40px;
                         font-weight: $bold;
                     }
+                }
+
+                table {
+                    color: $light-black;
+
+                    .amt-total {
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                }
+
+                thead {
+                    background: $primary;
+                    color: #fff;
                 }
             }
         }
@@ -962,6 +977,10 @@ section {
             }
 
         }
+    }
+
+    &.pickupPayment {
+
     }
 
 }
