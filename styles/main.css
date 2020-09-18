@@ -1123,6 +1123,15 @@ section.about .slide-images img {
   padding: 0 12px; }
 section.about .slide-images .slick-slide.slick-active.slick-center.slick-center img {
   opacity: 1; }
+section.career .testimonial {
+  background: #FFE6EA;
+  padding: 20px;
+  height: auto;
+  border: 1px solid #DC042A;
+  border-radius: 5px; }
+  section.career .testimonial .testimonial-name {
+    text-align: right;
+    font-weight: 600; }
 
 nav.navbar {
   padding: 15px 70px;
