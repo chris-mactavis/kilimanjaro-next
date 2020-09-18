@@ -943,4 +943,25 @@ section {
         }
     }
 
+    &.career {
+
+        .testimonial {
+            background: #FFE6EA;
+            padding: 20px;
+            height: auto;
+            border: 1px solid $primary;
+            border-radius: 5px;
+
+            .testimonial-txt {
+                
+            }
+
+            .testimonial-name {
+                text-align: right;
+                font-weight: $semi-bold;
+            }
+
+        }
+    }
+
 }
