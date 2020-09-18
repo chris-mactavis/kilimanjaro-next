@@ -4,7 +4,7 @@ const CouponProduct = () => {
             <div className="row">
               <div className="col-md-6">
                 <a>
-                  <img className="img-fluid" src="/images/kili-hot-spicy.png" alt=""/>
+                  <img className="img-fluid" src="/images/kili-spicy.png" alt=""/>
                 </a>
               </div>
               <div className="col-md-6">
