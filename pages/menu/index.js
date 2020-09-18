@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import Head from 'next/head';
 import { useState } from 'react';
 import Select from 'react-select';
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
 import Router from 'next/router';
 
 
@@ -49,7 +49,7 @@ const Menu = () => {
                 <Head>
                     <title>Menu | Kilimanjaro</title>
                 </Head>
-                <header className="menu-header">
+                {/* <header className="menu-header">
                     <Slider {...settings}>
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
@@ -57,7 +57,7 @@ const Menu = () => {
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                         <img className="img-fluid" src="/images/food-banner.png" alt="" />
                     </Slider>
-                </header>
+                </header> */}
                 <section className="select-restaurant">
                     <div className="container">
                         <div className="row">
@@ -128,6 +128,30 @@ const Menu = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="single-product">
+                                    <div className="row">
+                                        <div className="col-md-4 text-center mb-5 mb-sm-0">
+                                            <img className="img-fluid" src="/images/food-order-image.png" alt="" />
+                                        </div>
+                                        <div className="col-md-8">
+                                            <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                                <p className="product-name">Small Body</p>
+                                                <div className="d-flex">
+                                                    <p className="product-qty">Quantity</p>
+                                                    <input type='number' />
+                                                </div>
+                                            </div>
+                                            <p className="product-description">Excepteur sint occaecat cupidatat non proident, sunt in.</p>
+                                            <div className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                                <button className="btn">Add to cart</button>
+                                                <p className="amount">N1000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <img src="" alt=""/>
                             </div>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ const Career = () => {
                 <Head>
                     <title>Career | Kilimanjaro</title>
                 </Head>
-                <header className="store-header about-us"></header>
+                <header className="store-header about-us career"></header>
                 <section className="contact-us store-location career">
                     <div className="container">
                         <div className="row mb-5 pb-5">
