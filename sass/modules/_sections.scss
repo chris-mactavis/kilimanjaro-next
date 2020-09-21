@@ -549,12 +549,15 @@ section {
         .coupon-delivery-sect {
             margin: 15px 0;
 
-            label {
+            label.review {
                 text-transform: uppercase;
                 margin-bottom: 0;
-                color: $primary;
+                color: $primary !important;
                 font-size: 15px;
+                border: none;
             }
+
+          
 
             input[type="text"] {
                 width: 65%;
@@ -644,13 +647,9 @@ section {
 
         // Checkout Section
         .checkout-section {
-
-            h4 {
-                text-align: left;
-            }
-    
-            label {
-                color: $light-black !important;
+           
+            label.payment {
+                color: $light-black ;
                 border: 1px solid #707070;
                 padding: 10px 20px;
                 border-radius: 3px;
@@ -658,6 +657,10 @@ section {
                 &:not(:last-child) {
                     margin-right: 30px;
                 }
+            }
+
+            h4 {
+                text-align: left;
             }
 
             // Contact details 
