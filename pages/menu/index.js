@@ -192,8 +192,8 @@ const Menu = () => {
                                     </label>
                                 </div>
                                 <div>
-                                    <button className="btn btn-grey mr-4" onClick={() => Router.push('/menu/shopping-cart')}>View/Edit Cart</button>
-                                    <button className="btn">Proceed to Checkout</button>
+                                    <button className="btn btn-grey mr-4" onClick={() => Router.push('/cart')}>View/Edit Cart</button>
+                                    <button className="btn" onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
                                 </div>
                             </div>
                         </div>
