@@ -151,7 +151,20 @@ const Menu = () => {
                                 </div>
                             </div>
                             <div className="col-md-4">
-                                <img src="" alt=""/>
+                                <div className="coupon-on-menu">
+                                    <a>
+                                        <img className="img-fluid" src="/images/kili-spicy.png" alt="" />
+                                    </a>
+                                    <a>
+                                        <img className="img-fluid" src="/images/kili-shawama-promo-2.png" alt="" />
+                                    </a>
+                                    <a>
+                                        <img className="img-fluid" src="/images/Kili-promo-2.png" alt="" />
+                                    </a>
+                                    <a>
+                                        <img className="img-fluid" src="/images/kili-easter-promo.png" alt="" />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -641,6 +641,8 @@ section.products {
     section.products .single-product input[type="number"]::-webkit-inner-spin-button,
     section.products .single-product input[type="number"]::-webkit-outer-spin-button {
       opacity: 1; }
+  section.products .coupon-on-menu a img {
+    margin-bottom: 15px; }
   section.products .active-cart {
     box-shadow: -2px 3px 11px -7px rgba(0, 0, 0, 0.75);
     right: 0 !important; }
