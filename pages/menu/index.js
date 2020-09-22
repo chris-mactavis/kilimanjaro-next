@@ -181,7 +181,7 @@ const Menu = () => {
                                 <img className="img-fluid" src="/images/food-order-image.png" alt=""/>
                                 <p>Small body</p>
                                 <input type='number' pattern='[0-9]{0,5}'/>
-                                <p className="bold">N1000</p>
+                                <p className="bold">N10000</p>
                                 <button>x</button>
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
