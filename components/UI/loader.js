@@ -8,21 +8,30 @@ const Loader = () => {
         <style jsx>{` 
             .lds-ring {
                 display: inline-block;
-                position: relative;
-                width: 80px;
-                height: 80px;
+                width: 100%;
+                height: 100%;
+                background-color: #ffffffc4;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                z-index: 12;
+                transform: translate(-50%, -50%);
               }
               .lds-ring div {
                 box-sizing: border-box;
                 display: block;
                 position: absolute;
-                width: 64px;
-                height: 64px;
+                width: 80px;
+                height: 80px;
                 margin: 8px;
                 border: 8px solid #DC042A;
                 border-radius: 50%;
                 animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
                 border-color: #DC042A transparent transparent transparent;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
               }
               .lds-ring div:nth-child(1) {
                 animation-delay: -0.45s;
