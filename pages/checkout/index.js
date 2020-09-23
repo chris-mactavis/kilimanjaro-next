@@ -2,28 +2,43 @@ import Layout from '../../components/Layout';
 import Head from 'next/head';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng, } from 'react-places-autocomplete';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
 import Loader from '../../components/UI/loader';
+import Notifier from '../../components/UI/Notifier';
+// import CreateNotification from '../../components/CreateNotification';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 
 
 const Checkout = () => {
 
+    const showNotifications = () => {
+        NotificationManager.success('Message', 'Title', 3000);
+    }
+
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
-    const [paymentOption, setPaymentOption] = useState('delivery')
+    const [paymentOption, setPaymentOption] = useState('delivery');
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ showNotification, setShowNotification] = useState(false);
 
     const { register, handleSubmit, errors, reset } = useForm();
 
     const billingInfoHandler = (data) => {
+
+        setIsLoading(true);
         if (data) {
             data.latLng = latLng;
             console.log(data);
         }
+        setTimeout(() => {
+            setIsLoading(false);
+            setShowNotification(state => !state.showNotification);
+        }, 2000);
         setStreetAddress('');
         reset({});
     };
@@ -55,7 +70,11 @@ const Checkout = () => {
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
                 </Head>
-                <Loader />
+                <Notifier showNotification={showNotification} />
+                { isLoading && <Loader /> }
+                <button className='btn btn-info'
+                    onClick={showNotifications}>Info
+                </button>
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
