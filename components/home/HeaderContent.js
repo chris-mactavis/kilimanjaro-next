@@ -1,14 +1,30 @@
 import Select from 'react-select';
+import { useState } from 'react';
 
-const HeaderContent = (props) => {
-    const city = [
-        {value: 'Lagos', label: 'Lagos'}
-    ];
+import Loader from '../UI/loader';
 
-    const restaurants = [
 
-        {value: 'Kilimanjaro Lagos', label: 'Kilimanjaro Lagos', disabled : 'yes'}
-    ];
+const HeaderContent = ({cities}) => {
+    const [ restaurants, setRestaurants ] = useState([]);
+    const [ restaurantName, setRestaurantName ] = useState(null);
+    const [ loading, setLoading ] = useState(false);
+
+    const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
+
+    const handleCityInputChange = ({value: restaurantId}) => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1500)
+        setRestaurantName( null );
+        let restaurants = cities.find(city => city.id === restaurantId).restaurants;
+        restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
+        setRestaurants( restaurants );
+    };
+
+    const handleRestaurantInputChange = (value) => {
+        setRestaurantName( value );
+    }
 
 
     return (
@@ -24,8 +40,8 @@ const HeaderContent = (props) => {
                             </h1>
                             <p>Ordering from:</p>
                             <form className="select-state">
-                                <Select options={city} className="select-tool" placeholder='Select a city' instanceId="stateId" />
-                                <Select options={restaurants} className="select-tool select-disabled" placeholder='Select Restaurant' instanceId="restaurantId" />
+                                <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
+                                {loading ? <Loader /> : <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />}
                             </form>
                         </div>
                     </div>

@@ -2,23 +2,22 @@ import Layout from '../../components/Layout';
 import Head from 'next/head';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng, } from 'react-places-autocomplete';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
 import Loader from '../../components/UI/loader';
-import Notifier from '../../components/UI/Notifier';
 // import CreateNotification from '../../components/CreateNotification';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+// import { NotificationManager } from 'react-notifications';
 
 
 
 const Checkout = () => {
 
-    const showNotifications = () => {
-        NotificationManager.success('Message', 'Title', 3000);
-    }
+    // const showNotifications = () => {
+    //     NotificationManager.success('Message', 'Title', 3000);
+    // }
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -70,11 +69,7 @@ const Checkout = () => {
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
                 </Head>
-                <Notifier showNotification={showNotification} />
                 { isLoading && <Loader /> }
-                <button className='btn btn-info'
-                    onClick={showNotifications}>Info
-                </button>
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
