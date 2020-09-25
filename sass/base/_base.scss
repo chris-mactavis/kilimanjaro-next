@@ -27,6 +27,14 @@ a {
   }
 }
 
+p {
+  color: $light-black;
+}
+
+li {
+  color: $light-black;
+}
+
 %heading{
   font-family: $ffh;
   // line-height: 1.5;
@@ -51,7 +59,7 @@ h3 {
 
 h4 {
   @extend %heading;
-  font-size: 32px;
+  font-size: 30px;
 }
 
 h5 {

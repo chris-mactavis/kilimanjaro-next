@@ -12,7 +12,12 @@
     "nprogress": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-select": "^3.1.0"
+    "react-hook-form": "^6.8.2",
+    "react-notifications": "^1.7.2",
+    "react-places-autocomplete": "^7.3.0",
+    "react-select": "^3.1.0",
+    "react-slick": "^0.27.11",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "file-loader": "^6.1.0"

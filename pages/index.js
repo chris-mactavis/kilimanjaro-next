@@ -1,14 +1,12 @@
 import Head from 'next/head';
-
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
-import CouponSection from '../components/couponSection/CouponSection';
+import CouponProduct from '../components/couponProduct/CouponProduct';
 import Orders from '../components/orders/orders';
-// import MobileAppDownload from '../components/MobileAppDownload/mobileAppDownload';
 
 
 export default function Home() {
-  // const hasToken = true;
+  const hasToken = false;
 
   return (
     <>
@@ -17,10 +15,10 @@ export default function Home() {
           <title>Kilimanjaro</title>
         </Head>
         <HeaderContent />
-        {/* {hasToken && <Orders  />} */}
-        <Orders  />
+        {hasToken && <Orders  />}
+        {/* <Orders  /> */}
         <section className="coupon-products">
-          <CouponSection />
+          <CouponProduct />
         </section>
         <section className="how-it-works">
           <div className="container">

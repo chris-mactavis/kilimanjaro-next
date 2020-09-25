@@ -25,8 +25,11 @@
 @include do-font-face('Lato', 'Lato-Regular', '/fonts/', 'ttf', normal, normal);
 @include do-font-face('Lato', 'Lato-Bold', '/fonts/', 'ttf', bold, normal);
 @include do-font-face('Lato', 'Lato-Semibold', '/fonts/', 'ttf', 600, normal);
+@include do-font-face('Ubuntu', 'Ubuntu-Regular', '/fonts/', 'ttf', normal, normal);
+@include do-font-face('Ubuntu', 'Ubuntu-Bold', '/fonts/', 'ttf', bold, normal);
 
 $lato          : 'Lato', sans-serif;
+$ubuntu        : 'Ubuntu', sans-serif;
 
 $ffh            : $lato;
 $ffb            : $lato;
@@ -38,4 +41,4 @@ $semi-bold      :600;
 
 // Colors
 $primary: #DC042A;
-$light-black: #383838
+$light-black: #383838;

@@ -1,9 +1,8 @@
 nav.navbar {
   padding: 15px 70px;
   background: $primary;
-  position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
 
   .navbar-collapse {
     flex-grow: 0;
@@ -21,7 +20,7 @@ nav.navbar {
       .nav-link {
         font-family: $ffn;
         font-size: 15px;
-        font-weight: $bold;
+        // font-weight: $bold;
         text-transform: uppercase;
       }
     }

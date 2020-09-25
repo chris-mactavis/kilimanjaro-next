@@ -1,12 +1,13 @@
 import Select from 'react-select';
 
 const HeaderContent = (props) => {
-    const states = [
+    const city = [
         {value: 'Lagos', label: 'Lagos'}
     ];
 
     const restaurants = [
-        {value: 'Kilimanjaro Lagos', label: 'Kilimanjaro Lagos'}
+
+        {value: 'Kilimanjaro Lagos', label: 'Kilimanjaro Lagos', disabled : 'yes'}
     ];
 
 
@@ -23,8 +24,8 @@ const HeaderContent = (props) => {
                             </h1>
                             <p>Ordering from:</p>
                             <form className="select-state">
-                                <Select options={states} className="select-tool" placeholder='Select State' instanceId="stateId" />
-                                <Select options={restaurants} className="select-tool" placeholder='Select Restaurant' instanceId="restaurantId" />
+                                <Select options={city} className="select-tool" placeholder='Select a city' instanceId="stateId" />
+                                <Select options={restaurants} className="select-tool select-disabled" placeholder='Select Restaurant' instanceId="restaurantId" />
                             </form>
                         </div>
                     </div>

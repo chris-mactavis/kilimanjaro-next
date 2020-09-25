@@ -1,3 +1,52 @@
 header {
- 
+    &.menu-header {
+        .slick-dotted.slick-slider {
+            margin-bottom: 0;
+        }
+
+        .slick-dots {
+            width: auto;
+            bottom: 50px;
+            right: 50px;
+
+            li.slick-active button:before {
+                color: $primary;
+            }
+
+            li {
+                button {
+                    border: 1px solid #fff;
+                    border-radius: 50%;
+
+                    &:before {
+                        font-size: 20px;
+                        line-height: 22px;
+                        color: #fff;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    &.store-header {
+        background-image: url('/images/store-location-2.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        height: 60vh;
+        
+    }
+
+    &.contact-us {
+        background-image: url('/images/about-kilimanjaro.png');
+    }
+
+    &.about-us {
+        background-image: url('/images/about-us.png');
+    }
+
+    &.career {
+        background-image: url('/images/kilistaff.png');
+    }
 }

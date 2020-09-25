@@ -27,7 +27,7 @@
         @media only screen and (max-width: $wide_width) {
             @content;
         }
-    }    
+    }
 }
 
 @mixin abs-center {
@@ -37,8 +37,101 @@
     transform: translate(-50%, -50%);
 }
 
+@mixin input-number-icon-show {
+    opacity: 1;
+}
+
+@mixin input-number-style {
+    width: 50px;
+    padding: 3px;
+    font-size: 15px;
+}
+
+@mixin radio-btn {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    top: -5px;
+    left: 0;
+    position: relative;
+    background-color: transparent;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+}
+
+@mixin checkbox-btn {
+    .contain {
+        display: block;
+        position: relative;
+        padding-left: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-bottom: 0;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-transform: uppercase;
+        color: $primary;
+        font-weight: $semi-bold;
+    }
+
+    /* Hide the browser's default checkbox */
+    .contain input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 2px;
+        left: 0;
+        height: 13px;
+        width: 13px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 1px solid grey;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .contain:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .contain input:checked ~ .checkmark {
+        background-color: $primary;
+        border: 1px solid $primary;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Style the checkmark/indicator */
+    .contain .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
+
 $wide_width: 1300px;
 $medium_width: 1200px;
 $desktop_width: 992px;
-$tablet_width:  767px;
+$tablet_width: 767px;
 $mobile_width: 576px;
