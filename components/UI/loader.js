@@ -1,9 +1,13 @@
-
+import { useSelector } from 'react-redux';
 
 const Loader = () => {
+    const loading = useSelector(state => state.loader.loading);
+
     return (
         <>
-        <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+        {
+           loading && <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+        }
 
         <style jsx>{` 
             .lds-ring {
@@ -23,14 +27,14 @@ const Loader = () => {
                 position: absolute;
                 width: 80px;
                 height: 80px;
-                margin: 8px;
+                // margin: 8px;
                 border: 8px solid #DC042A;
                 border-radius: 50%;
                 animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
                 border-color: #DC042A transparent transparent transparent;
                 position: fixed;
                 top: 50%;
-                left: 50%;
+                left: 46%;
                 transform: translate(-50%, -50%);
               }
               .lds-ring div:nth-child(1) {

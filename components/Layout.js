@@ -5,6 +5,7 @@ import { NotificationContainer } from 'react-notifications';
 
 import NavBar from '../components/NavBar';
 import Footer from './Footer';
+import Loader from './UI/loader';
 
 
 Router.onRouteChangeStart = url => {
@@ -24,7 +25,11 @@ const Layout = ({children, showSecFooter}) => {
             </Head>
 
             <NavBar />
+
+            <Loader /> 
+
             <NotificationContainer/>
+
             {children}
 
             <Footer showSecFooter={showSecFooter} />
