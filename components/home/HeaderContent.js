@@ -1,20 +1,22 @@
 import Select from 'react-select';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import Loader from '../UI/loader';
+import { loader } from '../../store/actions/loader';
 
 
 const HeaderContent = ({cities}) => {
     const [ restaurants, setRestaurants ] = useState([]);
     const [ restaurantName, setRestaurantName ] = useState(null);
-    const [ loading, setLoading ] = useState(false);
-
+   
     const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
 
+    const dispatch = useDispatch();
+
     const handleCityInputChange = ({value: restaurantId}) => {
-        setLoading(true);
+        dispatch(loader());
         setTimeout(() => {
-            setLoading(false);
+            dispatch(loader());
         }, 1500)
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
@@ -41,7 +43,7 @@ const HeaderContent = ({cities}) => {
                             <p>Ordering from:</p>
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
-                                {loading ? <Loader /> : <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />}
+                                <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
                             </form>
                         </div>
                     </div>
