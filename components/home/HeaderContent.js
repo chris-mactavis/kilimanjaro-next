@@ -1,8 +1,9 @@
 import Select from 'react-select';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { loader } from '../../store/actions/loader';
+import { saveRestaurants } from '../../store/actions/shop'
 
 
 const HeaderContent = ({cities}) => {
@@ -12,6 +13,7 @@ const HeaderContent = ({cities}) => {
     const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
 
     const dispatch = useDispatch();
+    const loadingState = useSelector(state => state.loader.loading);
 
     const handleCityInputChange = ({value: restaurantId}) => {
         dispatch(loader());
@@ -20,8 +22,9 @@ const HeaderContent = ({cities}) => {
         }, 1500)
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
+        dispatch(saveRestaurants(restaurants));
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
-        setRestaurants( restaurants );
+        setRestaurants(restaurants);
     };
 
     const handleRestaurantInputChange = (value) => {
@@ -43,7 +46,7 @@ const HeaderContent = ({cities}) => {
                             <p>Ordering from:</p>
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
-                                <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
+                                { loadingState ? null : <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} /> }
                             </form>
                         </div>
                     </div>

@@ -6,12 +6,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import '../styles/main.css';
 // import city from '../store/reducers/city';
 import toggleLoading from '../store/reducers/loader';
-// import 'react-notifications/lib/notifications.css';
+import shop from '../store/reducers/shop'
 
 const reducers = combineReducers({
-  loader: toggleLoading
+  loader: toggleLoading,
+  shop: shop
 });
 
+// const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware)));
 const store = process.env.environment === 'dev' ? createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware))) : createStore(reducers, applyMiddleware(thunkMiddleware));
 
 function MyApp({ Component, pageProps }) {
