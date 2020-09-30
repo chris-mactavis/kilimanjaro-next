@@ -1,9 +1,11 @@
 import Select from 'react-select';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
+import Cookies from 'js-cookie';
 
 import { loader } from '../../store/actions/loader';
-import { saveRestaurants } from '../../store/actions/shop'
+import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
 
 
 const HeaderContent = ({cities}) => {
@@ -22,13 +24,21 @@ const HeaderContent = ({cities}) => {
         }, 1500)
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
-        dispatch(saveRestaurants(restaurants));
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurants(restaurants);
+        dispatch(saveRestaurants(restaurants));
+        Cookies.set('setRestaurants', JSON.stringify(restaurants));
     };
 
     const handleRestaurantInputChange = (value) => {
+        dispatch(loader());
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1500)
+        Router.push('/menu');
         setRestaurantName( value );
+        dispatch(selectedRestaurant(value));
+        Cookies.set('selectedRestaurant', JSON.stringify(value));
     }
 
 

@@ -1,4 +1,4 @@
-import { SAVE_RESTAURANTS } from '../actions/shop';
+import { SAVE_RESTAURANTS, SELECTED_RESTAURANT } from '../actions/shop';
 
 const initialState = {
     allRestaurants : [],
@@ -11,6 +11,11 @@ const shop = ( state = initialState, action) => {
             return {
                 ...state,
                 allRestaurants: action.restaurants,
+            }
+        case SELECTED_RESTAURANT :
+            return {
+                ...state,
+                selectedRestaurant: action.selectRestaurant
             }
         default: 
             return state;
