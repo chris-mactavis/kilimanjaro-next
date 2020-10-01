@@ -8,7 +8,6 @@ import { useState } from 'react';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
 import Loader from '../../components/UI/loader';
-// import CreateNotification from '../../components/CreateNotification';
 // import { NotificationManager } from 'react-notifications';
 
 
@@ -69,7 +68,6 @@ const Checkout = () => {
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
                 </Head>
-                { isLoading && <Loader /> }
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
