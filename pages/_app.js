@@ -4,7 +4,8 @@ import {applyMiddleware, combineReducers, createStore} from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import '../styles/main.css';
-// import city from '../store/reducers/city';
+import 'react-notifications/lib/notifications.css';
+
 import toggleLoading from '../store/reducers/loader';
 import shop from '../store/reducers/shop'
 

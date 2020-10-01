@@ -32,10 +32,10 @@ const HeaderContent = ({cities}) => {
 
     const handleRestaurantInputChange = (value) => {
         dispatch(loader());
+        Router.push('/menu');
         setTimeout(() => {
             dispatch(loader());
         }, 1500)
-        Router.push('/menu');
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
