@@ -41,17 +41,22 @@ const Menu = ({ productCategories }) => {
     useEffect(() => {
         const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
         const setRestaurants = JSON.parse(Cookies.get('setRestaurants'));
-       
-        // Issue is here
-        if (allCart.length > 0) {
-            const allProductCart = JSON.parse(Cookies.get('setCart'));
-            console.log(allProductCart);
 
-            if (!allCart.length > 0) {
-                dispatch(addToCart(allProductCart));
-                setProductCart(allProductCart);
-            }
-        }
+        // Fix for cart not displaying on reload!
+        const cartItems = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
+        dispatch(addToCart(cartItems));
+        setProductCart(cartItems);
+
+        // Issue is here
+        // if (allCart.length > 0) {
+        //     const allProductCart = JSON.parse(Cookies.get('setCart'));
+        //     console.log(allProductCart);
+        //
+        //     if (!allCart.length > 0) {
+        //         dispatch(addToCart(allProductCart));
+        //         setProductCart(allProductCart);
+        //     }
+        // }
        
         if (!restaurant) {
             dispatch(selectedRestaurant(selectRestaurant));
