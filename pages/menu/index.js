@@ -129,8 +129,13 @@ const Menu = ({ productCategories }) => {
             quantity: parseInt(quantitySelected)
         });
         setProductCart(prevCart);
+        console.log(prevCart);
         dispatch(addToCart(prevCart));
-        if (!allCart.length > 0){Cookies.set('setCart', JSON.stringify(prevCart));}
+
+        Cookies.set('setCart', JSON.stringify(prevCart));
+        // This was not adding the new cart to cookies
+        // if (!allCart.length > 0){Cookies.set('setCart', JSON.stringify(prevCart));}
+
         setTimeout(() => {
             dispatch(loader());
         }, 1500);
