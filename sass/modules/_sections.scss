@@ -163,17 +163,39 @@ section {
             font-weight: $semi-bold;
         }
 
-        .css-2b097c-container {
-            width: 35%;
+        .select-state {
+            width: 40%;
+
+            .css-6q0nyr-Svg {
+                color: #fff;
+            }
+
+            .css-yk16xz-control {
+                .css-g1d714-ValueContainer {
+                   .css-1uccc91-singleValue {
+                       color: #fff;
+                   }
+                }
+            }
 
             .css-yk16xz-control {
                 background-color: $primary;
-                font-size: 16px;
+                border: transparent;
 
                 .css-1wa3eu0-placeholder {
                     color: #fff;
                 }
             }
+        }
+
+        .select-tool {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        // select disabled on the menu page
+        .select-disabled
+
+        .css-2b097c-container {
 
             .css-1pahdxg-control {
                 box-shadow: 0 0 0 1px $primary;
@@ -182,18 +204,6 @@ section {
                 &:hover {
                     border-color: $primary !important;
                 }
-            }
-
-            .css-1okebmr-indicatorSeparator {
-                display: none;
-            }
-
-            .css-tlfecz-indicatorContainer {
-                color: #fff;
-            }
-
-            .css-1uccc91-singleValue {
-                // color: #FFF;
             }
 
             span.css-1laao21-a11yText {
@@ -239,6 +249,10 @@ section {
         }
     }
 
+    &.active-select-restaurant {
+        padding: 20px 0;
+    }
+
     &.products {
         padding: 40px 0;
         position: relative;
@@ -271,6 +285,14 @@ section {
 
             p {
                 margin-bottom: 0;
+            }
+
+            img {
+                max-width: 70%;
+            }
+
+            .sale {
+                color: $primary;
             }
 
             .product-name {

@@ -1,20 +1,22 @@
 import Head from 'next/head';
+
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
 import CouponProduct from '../components/couponProduct/CouponProduct';
 import Orders from '../components/orders/orders';
+import axiosInstance from '../config/axios';
 
 
-export default function Home() {
+const Home = ({cities}) => {
   const hasToken = false;
-
+  
   return (
     <>
       <Layout showSecFooter>
         <Head>
           <title>Kilimanjaro</title>
         </Head>
-        <HeaderContent />
+        <HeaderContent cities={cities} />
         {hasToken && <Orders  />}
         {/* <Orders  /> */}
         <section className="coupon-products">
@@ -50,3 +52,15 @@ export default function Home() {
     </>
   )
 }
+
+Home.getInitialProps = async() => {
+  try {
+      const {data: {data}} = await axiosInstance.get('cities');
+      return {cities: data};
+  } catch (error) {
+      console.log(error)
+      return {};
+  }
+}
+
+export default Home;

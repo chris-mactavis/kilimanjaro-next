@@ -266,15 +266,15 @@ form {
   form.select-state .select-disabled {
     pointer-events: none; }
     form.select-state .select-disabled .css-yk16xz-control {
-      border-color: #A5A5A5;
-      border: 1.2px solid #A5A5A5;
-      background: #F5F5F5; }
+      border-color: #A5A5A5 !important;
+      border: 1.2px solid #A5A5A5 !important;
+      background: #F5F5F5 !important; }
       form.select-state .select-disabled .css-yk16xz-control:hover {
-        border-color: #A5A5A5; }
+        border-color: #A5A5A5 !important; }
     form.select-state .select-disabled .css-1wa3eu0-placeholder {
-      color: #A5A5A5; }
+      color: #A5A5A5 !important; }
     form.select-state .select-disabled .css-6q0nyr-Svg {
-      color: #A5A5A5; }
+      color: #A5A5A5 !important; }
   form.select-state .css-1wa3eu0-placeholder {
     color: #DC042A; }
   form.select-state .css-1okebmr-indicatorSeparator {
@@ -289,6 +289,14 @@ form {
     border: 1.2px solid #DC042A; }
     form.select-state .css-yk16xz-control:hover {
       border-color: #DC042A; }
+  form.select-state .css-9gakcf-option {
+    background-color: transparent;
+    cursor: pointer;
+    color: #DC042A; }
+    form.select-state .css-9gakcf-option:hover {
+      background-color: #deebff; }
+  form.select-state .css-1n7v3ny-option {
+    cursor: pointer; }
   form.signup-form label {
     display: block;
     margin-bottom: 10px;
@@ -559,26 +567,33 @@ section.select-restaurant {
     margin-right: 20px;
     text-transform: uppercase;
     font-weight: 600; }
-  section.select-restaurant .css-2b097c-container {
-    width: 35%; }
-    section.select-restaurant .css-2b097c-container .css-yk16xz-control {
-      background-color: #DC042A;
-      font-size: 16px; }
-      section.select-restaurant .css-2b097c-container .css-yk16xz-control .css-1wa3eu0-placeholder {
-        color: #fff; }
-    section.select-restaurant .css-2b097c-container .css-1pahdxg-control {
-      box-shadow: 0 0 0 1px #DC042A;
-      font-size: 16px; }
-      section.select-restaurant .css-2b097c-container .css-1pahdxg-control:hover {
-        border-color: #DC042A !important; }
-    section.select-restaurant .css-2b097c-container .css-1okebmr-indicatorSeparator {
-      display: none; }
-    section.select-restaurant .css-2b097c-container .css-tlfecz-indicatorContainer {
+  section.select-restaurant .select-state {
+    width: 40%; }
+    section.select-restaurant .select-state .css-6q0nyr-Svg {
       color: #fff; }
-    section.select-restaurant .css-2b097c-container span.css-1laao21-a11yText {
-      background-color: #DC042A !important; }
-      section.select-restaurant .css-2b097c-container span.css-1laao21-a11yText p {
-        color: #DC042A !important; }
+    section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
+      color: #fff; }
+    section.select-restaurant .select-state .css-yk16xz-control {
+      background-color: #DC042A;
+      border: transparent; }
+      section.select-restaurant .select-state .css-yk16xz-control .css-1wa3eu0-placeholder {
+        color: #fff; }
+  section.select-restaurant .select-tool {
+    width: 100%;
+    margin-bottom: 0; }
+  section.select-restaurant .select-disabled
+  .css-2b097c-container .css-1pahdxg-control {
+    box-shadow: 0 0 0 1px #DC042A;
+    font-size: 16px; }
+    section.select-restaurant .select-disabled
+    .css-2b097c-container .css-1pahdxg-control:hover {
+      border-color: #DC042A !important; }
+  section.select-restaurant .select-disabled
+  .css-2b097c-container span.css-1laao21-a11yText {
+    background-color: #DC042A !important; }
+    section.select-restaurant .select-disabled
+    .css-2b097c-container span.css-1laao21-a11yText p {
+      color: #DC042A !important; }
   section.select-restaurant ul.product-cat {
     display: flex;
     align-items: center;
@@ -603,6 +618,8 @@ section.select-restaurant {
         text-transform: uppercase;
         font-size: 15px;
         padding: 15px 0; }
+section.active-select-restaurant {
+  padding: 20px 0; }
 section.products {
   padding: 40px 0;
   position: relative; }
@@ -629,6 +646,10 @@ section.products {
     border-bottom: 1px solid #a5a5a5; }
     section.products .single-product p {
       margin-bottom: 0; }
+    section.products .single-product img {
+      max-width: 70%; }
+    section.products .single-product .sale {
+      color: #DC042A; }
     section.products .single-product .product-name {
       font-size: 20px;
       text-transform: uppercase;
