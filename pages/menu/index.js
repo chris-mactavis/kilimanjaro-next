@@ -4,39 +4,55 @@ import Select from 'react-select';
 import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import { NotificationManager } from 'react-notifications';
 
 
 import Layout from '../../components/Layout';
-import { selectedRestaurant, saveRestaurants } from '../../store/actions/shop';
+import { selectedRestaurant, saveRestaurants, addToCart } from '../../store/actions/shop';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 
 
 
-const Menu = ({productCategories}) => {
-    
-    const [ restaurantCategories, setRestaurantCategories ] = useState(productCategories);
-    const [ allProductCat, setAllProductCategory ] = useState(null);
-    const [ products, setProducts ] = useState([]);
-    const [ addClass, changeClass ] = useState({ active: false });
-    const [ activeCategory, setActiveCategory ] = useState([]);
+const Menu = ({ productCategories }) => {
 
+    const [restaurantCategories, setRestaurantCategories] = useState(productCategories);
+    const [allProductCat, setAllProductCategory] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [addClass, changeClass] = useState({ active: false });
+    const [activeCategory, setActiveCategory] = useState([]);
+    const [productCart, setProductCart] = useState([]);
+    // console.log(productCart);
+    //  All Store
     const dispatch = useDispatch();
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
     const allRestaurants = useSelector(state => state.shop.allRestaurants);
+    const allCart = useSelector(state => state.shop.cart);
 
     useEffect(() => {
         if (restaurantCategories.length > 0) {
             const prods = restaurantCategories[0].category_products;
             setAllProductCategory(restaurantCategories[0]);
             setProducts(prods);
-            setActiveCategory(activeCategory => activeCategory.concat(`active-${restaurantCategories[0].id}`)); 
+            setActiveCategory(activeCategory => activeCategory.concat(`active-${restaurantCategories[0].id}`));
         }
     }, []);
 
     useEffect(() => {
-        const selectRestaurant =  JSON.parse(Cookies.get('selectedRestaurant'));
+        const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
         const setRestaurants = JSON.parse(Cookies.get('setRestaurants'));
+       
+        // Issue is here
+        if (allCart.length > 0) {
+            const allProductCart = JSON.parse(Cookies.get('setCart'));
+            console.log(allProductCart);
+
+            if (!allCart.length > 0) {
+                dispatch(addToCart(allProductCart));
+                setProductCart(allProductCart);
+            }
+        }
+       
         if (!restaurant) {
             dispatch(selectedRestaurant(selectRestaurant));
         }
@@ -44,6 +60,7 @@ const Menu = ({productCategories}) => {
         if (!allRestaurants.length > 0) {
             dispatch(saveRestaurants(setRestaurants));
         }
+
 
     }, []);
 
@@ -54,7 +71,7 @@ const Menu = ({productCategories}) => {
     };
 
     let cartClasses = ['cart'];
-    if(addClass.active) {
+    if (addClass.active) {
         cartClasses.push('active-cart');
     }
 
@@ -79,13 +96,13 @@ const Menu = ({productCategories}) => {
         setActiveCategory([]);
         try {
             dispatch(loader());
-            const {data: {data}} = await axiosInstance.get(`product-categories?restaurant_id=${value.id}`);
+            const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${value.id}`);
             const productCategories = data.filter(cat => cat.category_products.length > 0);
             if (productCategories.length > 0) {
                 const prods = productCategories[0].category_products;
                 setAllProductCategory(productCategories[0]);
                 setProducts(prods);
-                setActiveCategory(activeCategory => activeCategory.concat(`active-${productCategories[0].id}`)); 
+                setActiveCategory(activeCategory => activeCategory.concat(`active-${productCategories[0].id}`));
             }
             setRestaurantCategories(productCategories);
             dispatch(loader());
@@ -94,8 +111,27 @@ const Menu = ({productCategories}) => {
         }
     }
 
-    const addtoCartHandler = () => {
-        console.log('added to cart');
+    let quantitySelected = 0;
+    const handleQuantityChange = (e) => {
+        quantitySelected = e.target.value
+    };
+
+    const addtoCartHandler = (prod) => {
+        dispatch(loader());
+        const prevCart = [...productCart];
+        prevCart.push({
+            product: prod,
+            quantity: parseInt(quantitySelected)
+        });
+        setProductCart(prevCart);
+        dispatch(addToCart(prevCart));
+        if (!allCart.length > 0){Cookies.set('setCart', JSON.stringify(prevCart));}
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1500);
+        setTimeout(() => {
+            NotificationManager.success('Added successfully', '', 3000);
+        }, 1500);
     }
 
     return (
@@ -111,7 +147,7 @@ const Menu = ({productCategories}) => {
                                 <div className="d-flex flex-wrap align-items-center">
                                     <p>Ordering from</p>
                                     <form className="select-state">
-                                        <Select defaultValue={restaurant.name} onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
+                                        <Select onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
                                     </form>
                                 </div>
                                 <ul className="product-cat">
@@ -126,42 +162,42 @@ const Menu = ({productCategories}) => {
                 <section className="products">
                     <div className="container">
                         <div className="row">
-                            {!restaurantCategories.length > 0 ? 
+                            {!restaurantCategories.length > 0 ?
                                 <div className="col-md-8">
-                                     <p>Sorry, there are no menu available for this restaurant.</p> 
-                                </div> 
-                            :
-                            <div className="col-md-8">
-                                <>
-                                    <h4>{allProductCat ? allProductCat.category : null}</h4>
-                                    {products.length > 0 ? products.map((prod) => {
-                                        return <div key={prod.id} className="single-product">
-                                            <div className="row">
-                                                <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
-                                                    <img className="img-fluid" src={prod.image_url} alt="" />
-                                                </div>
-                                                <div className="col-md-8 pl-0">
-                                                    <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
-                                                        <p className="product-name">{prod.product}</p>
-                                                        <div className="d-flex">
-                                                            <p className="product-qty">Quantity</p>
-                                                            <input type='number' />
-                                                        </div>
+                                    <p>Sorry, there are no menu available for this restaurant.</p>
+                                </div>
+                                :
+                                <div className="col-md-8">
+                                    <>
+                                        <h4>{allProductCat ? allProductCat.category : null}</h4>
+                                        {products.length > 0 ? products.map((prod) => {
+                                            return <div key={prod.id} className="single-product">
+                                                <div className="row">
+                                                    <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
+                                                        <img className="img-fluid" src={prod.image_url} alt="" />
                                                     </div>
-                                                    <p className="product-description">{prod.short_description}</p>
-                                                    <div className="d-flex align-items-center justify-content-between flex-wrap mt-5">
-                                                        <button onClick={addtoCartHandler} className="btn">Add to cart</button>
-                                                        <div>
-                                                            {prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>}
-                                                            {prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>}
+                                                    <div className="col-md-8 pl-0">
+                                                        <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                                            <p className="product-name">{prod.product}</p>
+                                                            <div className="d-flex">
+                                                                <p className="product-qty">Quantity</p>
+                                                                <input onChange={handleQuantityChange} type='number' />
+                                                            </div>
+                                                        </div>
+                                                        <p className="product-description">{prod.short_description}</p>
+                                                        <div className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                                            <button onClick={() => addtoCartHandler(prod)} className="btn">Add to cart</button>
+                                                            <div>
+                                                                {prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>}
+                                                                {prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    }) : null}
-                                </>
-                                {/* <div className="single-product">
+                                        }) : null}
+                                    </>
+                                    {/* <div className="single-product">
                                     <div className="row">
                                         <div className="col-md-4 text-center mb-5 mb-sm-0">
                                             <img className="img-fluid" src="/images/food-order-image.png" alt="" />
@@ -185,7 +221,7 @@ const Menu = ({productCategories}) => {
                                         </div>
                                     </div>
                                 </div> */}
-                            </div>}
+                                </div>}
                             <div className="col-md-4">
                                 <div className="coupon-on-menu">
                                     <a>
@@ -207,19 +243,23 @@ const Menu = ({productCategories}) => {
                     <div className={cartClasses.join(' ')}>
                         <div className="cart-container">
                             <div className="cart-icon-container">
-                                <button onClick={toggleActiveClass}> <img src="/images/icon/cart-icon.svg" alt=""/></button>
-                                <p className="product-count">1</p>
+                                <button onClick={toggleActiveClass}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <p className="product-count">{allCart.length}</p>
                             </div>
                             <p className="cart-text">Cart</p>
                         </div>
                         <div className="cart-product-list">
-                            <div className="product-list">
-                                <img className="img-fluid" src="/images/food-order-image.png" alt=""/>
-                                <p>Small body</p>
-                                <input type='number' pattern='[0-9]{0,5}'/>
-                                <p className="bold">N10000</p>
-                                <button>x</button>
-                            </div>
+                            {allCart.map((cart) => {
+                                return <>
+                                    <div key={cart.product.id} className="product-list">
+                                        <img className="img-fluid" src={cart.product.image_url} alt="" />
+                                        <p>{cart.product.product}</p>
+                                        <input type='number' pattern='[0-9]{0,5}' />
+                                        {cart.product.sale_price ? <p className="bold">{'₦'+cart.product.sale_price}</p> : <p className="bold">{'₦'+cart.product.price}</p>}
+                                        <button>x</button>
+                                    </div>
+                                </>
+                            })}
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex">
                                     <label className="contain">Save Basket
@@ -240,23 +280,23 @@ const Menu = ({productCategories}) => {
     );
 };
 
-Menu.getInitialProps = async({req, res}) => {
+Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
-        selRestaurant =  JSON.parse(Cookies.get('selectedRestaurant'));
+        selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
     } else {
-        selRestaurant =  JSON.parse(req.cookies.selectedRestaurant);
+        selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
     }
     let restaurantId = selRestaurant.id;
-    
+
     try {
-        const {data: {data}} = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
+        const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
         const productCategories = data.filter(cat => cat.category_products.length > 0);
-        return {productCategories};
+        return { productCategories };
     } catch (error) {
         console.log(error)
         return {};
     }
-  }
+}
 
 export default Menu;

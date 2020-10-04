@@ -723,7 +723,7 @@ section.products {
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        padding-bottom: 20px;
+        padding: 20px 0;
         border-bottom: 1px solid #a5a5a5; }
         section.products .cart .cart-product-list .product-list img {
           max-width: 100px; }

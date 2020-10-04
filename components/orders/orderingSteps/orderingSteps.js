@@ -1,11 +1,14 @@
+import { useState } from "react";
 
-const OrderingSteps = ({activeTabs}) => {
+const OrderingSteps = ({activeTabs, restaurantName}) => {
+    const [ selectedRestaurantName, setSelectedRestaurantName ] = useState(restaurantName);
+    console.log(selectedRestaurantName);
 
     return (
         <>
             <div className="row">
                 <div className="col-md-12">
-                    <h1>Food Court, Abia Mall</h1>
+                <h1>{}</h1>
                 </div>
                 <div className="col-md-7 mx-auto">
                     <div className="d-flex align-items-center justify-content-between mb-5">

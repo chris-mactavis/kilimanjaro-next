@@ -1,8 +1,9 @@
-import { SAVE_RESTAURANTS, SELECTED_RESTAURANT } from '../actions/shop';
+import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART } from '../actions/shop';
 
 const initialState = {
     allRestaurants : [],
-    selectedRestaurant: null
+    selectedRestaurant: null,
+    cart: []
 };
 
 const shop = ( state = initialState, action) => {
@@ -16,6 +17,11 @@ const shop = ( state = initialState, action) => {
             return {
                 ...state,
                 selectedRestaurant: action.selectRestaurant
+            }
+        case ADD_TO_CART :
+            return {
+                ...state,
+                cart: action.allCart
             }
         default: 
             return state;

@@ -1,9 +1,14 @@
 import Layout from '../../components/Layout';
 import Head from 'next/head';
-import Router from 'next/router';
+// import Router from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { useState, useEffect } from 'react';
+
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
+import { selectedRestaurant, addToCart } from '../../store/actions/shop';
 
 const ShoppingCart = () => {
     const drinks = [
@@ -12,6 +17,32 @@ const ShoppingCart = () => {
         { url: '/images/fanta.svg', id: 2 },
         { url: '/images/coke.svg', id: 3 }
     ];
+
+    const dispatch = useDispatch();
+
+    //  All store 
+    const restaurant = useSelector(state => state.shop.selectedRestaurant);
+    const allCart = useSelector(state => state.shop.cart);
+    // console.log(restaurant);
+
+    // State
+    const [ restaurantName, setRestaurantName ] = useState(restaurant);
+    // console.log(restaurantName);
+
+    // Note get the cookies and set the restaurant name
+    
+    useEffect(() => {
+        const allProductCart = JSON.parse(Cookies.get('setCart'));
+        const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+
+        if (!allCart.length > 0) {
+            dispatch(addToCart(allProductCart));
+        }
+
+        if (!restaurant) {
+            dispatch(selectedRestaurant(selectRestaurant));
+        }
+    }, []);
 
     return (
         <>
@@ -22,21 +53,22 @@ const ShoppingCart = () => {
 
                 <section className="shopping-cart">
                     <div className="container">
-                        <OrderingSteps activeTabs={[1]} />
+                        <OrderingSteps restaurantName={restaurant} activeTabs={[1]} />
                         <div className="row">
                             <div className="col-md-8 mx-auto">
                                 <h4>Review Your Order</h4>
-                                <div className="order-review d-flex align-items-center justify-content-between flex-wrap">
-                                    <button><span>X</span>Remove</button>
-                                    <img src="/images/food-order-image.png" alt="" />
-                                    <p className="product-name">Small Body</p>
-                                    <div className="d-flex">
-                                        <p className="product-qty">Quantity</p>
-                                        <input type='number' />
+                                {allCart.map((cart) => {
+                                    return <div className="order-review d-flex align-items-center justify-content-between flex-wrap">
+                                        <button><span>X</span>Remove</button>
+                                        <img src={cart.product.image_url} alt="" />
+                                        <p className="product-name">{cart.product.product} </p>
+                                        <div className="d-flex">
+                                            <p className="product-qty">Quantity</p>
+                                            <input type='number' />
+                                        </div>
+                                        {cart.product.sale_price ? <p>{'₦'+cart.product.sale_price}</p> : <p>{'₦'+cart.product.price}</p>}
                                     </div>
-                                    <p>N1000</p>
-                                </div>
-
+                                })}
                                 <div className="row">
                                     <div className="col-md-8">
                                         <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
@@ -72,7 +104,7 @@ const ShoppingCart = () => {
                                                 <p>N2000</p>
                                             </div>
                                         </div>
-                                        <button className="btn btn-order w-100" onClick={() => Router.push('/checkout')}>Checkout</button>
+                                        <button className="btn btn-order w-100">Checkout</button>
                                     </div>
                                 </div>
                             </div>
