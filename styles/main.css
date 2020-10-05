@@ -280,7 +280,7 @@ form {
   form.select-state .css-1okebmr-indicatorSeparator {
     background-color: transparent; }
   form.select-state .css-6q0nyr-Svg {
-    color: #DC042A; }
+    color: #DC042A !important; }
   form.select-state .css-1pahdxg-control:hover {
     border-color: #DC042A;
     box-shadow: none; }
@@ -468,6 +468,9 @@ form {
 .btn-login {
   padding: 7px 30px; }
 
+.disabled {
+  pointer-events: none; }
+
 section.header-content {
   height: 100vh;
   padding: 150px 0; }
@@ -570,7 +573,7 @@ section.select-restaurant {
   section.select-restaurant .select-state {
     width: 40%; }
     section.select-restaurant .select-state .css-6q0nyr-Svg {
-      color: #fff; }
+      color: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
       color: #fff; }
     section.select-restaurant .select-state .css-yk16xz-control {
@@ -723,7 +726,7 @@ section.products {
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        padding-bottom: 20px;
+        padding: 20px 0;
         border-bottom: 1px solid #a5a5a5; }
         section.products .cart .cart-product-list .product-list img {
           max-width: 100px; }
