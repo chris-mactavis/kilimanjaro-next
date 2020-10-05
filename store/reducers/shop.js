@@ -1,9 +1,13 @@
-import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART } from '../actions/shop';
+import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UPDATED_TOTAL_PRICE } from '../actions/shop';
+import Cookies from 'js-cookie';
+
 
 const initialState = {
     allRestaurants : [],
     selectedRestaurant: null,
-    cart: []
+    cart: [],
+    totalPrice: 0,
+    updatedPrice : 0
 };
 
 const shop = ( state = initialState, action) => {
@@ -22,6 +26,21 @@ const shop = ( state = initialState, action) => {
             return {
                 ...state,
                 cart: action.allCart
+            }
+        case SET_TOTAL_PRICE :
+            const cartItems = [...state.cart];
+            let totalPrice = 0;
+            cartItems.forEach(cartItem => totalPrice += cartItem.totalPrice);
+            Cookies.set('totalPrice', totalPrice);
+            return {
+                ...state,
+                totalPrice,
+                updatedPrice: totalPrice
+            }
+        case UPDATED_TOTAL_PRICE :
+            return {
+                ...state,
+                updatedPrice: action.updatePrice
             }
         default: 
             return state;

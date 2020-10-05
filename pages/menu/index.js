@@ -8,13 +8,16 @@ import { NotificationManager } from 'react-notifications';
 
 
 import Layout from '../../components/Layout';
-import { selectedRestaurant, saveRestaurants, addToCart } from '../../store/actions/shop';
+import { selectedRestaurant, saveRestaurants, addToCart, setTotalPrice  } from '../../store/actions/shop';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 
 
 
+
 const Menu = ({ productCategories }) => {
+
+    console.log(productCategories);
 
     const [restaurantCategories, setRestaurantCategories] = useState(productCategories);
     const [allProductCat, setAllProductCategory] = useState(null);
@@ -22,12 +25,17 @@ const Menu = ({ productCategories }) => {
     const [addClass, changeClass] = useState({ active: false });
     const [activeCategory, setActiveCategory] = useState([]);
     const [productCart, setProductCart] = useState([]);
-    // console.log(productCart);
+    const [value, setValue] = useState(0);
+
+    console.log(productCart);
+  
     //  All Store
     const dispatch = useDispatch();
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
     const allRestaurants = useSelector(state => state.shop.allRestaurants);
     const allCart = useSelector(state => state.shop.cart);
+    const allTotalPrice = useSelector(state => state.shop.totalPrice);
+   
 
     useEffect(() => {
         if (restaurantCategories.length > 0) {
@@ -47,16 +55,6 @@ const Menu = ({ productCategories }) => {
         dispatch(addToCart(cartItems));
         setProductCart(cartItems);
 
-        // Issue is here
-        // if (allCart.length > 0) {
-        //     const allProductCart = JSON.parse(Cookies.get('setCart'));
-        //     console.log(allProductCart);
-        //
-        //     if (!allCart.length > 0) {
-        //         dispatch(addToCart(allProductCart));
-        //         setProductCart(allProductCart);
-        //     }
-        // }
        
         if (!restaurant) {
             dispatch(selectedRestaurant(selectRestaurant));
@@ -76,12 +74,12 @@ const Menu = ({ productCategories }) => {
     };
 
     let cartClasses = ['cart'];
+
     if (addClass.active) {
         cartClasses.push('active-cart');
-    }
+    };
 
     const productDisplayHandler = (categoryId) => {
-        dispatch(loader());
         let productCat = restaurantCategories.find(productCategory => productCategory.id === categoryId);
         setActiveCategory([]);
         if (productCat.id === categoryId) {
@@ -90,10 +88,7 @@ const Menu = ({ productCategories }) => {
         let products = productCat.category_products;
         setAllProductCategory(productCat);
         setProducts(products);
-        setTimeout(() => {
-            dispatch(loader());
-        }, 1500);
-    }
+    };
 
     const handleMenuRestaurantInputChange = async value => {
         setAllProductCategory(null);
@@ -114,9 +109,9 @@ const Menu = ({ productCategories }) => {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
-    let quantitySelected = 0;
+    let quantitySelected = 1;
     const handleQuantityChange = (e) => {
         quantitySelected = e.target.value
     };
@@ -126,15 +121,17 @@ const Menu = ({ productCategories }) => {
         const prevCart = [...productCart];
         prevCart.push({
             product: prod,
-            quantity: parseInt(quantitySelected)
+            quantity: parseInt(quantitySelected),
+            price: parseInt(prod.price),
+            salePrice: parseInt(prod.sale_price),
+            totalPrice: prod.sale_price ? quantitySelected * parseInt(prod.sale_price) : quantitySelected *  parseInt(prod.price),
         });
         setProductCart(prevCart);
-        console.log(prevCart);
         dispatch(addToCart(prevCart));
+        dispatch(setTotalPrice());
 
         Cookies.set('setCart', JSON.stringify(prevCart));
-        // This was not adding the new cart to cookies
-        // if (!allCart.length > 0){Cookies.set('setCart', JSON.stringify(prevCart));}
+        // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
 
         setTimeout(() => {
             dispatch(loader());
@@ -142,7 +139,36 @@ const Menu = ({ productCategories }) => {
         setTimeout(() => {
             NotificationManager.success('Added successfully', '', 3000);
         }, 1500);
-    }
+    };
+
+    const deleteProductCartHandler = (index) => {
+        allCart.splice(index, 1);
+        setProductCart(allCart);
+        dispatch(addToCart(allCart));
+        dispatch(setTotalPrice());
+        Cookies.set('setCart', JSON.stringify(allCart));
+        setValue(value => ++value);
+
+    };
+
+    let cartDisplay = <p>Your cart is empty</p>;
+
+    if (allCart.length > 0) {
+        cartDisplay =  <>
+        {allCart.map((cart, index) => {
+            return <>
+                <div key={cart.product.id} className="product-list">
+                    <img className="img-fluid" src={cart.product.image_url} alt="" />
+                    <p>{cart.product.product}</p>
+                    {/* <input type='number' pattern='[0-9]{0,5}' /> */}
+                    <p>{cart.quantity}</p>
+                    {cart.product.sale_price ? <p className="bold">{'₦'+cart.product.sale_price}</p> : <p className="bold">{'₦'+cart.product.price}</p>}
+                    <button onClick={() => deleteProductCartHandler(index)}>X</button>
+                </div>
+            </>
+        })} 
+        </>
+    };
 
     return (
         <>
@@ -259,17 +285,7 @@ const Menu = ({ productCategories }) => {
                             <p className="cart-text">Cart</p>
                         </div>
                         <div className="cart-product-list">
-                            {allCart.map((cart) => {
-                                return <>
-                                    <div key={cart.product.id} className="product-list">
-                                        <img className="img-fluid" src={cart.product.image_url} alt="" />
-                                        <p>{cart.product.product}</p>
-                                        <input type='number' pattern='[0-9]{0,5}' />
-                                        {cart.product.sale_price ? <p className="bold">{'₦'+cart.product.sale_price}</p> : <p className="bold">{'₦'+cart.product.price}</p>}
-                                        <button>x</button>
-                                    </div>
-                                </>
-                            })}
+                           {cartDisplay}
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex">
                                     <label className="contain">Save Basket
@@ -278,8 +294,8 @@ const Menu = ({ productCategories }) => {
                                     </label>
                                 </div>
                                 <div>
-                                    <button className="btn btn-grey mr-4" onClick={() => Router.push('/cart')}>View/Edit Cart</button>
-                                    <button className="btn" onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
+                                    <button className={!allCart.length > 0 ? 'btn btn-grey mr-4 disabled' : 'btn btn-grey mr-4'} onClick={() => Router.push('/cart')}>View/Edit Cart</button>
+                                    <button className={!allCart.length > 0 ? 'btn disabled' : 'btn'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
                                 </div>
                             </div>
                         </div>

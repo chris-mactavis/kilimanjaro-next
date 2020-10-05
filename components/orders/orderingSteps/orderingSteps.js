@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
-const OrderingSteps = ({activeTabs, restaurantName}) => {
-    const [ selectedRestaurantName, setSelectedRestaurantName ] = useState(restaurantName);
-    console.log(selectedRestaurantName);
+import { selectedRestaurant } from '../../../store/actions/shop';
+
+
+const OrderingSteps = ({activeTabs}) => {
+
+    const dispatch = useDispatch();
+
+    const [restaurant, setRestaurant] = useState({});
+
+    useEffect(() => {
+        const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : {};
+        dispatch(selectedRestaurant(selectRestaurant));
+        setRestaurant(selectRestaurant);
+    }, []);
 
     return (
         <>
             <div className="row">
                 <div className="col-md-12">
-                <h1>{}</h1>
+                <h1>{restaurant.name}</h1>
                 </div>
                 <div className="col-md-7 mx-auto">
                     <div className="d-flex align-items-center justify-content-between mb-5">
