@@ -273,13 +273,13 @@ form {
         border-color: #A5A5A5 !important; }
     form.select-state .select-disabled .css-1wa3eu0-placeholder {
       color: #A5A5A5 !important; }
-    form.select-state .select-disabled .css-6q0nyr-Svg {
+    form.select-state .select-disabled .css-tlfecz-indicatorContainer svg {
       fill: #A5A5A5 !important; }
   form.select-state .css-1wa3eu0-placeholder {
     color: #DC042A; }
   form.select-state .css-1okebmr-indicatorSeparator {
     background-color: transparent; }
-  form.select-state .css-6q0nyr-Svg {
+  form.select-state .css-tlfecz-indicatorContainer svg {
     fill: #DC042A !important; }
   form.select-state .css-1pahdxg-control:hover {
     border-color: #DC042A;
@@ -572,7 +572,7 @@ section.select-restaurant {
     font-weight: 600; }
   section.select-restaurant .select-state {
     width: 40%; }
-    section.select-restaurant .select-state .css-6q0nyr-Svg {
+    section.select-restaurant .select-state .css-tlfecz-indicatorContainer svg {
       fill: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
       color: #fff; }
