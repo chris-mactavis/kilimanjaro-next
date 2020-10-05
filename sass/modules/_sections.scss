@@ -167,7 +167,7 @@ section {
             width: 40%;
 
             .css-6q0nyr-Svg {
-                color: #fff;
+                color: #fff !important;
             }
 
             .css-yk16xz-control {
@@ -402,7 +402,7 @@ section {
                     align-items: center;
                     justify-content: space-between;
                     flex-wrap: wrap;
-                    padding-bottom: 20px;
+                    padding: 20px 0;
                     border-bottom: 1px solid #a5a5a5;
 
                     img {
