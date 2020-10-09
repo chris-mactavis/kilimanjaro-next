@@ -1,17 +1,57 @@
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { NotificationManager } from 'react-notifications';
 
 import FormInput from '../formInput/formInput';
+import axiosInstance from '../../config/axios';
+import { loader } from '../../store/actions/loader';
 
 const Signup = () => {
 
     const { register, handleSubmit, errors, reset } = useForm();
 
-    const signupHandler = (data) =>  {
-        if (data) {
-            console.log(data);
+    const dispatch = useDispatch();
+
+    const signupHandler = async (data) =>  {
+        dispatch(loader());
+        try {
+            if (data) {
+                const { data : response} = await axiosInstance.post('registe', {...data, signup_device: 'web'});
+                const { user, token } = response.data;
+                console.log(user);
+                console.log(token);
+                dispatch(loader());
+            }
+            // setTimeout(() => {
+                NotificationManager.success('Registered Successfully', '', 3000);
+                // console.log("Hello");
+            // }, 1500);
+        } catch (error) {
+            dispatch(loader());
+            NotificationManager.error(error.response.data.message, '', 3000);
+            // console.log(error.response.data.message);
         }
         reset({});
     };
+
+    const verifyEmailHandler = async email => {
+        try {
+            const { data: {data: {email_exists}} } = await axiosInstance.post('verify-email', {email});
+            return !email_exists || 'Email already exists. Do you want to login instead?'
+        } catch (error) {
+
+        }
+
+    }
+
+    const verifyPhoneHandler = async phone => {
+        try {
+            const { data: {data: {phone_exists}} } = await axiosInstance.post('verify-phone', {phone});
+            return !phone_exists || 'Phone number already exists. Kindly use another number'
+        } catch (error) {
+
+        }
+    }
 
     return (
         <>
@@ -21,34 +61,42 @@ const Signup = () => {
                 <form onSubmit={handleSubmit(signupHandler)} className="signup-form">
                     <FormInput
                         type="text"
-                        name="firstName"
+                        name="first_name"
                         placeholder="First Name*"
                         label="First Name"
-                        register={register ({required : true})} 
-                        error={errors.firstName && 'First name is required'}
+                        register={register ({required : 'First name is required'})} 
+                        error={errors.first_name && errors.first_name.message}
                     />
                     <FormInput
                         type="text"
-                        name="lastName"
+                        name="last_name"
                         placeholder="Last Name*"
                         label="Last Name"
-                        register={register ({required : true})}
-                        error={errors.lastName && 'Last name is required'} 
+                        register={register ({required : 'Last name is required'})}
+                        error={errors.last_name && errors.last_name.message} 
                     />
                     <FormInput
                         type="number"
-                        name="mobileNumber"
+                        name="phone"
                         placeholder="+234 80 1234 5678"
                         label="Mobile Number"
-                        register={register ({required : true})}
+                        register={register ({ 
+                            required : true,
+                            // validate: async value => verifyPhoneHandler(value)
+                        })}
+                        error={errors.phone && errors.phone.message} 
                     />
                     <FormInput
                         type="email"
                         name="email"
                         placeholder="Example@email.com*"
                         label="Email Address"
-                        register={register ({ required : true, pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/ })}
-                        error={errors.email && 'Please input a valid email address'} 
+                        register={register({ 
+                            required : 'Please input a valid email address', 
+                            pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                            validate: async value => verifyEmailHandler(value) 
+                        })}
+                        error={errors.email && errors.email.message} 
                     />
                     <FormInput
                         type="password"
@@ -56,7 +104,7 @@ const Signup = () => {
                         placeholder="Password*"
                         label="Password"
                         register={register ({required : true, minLength: 8})}
-                        error={errors.password && 'Password must be more than 8 characters'} 
+                        error={errors.password && errors.password.message} 
                     />
                     <button className="btn btn-login mt-3">Register</button>
                 </form>
