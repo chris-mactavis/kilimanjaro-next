@@ -16,7 +16,7 @@ const Signup = () => {
         dispatch(loader());
         try {
             if (data) {
-                const { data : response} = await axiosInstance.post('registe', {...data, signup_device: 'web'});
+                const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
                 const { user, token } = response.data;
                 console.log(user);
                 console.log(token);

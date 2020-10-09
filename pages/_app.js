@@ -8,12 +8,12 @@ import 'react-notifications/lib/notifications.css';
 
 import toggleLoading from '../store/reducers/loader';
 import shop from '../store/reducers/shop';
-import auth from '../store/reducers/auth'
+// import auth from '../store/reducers/auth'
 
 const reducers = combineReducers({
   loader: toggleLoading,
   shop: shop,
-  auth: auth
+  // auth: auth
 });
 
 // const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware)));
