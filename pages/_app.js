@@ -7,11 +7,13 @@ import '../styles/main.css';
 import 'react-notifications/lib/notifications.css';
 
 import toggleLoading from '../store/reducers/loader';
-import shop from '../store/reducers/shop'
+import shop from '../store/reducers/shop';
+import auth from '../store/reducers/auth'
 
 const reducers = combineReducers({
   loader: toggleLoading,
-  shop: shop
+  shop: shop,
+  auth: auth
 });
 
 // const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware)));
