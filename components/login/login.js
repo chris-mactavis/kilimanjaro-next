@@ -1,15 +1,42 @@
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import Router from 'next/router';
+import { NotificationManager } from 'react-notifications';
+
 
 import FormInput from "../formInput/formInput";
+import { loginAsync } from '../../store/actions/auth';
+import { storeAuth } from '../../store/actions/auth';
 
 
 const Login = () => {
 
     const { register, handleSubmit, errors , reset} = useForm();
+    const dispatch = useDispatch();
 
-    const loginHandler = (data) =>  {
+    const facebookLoginHandler = (data) => {
+        console.log(data);
+    }
+
+    const googleLoginHandler = (data) => {
+        const user = {
+            token: data.tokenId,
+            user: {...data.profileObj, first_name: data.profileObj.familyName, last_name: data.profileObj.givenName}
+        }
+        dispatch(storeAuth(user));
+        NotificationManager.success('Account Registeration Successful', '', 3000);
+        Router.push('/');
+    }
+
+    const loginHandler = async data =>  {
         if (data) {
-            console.log(data);
+            try {
+                await dispatch(loginAsync(data));
+            } catch (error) {
+                console.log(error);
+            }
         }
         reset({});
     };
@@ -44,8 +71,29 @@ const Login = () => {
                 </form>
                 <p className="mt-3">Or sign in with</p>
                 <div className="other-signin-option">
-                    <button className="fb-btn"><img src="/images/icon/fb-white.svg" alt="" />facebook</button>
-                    <button><img src="/images/icon/google.svg" alt="" />Google</button>
+                <FacebookLogin
+                        appId="699697547406211"
+                        autoLoad={true}
+                        fields="name,email,picture"
+                        callback={facebookLoginHandler}
+                        icon='fa-facebook'
+                        textButton="Facebook"
+                    />
+                    <div className="gle-btn">
+                        <GoogleLogin
+                            clientId="468329337642-v2qjq23bgdoluhfq4dtblb36bodanmhg.apps.googleusercontent.com"
+                            fields="first_name,last_name,email,picture"
+                            buttonText="Google"
+                            onSuccess={googleLoginHandler}
+                            onFailure={googleLoginHandler}
+                            cookiePolicy={'single_host_origin'}
+                            icon= {true}
+                            className="google-btn"
+                            disabled= {false}
+                        />
+                    </div>
+                    {/* <button className="fb-btn"><img src="/images/icon/fb-white.svg" alt="" />facebook</button>
+                    <button><img src="/images/icon/google.svg" alt="" />Google</button> */}
                 </div>
             </div>
         </>
