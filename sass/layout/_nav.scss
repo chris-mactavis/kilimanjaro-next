@@ -33,6 +33,39 @@ nav.navbar {
         color: $primary;
       }
     }
+
+    .account-toggle {
+      position: relative;
+
+      a.dropdown-toggle {
+
+        &::after {
+          margin-left: .5em;
+        }
+      }
+
+      a {
+        text-transform: uppercase;
+        color: $primary;
+        font-size: 15px;
+      }
+
+      .dropdown-menu {
+        min-width: 100%;
+      }
+
+      .dropdown-item {
+        padding: 0.7rem 1.5rem;
+
+        &:active {
+          background-color: transparent !important;
+        }
+      } 
+
+      .dropdown-item.active {
+       background-color: transparent !important;
+      } 
+    }
   }
 
   .navbar-toggler {

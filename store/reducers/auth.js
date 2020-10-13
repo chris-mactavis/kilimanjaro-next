@@ -1,15 +1,37 @@
+import { LOGIN, LOGOUT } from '../actions/auth';
 
-// const initialState = {
-//     user: user || null,
-//     token: token || null
-// };
+import Cookies from 'js-cookie';
 
-// const auth = (state = initialState, action) => {
-//     switch (action.type) {
-//         case STORE_USER:
-//             return {
-//                 ...state,
-//                 user: action.user
-//             }
-//     }
-// }
+const token = Cookies.get('token'), user = Cookies.get('user');
+
+const initialState = {
+    loggedIn: !!token && !!user,
+    user: user || null,
+    token: token || null
+};
+
+const auth = (state = initialState, action) => {
+    switch (action.type) {
+        case LOGIN:
+            const {user, token} = action.data;
+
+            return {
+                ...state,
+                user,
+                token,
+                loggedIn: true
+            }
+        case LOGOUT:
+            return {
+                ...state,
+                user: null,
+                token: null,
+                loggedIn: false
+            }
+
+        default:
+            return state;
+    }
+};
+
+export default auth;

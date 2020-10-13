@@ -1082,24 +1082,45 @@ section.signup {
     color: #DC042A; }
   section.signup p {
     color: #7F7F7F; }
-  section.signup .other-signin-option button {
-    border: 1px solid #707070;
-    font-size: 10px;
-    text-transform: uppercase;
-    padding: 6px 30px 6px 10px;
+  section.signup .other-signin-option {
     display: inline-flex;
-    align-items: center;
-    background-color: #fff;
-    font-family: "Ubuntu", sans-serif; }
-    section.signup .other-signin-option button:not(:last-child) {
-      margin-right: 20px; }
-    section.signup .other-signin-option button img {
-      max-height: 15px;
-      margin-right: 10px; }
-  section.signup .other-signin-option .fb-btn {
-    background-color: #435A9B;
-    color: #fff;
-    border: none; }
+    align-items: flex-end; }
+    section.signup .other-signin-option button {
+      border: 1px solid #707070;
+      font-size: 10px;
+      text-transform: uppercase;
+      padding: 6px 30px 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      background-color: #fff;
+      font-family: "Ubuntu", sans-serif; }
+      section.signup .other-signin-option button:not(:last-child) {
+        margin-right: 20px; }
+      section.signup .other-signin-option button img {
+        max-height: 15px;
+        margin-right: 10px; }
+    section.signup .other-signin-option .fb-btn {
+      background-color: #435A9B;
+      color: #fff;
+      border: none; }
+    section.signup .other-signin-option .kep-login-facebook {
+      background-color: #435A9B; }
+      section.signup .other-signin-option .kep-login-facebook .fa {
+        font-size: 15px; }
+    section.signup .other-signin-option .google-btn {
+      color: #000 !important;
+      padding: 0 !important;
+      font-size: 10px !important;
+      border: 1px solid #000 !important;
+      border-radius: 0 !important;
+      box-shadow: unset !important;
+      opacity: 1 !important; }
+      section.signup .other-signin-option .google-btn div {
+        padding: 5px !important;
+        margin-right: 2px !important;
+        margin-left: 5px !important; }
+      section.signup .other-signin-option .google-btn span {
+        padding: 0 20px 0 0  !important; }
   section.signup .or-text {
     width: 40px;
     height: 40px;
@@ -1220,6 +1241,22 @@ nav.navbar {
       padding: 5px 20px; }
       nav.navbar ul.navbar-nav .nav-bg-white .nav-link {
         color: #DC042A; }
+    nav.navbar ul.navbar-nav .account-toggle {
+      position: relative; }
+      nav.navbar ul.navbar-nav .account-toggle a.dropdown-toggle::after {
+        margin-left: .5em; }
+      nav.navbar ul.navbar-nav .account-toggle a {
+        text-transform: uppercase;
+        color: #DC042A;
+        font-size: 15px; }
+      nav.navbar ul.navbar-nav .account-toggle .dropdown-menu {
+        min-width: 100%; }
+      nav.navbar ul.navbar-nav .account-toggle .dropdown-item {
+        padding: 0.7rem 1.5rem; }
+        nav.navbar ul.navbar-nav .account-toggle .dropdown-item:active {
+          background-color: transparent !important; }
+      nav.navbar ul.navbar-nav .account-toggle .dropdown-item.active {
+        background-color: transparent !important; }
   nav.navbar .navbar-toggler:focus {
     outline: none; }
   nav.navbar .navbar-toggler .navbar-toggler-icon {
