@@ -996,6 +996,56 @@ section {
                 opacity: 1;
             }
         }
+
+        .MuiTypography-body1 {
+            font-size: 14px;
+            color: #7F7F7F;
+
+            a {
+                color: $primary;
+                text-decoration: none;
+            }
+        }
+
+        .MuiSvgIcon-root {
+            fill: $primary;
+            width: 25px;
+            height: 25px;
+        }
+
+        .MuiAccordion-root {
+            &:before {
+                top: 0;
+            }
+        }
+
+        .MuiAccordionDetails-root {
+            text-align: left;
+            padding: 8px 16px 6px;
+        }
+
+        .MuiAccordionSummary-root {
+            border: 1px solid $primary;
+            min-height: 20px;
+        }
+
+        .MuiPaper-elevation1 {
+            box-shadow: unset;
+            margin-bottom: 15px;
+        }
+
+        .MuiAccordionSummary-content {
+            margin: 0 !important;
+        }
+
+        .MuiAccordionSummary-root.Mui-expanded {
+            min-height: 20px;
+            border: 1px solid $primary;
+        }
+
+        .MuiAccordionSummary-content.Mui-expanded {
+            margin: 0;
+        }
     }
 
     &.career {
