@@ -185,6 +185,9 @@ const Menu = ({ productCategories }) => {
                                     <form className="select-state">
                                         <Select onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
                                     </form>
+                                    <form className="select-state">
+                                        <Select onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
+                                    </form>
                                 </div>
                                 <ul className="product-cat">
                                     {restaurantCategories.map((productCategory) => {

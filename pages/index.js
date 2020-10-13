@@ -1,4 +1,7 @@
 import Head from 'next/head';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+
 
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
@@ -8,7 +11,13 @@ import axiosInstance from '../config/axios';
 
 
 const Home = ({cities}) => {
+  // console.log(cities);
   const hasToken = false;
+
+  useEffect(() => {
+    const allCities = Cookies.set('setAllCities') ? Cookies.set('setAllCities', JSON.stringify(cities)) : [];
+    console.log(allCities);
+  }, []); 
   
   return (
     <>
@@ -57,6 +66,7 @@ Home.getInitialProps = async() => {
   try {
       const {data: {data}} = await axiosInstance.get('cities');
       return {cities: data};
+    
   } catch (error) {
       console.log(error)
       return {};

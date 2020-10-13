@@ -564,14 +564,15 @@ section.select-restaurant {
   padding: 20px 0 0 0;
   box-shadow: 0 2px 9px -3px grey; }
   section.select-restaurant .d-flex {
-    width: 50%; }
+    width: 100%; }
   section.select-restaurant p {
     margin-bottom: 0;
     margin-right: 20px;
     text-transform: uppercase;
     font-weight: 600; }
   section.select-restaurant .select-state {
-    width: 40%; }
+    width: 20%;
+    margin-right: 20px; }
     section.select-restaurant .select-state .css-tlfecz-indicatorContainer svg {
       fill: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
