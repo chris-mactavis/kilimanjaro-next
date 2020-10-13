@@ -27,8 +27,10 @@ form {
             color: #A5A5A5 !important;
         }
 
-        .css-6q0nyr-Svg {
-            color: #A5A5A5 !important;
+        .css-tlfecz-indicatorContainer {
+            svg {
+                fill: #A5A5A5 !important;
+            }
         }
     }
 
@@ -40,8 +42,10 @@ form {
         background-color: transparent;
     }
 
-    .css-6q0nyr-Svg {
-        color: $primary !important;
+    .css-tlfecz-indicatorContainer {
+        svg {
+            fill: $primary !important;
+        }
     }
 
     .css-1pahdxg-control:hover {

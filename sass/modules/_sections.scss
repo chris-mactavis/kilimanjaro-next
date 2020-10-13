@@ -165,9 +165,10 @@ section {
 
         .select-state {
             width: 40%;
-
-            .css-6q0nyr-Svg {
-                color: #fff !important;
+            .css-tlfecz-indicatorContainer {
+                svg {
+                    fill: #fff !important;
+                }
             }
 
             .css-yk16xz-control {
@@ -864,6 +865,8 @@ section {
         }
 
         .other-signin-option {
+            display: inline-flex;
+            align-items: flex-end;
 
             button {
                 border: 1px solid #707070;
@@ -889,6 +892,34 @@ section {
                 background-color: #435A9B;
                 color: #fff;
                 border: none;
+            }
+
+            .kep-login-facebook {
+                background-color: #435A9B;
+
+                .fa {
+                    font-size: 15px;
+                }
+            }
+
+            .google-btn {
+                color: #000 !important;
+                padding: 0 !important;
+                font-size: 10px !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                box-shadow: unset !important;
+                opacity: 1 !important;
+
+                div {
+                    padding: 5px !important;
+                    margin-right: 2px !important;
+                    margin-left: 5px !important;
+                }
+
+                span {
+                    padding: 0 20px 0 0  !important;
+                }
             }
         }
 
@@ -994,6 +1025,56 @@ section {
             .slick-slide.slick-active.slick-center.slick-center img {
                 opacity: 1;
             }
+        }
+
+        .MuiTypography-body1 {
+            font-size: 14px;
+            color: #7F7F7F;
+
+            a {
+                color: $primary;
+                text-decoration: none;
+            }
+        }
+
+        .MuiSvgIcon-root {
+            fill: $primary;
+            width: 25px;
+            height: 25px;
+        }
+
+        .MuiAccordion-root {
+            &:before {
+                top: 0;
+            }
+        }
+
+        .MuiAccordionDetails-root {
+            text-align: left;
+            padding: 8px 16px 6px;
+        }
+
+        .MuiAccordionSummary-root {
+            border: 1px solid $primary;
+            min-height: 20px;
+        }
+
+        .MuiPaper-elevation1 {
+            box-shadow: unset;
+            margin-bottom: 15px;
+        }
+
+        .MuiAccordionSummary-content {
+            margin: 0 !important;
+        }
+
+        .MuiAccordionSummary-root.Mui-expanded {
+            min-height: 20px;
+            border: 1px solid $primary;
+        }
+
+        .MuiAccordionSummary-content.Mui-expanded {
+            margin: 0;
         }
     }
 
