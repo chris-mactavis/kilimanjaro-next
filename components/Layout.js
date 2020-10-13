@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Router from 'next/router';
 import NProgress from 'nprogress';
-import { NotificationContainer } from 'react-notifications';
+
 
 import NavBar from '../components/NavBar';
 import Footer from './Footer';
@@ -27,8 +27,6 @@ const Layout = ({children, showSecFooter}) => {
             <NavBar />
 
             <Loader /> 
-
-            <NotificationContainer/>
 
             {children}
 

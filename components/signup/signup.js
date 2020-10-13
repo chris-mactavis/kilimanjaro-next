@@ -1,10 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
+import Router from 'next/router';
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 
 import FormInput from '../formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
+import { storeAuth } from '../../store/actions/auth';
+
 
 const Signup = () => {
 
@@ -12,24 +17,35 @@ const Signup = () => {
 
     const dispatch = useDispatch();
 
+    const facebookLoginHandler = (data) => {
+        console.log(data);
+    }
+
+    const googleLoginHandler = (data) => {
+        const user = {
+            token: data.tokenId,
+            user: {...data.profileObj, first_name: data.profileObj.familyName, last_name: data.profileObj.givenName}
+        }
+        dispatch(storeAuth(user));
+        NotificationManager.success('Account Registeration Successful', '', 3000);
+        Router.push('/');
+    }
+
     const signupHandler = async (data) =>  {
         dispatch(loader());
         try {
             if (data) {
                 const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
-                const { user, token } = response.data;
-                console.log(user);
-                console.log(token);
+                dispatch(storeAuth(response.data));
+                console.log(response.data);
                 dispatch(loader());
+                Router.push('/');
             }
-            // setTimeout(() => {
-                NotificationManager.success('Registered Successfully', '', 3000);
-                // console.log("Hello");
-            // }, 1500);
+            NotificationManager.success('Account Registeration Successful', '', 3000);
         } catch (error) {
             dispatch(loader());
             NotificationManager.error(error.response.data.message, '', 3000);
-            // console.log(error.response.data.message);
+            console.log(error);
         }
         reset({});
     };
@@ -82,7 +98,7 @@ const Signup = () => {
                         label="Mobile Number"
                         register={register ({ 
                             required : true,
-                            // validate: async value => verifyPhoneHandler(value)
+                            validate: async value => verifyPhoneHandler(value)
                         })}
                         error={errors.phone && errors.phone.message} 
                     />
@@ -110,8 +126,35 @@ const Signup = () => {
                 </form>
                 <p className="mt-3">Or sign up with</p>
                 <div className="other-signin-option">
-                    <button className="fb-btn"><img src="/images/icon/fb-white.svg" alt="" />facebook</button>
-                    <button><img src="/images/icon/google.svg" alt="" />Google</button>
+                    <FacebookLogin
+                        appId="699697547406211"
+                        autoLoad={true}
+                        fields="name,email,picture"
+                        callback={facebookLoginHandler}
+                        icon='fa-facebook'
+                        textButton="Facebook"
+                    />
+                    <div className="gle-btn">
+                        <GoogleLogin
+                            clientId="468329337642-v2qjq23bgdoluhfq4dtblb36bodanmhg.apps.googleusercontent.com"
+                            fields="first_name,last_name,email,picture"
+                            buttonText="Google"
+                            onSuccess={googleLoginHandler}
+                            onFailure={googleLoginHandler}
+                            cookiePolicy={'single_host_origin'}
+                            icon= {true}
+                            className="google-btn"
+                            disabled= {false}
+                        />
+                    </div>
+                    
+                    {/* <button className="fb-btn"><img src="/images/icon/fb-white.svg" alt="" /><FacebookLogin
+                        appId="1088597931155576"
+                        autoLoad={true}
+                        fields="name,email,picture"
+                        callback={facebookLoginHandler}
+                    /></button> */}
+                    {/* <button><img src="/images/icon/google.svg" alt="" />Google</button> */}
                 </div>
             </div>
         </>

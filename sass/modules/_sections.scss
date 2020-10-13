@@ -865,6 +865,8 @@ section {
         }
 
         .other-signin-option {
+            display: inline-flex;
+            align-items: flex-end;
 
             button {
                 border: 1px solid #707070;
@@ -890,6 +892,34 @@ section {
                 background-color: #435A9B;
                 color: #fff;
                 border: none;
+            }
+
+            .kep-login-facebook {
+                background-color: #435A9B;
+
+                .fa {
+                    font-size: 15px;
+                }
+            }
+
+            .google-btn {
+                color: #000 !important;
+                padding: 0 !important;
+                font-size: 10px !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                box-shadow: unset !important;
+                opacity: 1 !important;
+
+                div {
+                    padding: 5px !important;
+                    margin-right: 2px !important;
+                    margin-left: 5px !important;
+                }
+
+                span {
+                    padding: 0 20px 0 0  !important;
+                }
             }
         }
 
