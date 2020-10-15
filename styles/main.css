@@ -272,9 +272,12 @@ form {
       form.select-state .select-disabled .css-yk16xz-control:hover {
         border-color: #A5A5A5 !important; }
     form.select-state .select-disabled .css-1wa3eu0-placeholder {
-      color: #A5A5A5 !important; }
+      color: #A5A5A5 !important;
+      font-size: 15px; }
     form.select-state .select-disabled .css-tlfecz-indicatorContainer svg {
       fill: #A5A5A5 !important; }
+    form.select-state .select-disabled .css-g1d714-ValueContainer {
+      padding: 0 8px; }
   form.select-state .css-1wa3eu0-placeholder {
     color: #DC042A; }
   form.select-state .css-1okebmr-indicatorSeparator {
@@ -576,7 +579,7 @@ section.select-restaurant {
     section.select-restaurant .select-state .css-tlfecz-indicatorContainer svg {
       fill: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
-      color: #fff; }
+      color: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control {
       background-color: #DC042A;
       border: transparent; }
@@ -722,6 +725,12 @@ section.products {
         margin-bottom: 0; }
     section.products .cart .cart-product-list {
       display: none; }
+      section.products .cart .cart-product-list .cart-listing-container {
+        overflow: scroll;
+        height: 273px;
+        padding-right: 10px; }
+      section.products .cart .cart-product-list .cart-listing-height {
+        height: auto !important; }
       section.products .cart .cart-product-list .product-list {
         display: flex;
         align-items: center;

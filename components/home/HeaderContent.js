@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 
 import { loader } from '../../store/actions/loader';
 import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
-import { useEffect } from 'react';
 
 
 const HeaderContent = ({cities}) => {

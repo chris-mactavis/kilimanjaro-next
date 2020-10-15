@@ -2,32 +2,49 @@ import Layout from '../../components/Layout';
 import Head from 'next/head';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng, } from 'react-places-autocomplete';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
 
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
-import Loader from '../../components/UI/loader';
+import { addToCart, updateTotalPrice } from '../../store/actions/shop'
+// import Loader from '../../components/UI/loader';
 // import { NotificationManager } from 'react-notifications';
 
 
 
 const Checkout = () => {
 
-    // const showNotifications = () => {
-    //     NotificationManager.success('Message', 'Title', 3000);
-    // }
-
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
     const [paymentOption, setPaymentOption] = useState('delivery');
     const [ isLoading, setIsLoading ] = useState(false);
-    const [ showNotification, setShowNotification] = useState(false);
+
+    //  All store
+    const allCart = useSelector(state => state.shop.cart);
+    const allTotalPrice = useSelector(state => state.shop.updatedPrice); 
+
+    console.log(allCart);
+
+    const dispatch = useDispatch();
+    
+    
+    useEffect(() => {
+        const allProductCart = JSON.parse(Cookies.get('setCart'));
+        const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
+
+        dispatch(updateTotalPrice(tolPrice));
+
+        if (!allCart.length > 0) {
+            dispatch(addToCart(allProductCart));
+        }
+    }, []);
 
     const { register, handleSubmit, errors, reset } = useForm();
 
     const billingInfoHandler = (data) => {
-
         setIsLoading(true);
         if (data) {
             data.latLng = latLng;
@@ -195,20 +212,24 @@ const Checkout = () => {
                                             <h4>Order Details</h4>
                                             <div className="order-details-list">
                                                 <div className="order-prod d-flex align-items justify-content-between mb-5 flex-wrap">
-                                                    <p>2x <span>Yam porridge and fish</span></p>
-                                                    <p>N2000</p>
+                                                    {allCart.map((cart) => {
+                                                        return <>
+                                                            <p>{cart.quantity}x <span>{cart.product.product}</span></p>
+                                                            <p>{'₦'+cart.totalPrice}</p>
+                                                        </>
+                                                    })}
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Subtotal</p>
-                                                    <p>N2000</p>
+                                                    <p>{'₦'+allTotalPrice}</p>
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Delivery</p>
-                                                    <p>N1000</p>
+                                                    <p>{'₦'+0}</p>
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Order Total </p>
-                                                    <p>N3000</p>
+                                                    <p>{'₦'+0}</p>
                                                 </div>
                                                 <button className="btn btn-place-order">Place Order</button>
                                             </div>

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
-import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice } from '../../store/actions/shop';
+import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
 
 const ShoppingCart = () => {
     const drinks = [
@@ -25,14 +25,29 @@ const ShoppingCart = () => {
     //  All store 
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
     const allCart = useSelector(state => state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.updatedPrice); 
+    const allTotalPrice = useSelector(state => state.shop.updatedPrice);
+    const varPrice = useSelector(state => state.shop.variablePrice) 
+    // console.log(allCart);
+    
+    // Displaying the total price with variable products
+    let newTotalPrice = 0;
+    if (varPrice) {
+        newTotalPrice = parseInt(allTotalPrice) + varPrice.totalVariablePrice;
+    } else {
+        newTotalPrice = parseInt(allTotalPrice)
+    }
+    console.log(newTotalPrice);
     
     useEffect(() => {
-        const allProductCart = JSON.parse(Cookies.get('setCart'));
-        const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        const tolPrice = Cookies.get('setCart') ? JSON.parse(Cookies.get('totalPrice')) : null;
+        const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
+        const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
+        const tolPrice = Cookies.get('totalPrice') ? Cookies.get('totalPrice') : null;
+        const cookiesVariablePrice = Cookies.get('variable') ? JSON.parse(Cookies.get('variable')) : null;
         dispatch(updateTotalPrice(tolPrice));
-        console.log(tolPrice);
+
+        if (!varPrice) {
+            dispatch(updateVariablePrice(cookiesVariablePrice));
+        }
 
         if (!allCart.length > 0) {
             dispatch(addToCart(allProductCart));
@@ -43,8 +58,10 @@ const ShoppingCart = () => {
         }
     }, []); 
     
-    const updateQuantityChangeHandle = (e) => {
+    const updateQuantityChangeHandle = (e, cart) => {
         const quantitySelected = e.target.value;
+        console.log(quantitySelected);
+        console.log(cart);
     }
 
     const deleteProductCartHandler = (index) => {
@@ -54,6 +71,10 @@ const ShoppingCart = () => {
         dispatch(setTotalPrice());
         setValue(value => ++value); 
     };
+
+    const updateCartHander = () => {
+        console.log('hello');
+    }
 
     let cartDisplay = <p className="text-center">Your cart is empty</p>;
     if (allCart.length > 0) {
@@ -65,7 +86,7 @@ const ShoppingCart = () => {
                     <p className="product-name">{cart.product.product} </p>
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
-                        <input onChange={updateQuantityChangeHandle} defaultValue={cart.quantity} type='number' />
+                        <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' />
                     </div>
                     <p>{'₦' + cart.totalPrice}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
@@ -88,6 +109,9 @@ const ShoppingCart = () => {
                             <div className="col-md-8 mx-auto">
                                 <h4>Review Your Order</h4>
                                 {cartDisplay}
+                                <div className="text-right mt-4 mb-3">
+                                    <button onClick={updateCartHander} className="btn">Update Cart</button>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-8">
                                         <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
@@ -112,7 +136,7 @@ const ShoppingCart = () => {
                                             </div>
                                             <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Subtotal</p>
-                                                <p>{'₦'+allTotalPrice}</p>
+                                                <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                             {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Delivery fee</p>
@@ -120,7 +144,7 @@ const ShoppingCart = () => {
                                             </div> */}
                                             <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Total</p>
-                                                <p>{'₦'+allTotalPrice}</p>
+                                                <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                         </div>
                                         <button className="btn btn-order w-100">Checkout</button>

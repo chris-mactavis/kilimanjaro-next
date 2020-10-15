@@ -4,6 +4,7 @@ export const SELECTED_RESTAURANT = 'SELECTED_RESTAURANTS';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const SET_TOTAL_PRICE = 'SET_TOTAL_PRICE';
 export const UPDATED_TOTAL_PRICE  = 'UPDATED_TOTAL_PRICE';
+export const UPDATED_VARIABLE_PRICE = 'UPDATED_VARIABLE_PRICE';
 
 export const saveRestaurants = (restaurants) => ({
     type: SAVE_RESTAURANTS,
@@ -27,6 +28,11 @@ export const setTotalPrice = () => ({
 export const updateTotalPrice = (updatePrice) => ({
     type: UPDATED_TOTAL_PRICE,
     updatePrice
+});
+
+export const updateVariablePrice = (variablePrice) => ({
+    type: UPDATED_VARIABLE_PRICE,
+    variablePrice
 });
 
 

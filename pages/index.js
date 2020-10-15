@@ -11,12 +11,10 @@ import axiosInstance from '../config/axios';
 
 
 const Home = ({cities}) => {
-  // console.log(cities);
   const hasToken = false;
 
   useEffect(() => {
-    const allCities = Cookies.set('setAllCities') ? Cookies.set('setAllCities', JSON.stringify(cities)) : [];
-    console.log(allCities);
+    localStorage.setItem('setAllCities', JSON.stringify(cities));
   }, []); 
   
   return (

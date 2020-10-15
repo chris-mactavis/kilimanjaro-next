@@ -166,7 +166,7 @@ section {
         .select-state {
             width: 20%;
             margin-right: 20px;
-            
+
             .css-tlfecz-indicatorContainer {
                 svg {
                     fill: #fff !important;
@@ -176,7 +176,7 @@ section {
             .css-yk16xz-control {
                 .css-g1d714-ValueContainer {
                    .css-1uccc91-singleValue {
-                       color: #fff;
+                       color: #fff !important;
                    }
                 }
             }
@@ -399,6 +399,16 @@ section {
             .cart-product-list {
                 // padding: 40px 60px 40px 300px;
                 display: none;
+
+                .cart-listing-container {
+                    overflow: scroll;
+                    height: 273px;
+                    padding-right: 10px;
+                }
+
+                .cart-listing-height {
+                    height: auto !important;
+                }
 
                 .product-list {
                     display: flex;
