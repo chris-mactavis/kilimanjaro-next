@@ -30,7 +30,9 @@ const Menu = ({ productCategories }) => {
     const [ inlineLoading, setInlineLoading ] = useState(0);
     const [ restaurantName, setRestaurantName ] = useState(null);
     const [selectedVariableProducts, setSelectedVariableProducts] = useState([]);
-
+    const [quantitiesArray, setQuantitiesArray] = useState([]);
+    // const [allProducts, setAllProducts] = useState([]);
+    
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
 
     // let activeVarationBtn = ['btn'];
@@ -61,6 +63,19 @@ const Menu = ({ productCategories }) => {
 
     useEffect(() => {
         if (restaurantCategories.length > 0) {
+            // Set the default quantities for all products
+            let products = [];
+            restaurantCategories.forEach(c => {
+                const productsArray = c.category_products;
+                
+                productsArray.forEach(x => {
+                    
+                    products.push(x);
+                });
+            });
+
+            setQuantitiesArray(products.map(p => ({productId: p.id, quantity: 1})));
+
             const prods = restaurantCategories[0].category_products;
             setAllProductCategory(restaurantCategories[0]);
             setProducts(prods);
@@ -146,25 +161,33 @@ const Menu = ({ productCategories }) => {
         }
     };
 
-    let quantitySelected = 1;
-    const handleQuantityChange = (e) => {
-        quantitySelected = e.target.value;
+    // let quantitySelected = 1;
+    const handleQuantityChange = (e, prodId) => {
+        // quantitySelected = e.target.value;
+        const prevProdQtyIndex = quantitiesArray.findIndex(x => x.productId === prodId);
+        const prevProdQty = quantitiesArray[prevProdQtyIndex];
+
+        if (prevProdQty) {
+            quantitiesArray[prevProdQtyIndex] = {productId: prodId, quantity: +e.target.value};
+        } else {
+            const newQuantityArray = {productId: prodId, quantity: +e.target.value};
+            quantitiesArray.push(newQuantityArray);
+        }
+        console.log(quantitiesArray);
+        
+        setQuantitiesArray(quantitiesArray);
     };
 
     const addtoCartHandler = (prod) => {
         // setInlineLoading(prod.id);
         const prevCart = [...productCart];
+        const quantitySelected = quantitiesArray.find(q => q.productId === prod.id).quantity;
         /** This is an example of checking if a product is in cart and updating it */
         const prodInCartIndex = prevCart.findIndex(cart => cart.product.id === prod.id);
 
         const productType = prod.product_type;
         
         if (prodInCartIndex >= 0) {
-            // if (productType === 'variable') {
-            //     const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-            //     const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * productVariation.salePrice};
-            //     prevCart.push(newCart);
-            // }
 
             const prodInCart = prevCart[prodInCartIndex];
 
@@ -339,7 +362,7 @@ const Menu = ({ productCategories }) => {
                                                                     <p className="product-name">{prod.product}</p>
                                                                     <div className="d-flex">
                                                                         <p className="product-qty">Quantity</p>
-                                                                        <input defaultValue={quantitySelected} onChange={handleQuantityChange} type='number' />
+                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' />
                                                                     </div>
                                                                 </div>
                                                                 <p className="product-description">{prod.short_description}</p>
