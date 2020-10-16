@@ -1194,6 +1194,10 @@ section.store-location {
       list-style: none;
       margin-bottom: 10px;
       font-size: 17px; }
+  section.store-location .card {
+    padding: 23px;
+    border: none;
+    box-shadow: -1px -2px 19px -11px rgba(0, 0, 0, 0.75); }
 section.contact-us h4 {
   text-transform: initial;
   font-family: "Lato", sans-serif; }

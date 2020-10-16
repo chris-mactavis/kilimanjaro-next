@@ -1000,6 +1000,11 @@ section {
                 font-size: 17px;
             }
         }
+        .card {
+            padding: 23px;
+            border: none;
+            box-shadow: -1px -2px 19px -11px rgba(0,0,0,0.75);
+        }
     }
 
     &.contact-us {
