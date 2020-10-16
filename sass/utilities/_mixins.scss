@@ -54,6 +54,9 @@
     top: -5px;
     left: 0;
     position: relative;
+    -o-background-color: transparent;
+    -moz-background-color: transparent;
+    -webkit-background-color: transparent;
     background-color: transparent;
     content: "";
     display: inline-block;
@@ -105,6 +108,9 @@
 
     /* When the checkbox is checked, add a blue background */
     .contain input:checked ~ .checkmark {
+        -o-background-color: $primary;
+        -moz-background-color: $primary;
+        -webkit-background-color: $primary;
         background-color: $primary;
         border: 1px solid $primary;
     }

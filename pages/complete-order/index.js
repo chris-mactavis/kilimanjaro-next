@@ -1,9 +1,25 @@
 import Layout from '../../components/Layout';
 import Head from 'next/head';
+import Cookies from 'js-cookie';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
+import { useEffect, useState } from 'react';
+
 
 const CompleteOrder = () => {
+
+    const [ completeOrderItem, setCompleteOrderItem ] = useState({});
+    const [ selRestaurant, setSelRestaurant ] = useState({});
+    console.log(completeOrderItem);
+    console.log(selRestaurant);
+
+    useEffect(() => {
+        const orderCompleteItem = JSON.parse(Cookies.get('orderItem'));
+        const resSelected = JSON.parse(Cookies.get('selectedRestaurant'));
+        setSelRestaurant(resSelected);
+        setCompleteOrderItem(orderCompleteItem);
+    }, []);
+
     return (
         <Layout>
             <Head>
@@ -15,8 +31,8 @@ const CompleteOrder = () => {
                     {/* complete order */}
                     <div className="complete-order">
                         <div className="row">
-                            <div className="col-md-6 mx-auto">
-                                <h2>Order number: 3w25414656</h2>
+                            <div className="col-md-8 mx-auto">
+                            <h2>Order number: {completeOrderItem.order_number}</h2>
                             </div>
 
                             <div className="col-md-10 mx-auto">
@@ -26,12 +42,11 @@ const CompleteOrder = () => {
                                         <div className="row">
                                             <div className="col-md-8">
                                                 <h5 className="red">Order Details</h5>
-                                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpaofficia deserunt mollit anim id est eopksio laborum.
-                                             Sed perspiciatis unde omnis istpoe natus error sit voluptatem accusantium doloremque eopsloi laudantium, totam rem </p>
+                                                <p>{completeOrderItem.delivery_note}</p>
                                             </div>
                                             <div className="col-md-4 text-center">
                                                 <h5 className="mb-0">Order Total</h5>
-                                                <h6 className="amt">N2000</h6>
+                                                <h6 className="amt">{'₦'+completeOrderItem.total}</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -39,15 +54,15 @@ const CompleteOrder = () => {
                                         <div className="row">
                                             <div className="col-md-4">
                                                 <h5 className="red">Delivery address</h5>
-                                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpaofficia deserunt mollit anim id est eopksio laborum.</p>
+                                                <p>{completeOrderItem.ship_to}</p>
                                             </div>
                                             <div className="col-md-4">
                                                 <h5 className="red">Store Location</h5>
-                                                <p>Food Court, Abia mall </p>
+                                                <p>{selRestaurant.name}</p>
                                             </div>
                                             <div className="col-md-4">
                                                 <h5 className="red">Personal Details</h5>
-                                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpaofficia deserunt mollit anim id est eopksio laborum.</p>
+                                                <p>{completeOrderItem.house_number}</p>
                                             </div>
                                         </div>
                                     </div>

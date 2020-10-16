@@ -3,37 +3,50 @@ import Head from 'next/head';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng, } from 'react-places-autocomplete';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
+import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import { NotificationManager } from 'react-notifications';
 
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
+import axiosInstance from '../../config/axios';
 import { addToCart, updateTotalPrice } from '../../store/actions/shop'
-// import Loader from '../../components/UI/loader';
-// import { NotificationManager } from 'react-notifications';
+import { loader } from '../../store/actions/loader';
 
 
 
 const Checkout = () => {
 
+    //  All store
+    const allCart = useSelector(state => state.shop.cart);
+    const allTotalPrice = useSelector(state => state.shop.updatedPrice);
+    const loggedIn = useSelector(state => state.auth.loggedIn); 
+
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
     const [paymentOption, setPaymentOption] = useState('delivery');
+    const [ paymentMethod, setPaymentmethod] = useState('payment on delivery');
     const [ isLoading, setIsLoading ] = useState(false);
-
-    //  All store
-    const allCart = useSelector(state => state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.updatedPrice); 
-
-    console.log(allCart);
+    const [ selectedRestaurant, setSelectedRestaurant ] = useState(null);
+    const [ deliveryPrice, setDeliveryPrice ] = useState(0);
+    const [ total, setTotal ] = useState(allTotalPrice)
+    const [value, setValue] = useState(0);
 
     const dispatch = useDispatch();
     
+    // let orderTotal = allTotalPrice;
+
+    // if (deliveryPrice) {
+    //     orderTotal = deliveryPrice.delivery_price + allTotalPrice;
+    // }
     
     useEffect(() => {
         const allProductCart = JSON.parse(Cookies.get('setCart'));
         const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
+        const selectedRes =  Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
+        setSelectedRestaurant(selectedRes);
 
         dispatch(updateTotalPrice(tolPrice));
 
@@ -44,37 +57,123 @@ const Checkout = () => {
 
     const { register, handleSubmit, errors, reset } = useForm();
 
-    const billingInfoHandler = (data) => {
-        setIsLoading(true);
+    const billingInfoHandler = async data => {
+       dispatch(loader());
+        // console.log(data);
+        const cartItems = allCart.map(cart => ({
+            restaurant_product_id: cart.product.id,
+            product_cost: cart.price,
+            quantity: cart.quantity,
+            subtotal: cart.totalPrice,
+            variation: cart.product.product_type === 'variable' ? cart.product_variation : ''
+        }))
         if (data) {
-            data.latLng = latLng;
-            console.log(data);
+            const orderData = {
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+                phone: data.phone,
+                signup_device: 'web',
+                restaurant_id : selectedRestaurant.id,
+                street_address: streetAddress,
+                house_number: data.houseNumber,
+                longitude: latLng.lng,
+                latitude: latLng.lat,
+                payment_method: 'webPay',
+                quantity: allCart.length,
+                subtotal: allTotalPrice,
+                delivery: deliveryPrice,
+                total: total,
+                order_type: paymentOption,
+                ordered_from: 'web',
+                delivery_note: data.message,
+                order_items: cartItems
+            }
+
+            try {
+                const data = await axiosInstance.post('orders', orderData);
+                const orderItem = data.data.data; 
+                console.log(orderItem);
+                Cookies.set('orderItem', JSON.stringify(orderItem));
+                dispatch(loader());
+                NotificationManager.success('Order added successfully', '', 3000);
+                Router.push('/complete-order');
+                dispatch(addToCart([]));
+                dispatch(updateTotalPrice(0));
+                Cookies.remove('setCart');
+                Cookies.remove('totalPrice');
+            } catch (error) {
+                console.log(error);
+                dispatch(loader());
+                NotificationManager.error(error.response.data.message, '', 3000);
+            }
+
         }
         setTimeout(() => {
             setIsLoading(false);
-            setShowNotification(state => !state.showNotification);
         }, 2000);
         setStreetAddress('');
         reset({});
     };
 
-    const paymentOptionHandler = (e) => {
+    const verifyEmailHandler = async email => {
+        try {
+            const { data: {data: {email_exists}} } = await axiosInstance.post('verify-email', {email});
+            return !email_exists || 'Email already exists. Do you want to login instead?'
+        } catch (error) {
+
+        }
+    }
+
+    const onchangePaymentOption = (e) => {
         setPaymentOption(e.target.value);
     };
 
-    const handleChange = streetAddress => {
-        // this.setState({ streetAddress });
+    const onchangePaymentMethod = (e) => {
+        console.log(e.target.value);
+        setPaymentmethod(e.target.value);
+    }
+  
+    const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
     };
 
     const handleSelect = streetAddress => {
+        // setTotal(0);
+        setDeliveryPrice(0);
+        setValue(value => ++value);
         geocodeByAddress(streetAddress)
             .then(async results => {
                 const latLng = await getLatLng(results[0]);
                 setStreetAddress(results[0].formatted_address);
                 setLatLng(latLng);
+                return latLng;
             })
-            .then(latLng => console.log('Success', latLng))
+            .then(async latLng => {
+                // console.log(latLng, 'handle');
+                const deliveryDataForAmount = {
+                    restaurant_id: selectedRestaurant.id,
+                    longitude: latLng ? latLng.lng : null,
+                    latitude: latLng ? latLng.lat : null
+                }
+        
+                try {
+                    dispatch(loader());
+                    const {data: {data}} = await axiosInstance.post('delivery-fee', deliveryDataForAmount);
+                    setDeliveryPrice(data.delivery_price);
+                    // let calculateTotal = total;
+                    const calculateTotal = +data.delivery_price + +allTotalPrice;
+                    setTotal(calculateTotal);
+                    setValue(value => ++value);
+                    setTimeout(() => {
+                        dispatch(loader());
+                    }, 1000)
+                    // console.log(data);
+                } catch(error) {
+                    console.log(error);
+                }
+                // console.log('Success', latLng)
+            })
             .catch(error => console.error('Error', error));
     };
 
@@ -95,10 +194,10 @@ const Checkout = () => {
                                     <h4>Payment Option</h4>
                                     <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
                                         <label className="pay-opt">
-                                            <input type="radio" value="delivery" name="radio" onChange={paymentOptionHandler} defaultChecked />Delivery
+                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} defaultChecked />Delivery
                                             </label>
                                         <label className="pay-opt">
-                                            <input type="radio" value="pickup" name="radio" onChange={paymentOptionHandler} />Pickup
+                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} />Pickup
                                             </label>
                                     </div>
                                 </div>
@@ -113,10 +212,10 @@ const Checkout = () => {
                                                 ?
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment on delivery" name="radio" />Pay On Delivery
+                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked />Pay On Delivery
                                                     </label>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
                                                     </label>
                                                 </> 
                                                 :
@@ -132,26 +231,56 @@ const Checkout = () => {
                                        { paymentOption === 'delivery' && 
                                        <>
                                        <h4 className="mt-5">Billing Details</h4>
+                                       {!loggedIn && <div>
                                         <FormInput
                                             type="text"
-                                            name="name"
-                                            placeholder="Name*"
-                                            label="Name"
-                                            register={register({ required: true })}
-                                            error={errors.name && 'This field is required.'}
+                                            name="first_name"
+                                            placeholder="First Name*"
+                                            label="First Name"
+                                            register={register({ required: 'First name is required' })}
+                                            error={errors.first_name && errors.first_name.message}
                                         />
                                         <FormInput
+                                            type="text"
+                                            name="last_name"
+                                            placeholder="Last Name*"
+                                            label="Last Name"
+                                            register={register({ required: 'Last name is required' })}
+                                            error={errors.last_name && errors.last_name.message}
+                                        />
+                                         <FormInput
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email*"
+                                            label="Email"
+                                            register={register({ 
+                                                required: 'Please input a valid email address' ,
+                                                pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                                                validate: async value => verifyEmailHandler(value) 
+                                            })}
+                                            error={errors.email && errors.email.message}
+                                        />
+                                         <FormInput
+                                            type="password"
+                                            name="password"
+                                            placeholder="Password*"
+                                            label="Password"
+                                            register={register({ required: true, minLength: 8 })}
+                                            error={errors.password && errors.password.message}
+                                        />
+                                        </div>}
+                                        <FormInput
                                             type="number"
-                                            name="mobileNumber"
+                                            name="phone"
                                             placeholder="+234 80 1234 5678*"
                                             label="Mobile Number"
-                                            register={register({ required: true })}
-                                            error={errors.mobileNumber && 'This field is required.'}
+                                            register={register({ required: 'This field is required.' })}
+                                            error={errors.phone && errors.phone.message}
                                         />
                                         <PlacesAutocomplete 
                                             value={streetAddress}
                                             onChange={handleChange}
-                                            onSelect={handleSelect}
+                                            onSelect={handleSelect} 
                                         >
                                             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                                                 <div>
@@ -163,8 +292,8 @@ const Checkout = () => {
                                                             placeholder: 'Street/estate address*',
                                                             className: 'location-search-input',
                                                         })}
-                                                        register={register({ required: true })}
-                                                        error={errors.streetAddress && 'This field is required.'}
+                                                        register={register({ required: 'This field is required.' })}
+                                                        error={errors.streetAddress && errors.streetAddress.message}
                                                     />
                                                     <div className="autocomplete-dropdown-container">
                                                         {loading && <div>Loading...</div>}
@@ -199,11 +328,13 @@ const Checkout = () => {
                                             error={errors.houseNumber && 'This field is required.'}
                                         /> 
                                         </>}
+                                        <p>ALready a member? <a className="red-colored">Login</a></p>
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
                                             // className={errors.message ? 'textarea-error' : null}
                                             name="message"
                                             placeholder='Order/delivery note'
+                                            ref={register}
                                         />
                                     </div>
 
@@ -211,12 +342,12 @@ const Checkout = () => {
                                         <div className="order-details text-center">
                                             <h4>Order Details</h4>
                                             <div className="order-details-list">
-                                                <div className="order-prod d-flex align-items justify-content-between mb-5 flex-wrap">
-                                                    {allCart.map((cart) => {
-                                                        return <>
+                                                <div className="order-prod mb-5">
+                                                    {allCart.map((cart, id) => {
+                                                            return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
                                                             <p>{cart.quantity}x <span>{cart.product.product}</span></p>
-                                                            <p>{'₦'+cart.totalPrice}</p>
-                                                        </>
+                                                            <p key={cart}>{'₦'+cart.totalPrice}</p>
+                                                        </div>
                                                     })}
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
@@ -225,13 +356,13 @@ const Checkout = () => {
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Delivery</p>
-                                                    <p>{'₦'+0}</p>
+                                                    <p>{`${deliveryPrice === null ? '0' : '₦'+deliveryPrice}`}</p>
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Order Total </p>
-                                                    <p>{'₦'+0}</p>
+                                                    <p>{'₦'+total}</p>
                                                 </div>
-                                                <button className="btn btn-place-order">Place Order</button>
+                                                <button className={deliveryPrice === null ? "btn btn-place-order disabled" : "btn btn-place-order"}>Place Order</button>
                                             </div>
                                         </div>
                                     </div>
