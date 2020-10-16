@@ -54,7 +54,7 @@ const StoreLocation = () => {
                             </div>
                             <div className="col-md-4 mb-5">
                                 <div className="card">
-                                    <img className="img-fluid" src="/images/abuja" alt="" />
+                                    <img className="img-fluid" src="/images/abuja.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
                                         <h5>Enugu</h5>
                                         <button className="btn">
