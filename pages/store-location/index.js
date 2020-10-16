@@ -56,7 +56,7 @@ const StoreLocation = () => {
                                 <div className="card">
                                     <img className="img-fluid" src="/images/abuja" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Enugu</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
@@ -67,7 +67,7 @@ const StoreLocation = () => {
                                 <div className="card">
                                     <img className="img-fluid" src="/images/lagos.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Onitsha</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
@@ -78,7 +78,7 @@ const StoreLocation = () => {
                                 <div className="card">
                                     <img className="img-fluid" src="/images/lagos.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Oweri</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
@@ -89,7 +89,7 @@ const StoreLocation = () => {
                                 <div className="card">
                                     <img className="img-fluid" src="/images/lagos.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Portharcourt</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
@@ -100,7 +100,7 @@ const StoreLocation = () => {
                             <div className="card">
                                     <img className="img-fluid" src="/images/lagos.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Uyo</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
@@ -111,7 +111,7 @@ const StoreLocation = () => {
                                 <div className="card">
                                     <img className="img-fluid" src="/images/lagos.png" alt="" />
                                     <div className="d-flex mt-5 align-items-center justify-content-between">
-                                        <h5>Delta</h5>
+                                        <h5>Yenogoa</h5>
                                         <button className="btn">
                                             View Outlets
                                     </button>
