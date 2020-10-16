@@ -272,9 +272,12 @@ form {
       form.select-state .select-disabled .css-yk16xz-control:hover {
         border-color: #A5A5A5 !important; }
     form.select-state .select-disabled .css-1wa3eu0-placeholder {
-      color: #A5A5A5 !important; }
+      color: #A5A5A5 !important;
+      font-size: 15px; }
     form.select-state .select-disabled .css-tlfecz-indicatorContainer svg {
       fill: #A5A5A5 !important; }
+    form.select-state .select-disabled .css-g1d714-ValueContainer {
+      padding: 0 8px; }
   form.select-state .css-1wa3eu0-placeholder {
     color: #DC042A; }
   form.select-state .css-1okebmr-indicatorSeparator {
@@ -359,6 +362,8 @@ form {
     background-color: #F2F2F2 !important;
     padding: 2px 10px;
     font-size: 15px; }
+  form.signup-form .red-colored {
+    color: #DC042A; }
   form .remember-account {
     margin-bottom: 15px;
     /* Hide the browser's default checkbox */
@@ -399,6 +404,9 @@ form {
     form .remember-account .contain:hover input ~ .checkmark {
       background-color: #ccc; }
     form .remember-account .contain input:checked ~ .checkmark {
+      -o-background-color: #DC042A;
+      -moz-background-color: #DC042A;
+      -webkit-background-color: #DC042A;
       background-color: #DC042A;
       border: 1px solid #DC042A; }
     form .remember-account .checkmark:after {
@@ -562,20 +570,24 @@ section.orders {
 section.select-restaurant {
   background-color: #fff;
   padding: 20px 0 0 0;
-  box-shadow: 0 2px 9px -3px grey; }
+  box-shadow: 0 2px 9px -3px grey;
+  position: fixed;
+  width: 100%;
+  z-index: 3; }
   section.select-restaurant .d-flex {
-    width: 50%; }
+    width: 100%; }
   section.select-restaurant p {
     margin-bottom: 0;
     margin-right: 20px;
     text-transform: uppercase;
     font-weight: 600; }
   section.select-restaurant .select-state {
-    width: 40%; }
+    width: 20%;
+    margin-right: 20px; }
     section.select-restaurant .select-state .css-tlfecz-indicatorContainer svg {
       fill: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
-      color: #fff; }
+      color: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control {
       background-color: #DC042A;
       border: transparent; }
@@ -680,8 +692,8 @@ section.products {
     background: #fff;
     width: 36%;
     border-radius: 44px 0px 0px;
-    position: absolute;
-    top: 40px;
+    position: fixed;
+    top: 25%;
     right: -25%;
     transition: all 0.3s; }
     section.products .cart .cart-container {
@@ -721,6 +733,12 @@ section.products {
         margin-bottom: 0; }
     section.products .cart .cart-product-list {
       display: none; }
+      section.products .cart .cart-product-list .cart-listing-container {
+        overflow: scroll;
+        height: 273px;
+        padding-right: 10px; }
+      section.products .cart .cart-product-list .cart-listing-height {
+        height: auto !important; }
       section.products .cart .cart-product-list .product-list {
         display: flex;
         align-items: center;
@@ -789,6 +807,9 @@ section.products {
         section.products .cart .cart-product-list .cart-button-actions .contain:hover input ~ .checkmark {
           background-color: #ccc; }
         section.products .cart .cart-product-list .cart-button-actions .contain input:checked ~ .checkmark {
+          -o-background-color: #DC042A;
+          -moz-background-color: #DC042A;
+          -webkit-background-color: #DC042A;
           background-color: #DC042A;
           border: 1px solid #DC042A; }
         section.products .cart .cart-product-list .cart-button-actions .checkmark:after {
@@ -913,6 +934,9 @@ section.shopping-cart {
       top: -5px;
       left: 0;
       position: relative;
+      -o-background-color: transparent;
+      -moz-background-color: transparent;
+      -webkit-background-color: transparent;
       background-color: transparent;
       content: "";
       display: inline-block;
@@ -924,6 +948,9 @@ section.shopping-cart {
       top: -5px;
       left: 0;
       position: relative;
+      -o-background-color: transparent;
+      -moz-background-color: transparent;
+      -webkit-background-color: transparent;
       background-color: transparent;
       content: "";
       display: inline-block;

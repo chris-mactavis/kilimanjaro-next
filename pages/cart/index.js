@@ -4,11 +4,14 @@ import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import Router from 'next/router';
 
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
-import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice } from '../../store/actions/shop';
+import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
+import { loader } from '../../store/actions/loader';
 
 const ShoppingCart = () => {
     const drinks = [
@@ -19,22 +22,42 @@ const ShoppingCart = () => {
     ];
 
     const [value, setValue] = useState(0);
-    
+
     const dispatch = useDispatch();
 
     //  All store 
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
-    const allCart = useSelector(state => state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.updatedPrice); 
+
+    const allTotalPrice = useSelector(state => state.shop.updatedPrice);
+    const varPrice = useSelector(state => state.shop.variablePrice);
+   
+
+    const [localCart, setLocalCart] = useState([]);
+    
+    
+    // Displaying the total price with variable products
+    let newTotalPrice = 0;
+    if (varPrice) {
+        newTotalPrice = parseInt(allTotalPrice) + varPrice.totalVariablePrice;
+    } else {
+        newTotalPrice = parseInt(allTotalPrice)
+    }
     
     useEffect(() => {
-        const allProductCart = JSON.parse(Cookies.get('setCart'));
-        const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        const tolPrice = Cookies.get('setCart') ? JSON.parse(Cookies.get('totalPrice')) : null;
-        dispatch(updateTotalPrice(tolPrice));
-        console.log(tolPrice);
+        // Fetch cart
+        setLocalCart(JSON.parse(Cookies.get('setCart')))
 
-        if (!allCart.length > 0) {
+        const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
+        const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
+        const tolPrice = Cookies.get('totalPrice') ? Cookies.get('totalPrice') : null;
+        const cookiesVariablePrice = Cookies.get('variable') ? JSON.parse(Cookies.get('variable')) : null;
+        dispatch(updateTotalPrice(tolPrice));
+
+        if (!varPrice) {
+            dispatch(updateVariablePrice(cookiesVariablePrice));
+        }
+
+        if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
         }
 
@@ -43,29 +66,50 @@ const ShoppingCart = () => {
         }
     }, []); 
     
-    const updateQuantityChangeHandle = (e) => {
-        const quantitySelected = e.target.value;
+    const updateQuantityChangeHandle = (e, cartIndex) => {
+        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price
+        console.log(localCart[cartIndex].salePrice);
+        localCart[cartIndex].quantity = +e.target.value;
+        localCart[cartIndex].totalPrice = +e.target.value * price;
+
+        setLocalCart(localCart);
     }
 
     const deleteProductCartHandler = (index) => {
-        allCart.splice(index, 1);
-        dispatch(addToCart(allCart));
-        Cookies.set('setCart', JSON.stringify(allCart));
+        localCart.splice(index, 1);
+        dispatch(addToCart(localCart));
+        Cookies.set('setCart', JSON.stringify(localCart));
         dispatch(setTotalPrice());
         setValue(value => ++value); 
     };
 
+    const updateCartHander = () => {
+        dispatch(loader());
+        dispatch(addToCart(localCart));
+        Cookies.set('setCart', JSON.stringify(localCart));
+        dispatch(setTotalPrice());
+        setValue(value => ++value); 
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1500);
+        setTimeout(() => {
+            NotificationManager.success('Cart updated successfully', '', 3000);
+        }, 1500);
+        console.log('hello');
+    }
+
     let cartDisplay = <p className="text-center">Your cart is empty</p>;
-    if (allCart.length > 0) {
+    if (localCart.length > 0) {
         cartDisplay = <>
-            {allCart.map((cart, index) => {
+            {localCart.map((cart, index) => {
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
                     <p className="product-name">{cart.product.product} </p>
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
-                        <input onChange={updateQuantityChangeHandle} defaultValue={cart.quantity} type='number' />
+                        {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
+                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
                     </div>
                     <p>{'₦' + cart.totalPrice}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
@@ -88,6 +132,9 @@ const ShoppingCart = () => {
                             <div className="col-md-8 mx-auto">
                                 <h4>Review Your Order</h4>
                                 {cartDisplay}
+                                <div className="text-right mt-4 mb-3">
+                                    <button onClick={updateCartHander} className="btn">Update Cart</button>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-8">
                                         <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
@@ -112,7 +159,7 @@ const ShoppingCart = () => {
                                             </div>
                                             <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Subtotal</p>
-                                                <p>{'₦'+allTotalPrice}</p>
+                                                <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                             {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Delivery fee</p>
@@ -120,10 +167,10 @@ const ShoppingCart = () => {
                                             </div> */}
                                             <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Total</p>
-                                                <p>{'₦'+allTotalPrice}</p>
+                                                <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                         </div>
-                                        <button className="btn btn-order w-100">Checkout</button>
+                                        <button onClick={() => Router.push('/checkout')} className="btn btn-order w-100">Checkout</button>
                                     </div>
                                 </div>
                             </div>

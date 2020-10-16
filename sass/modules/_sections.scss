@@ -151,9 +151,12 @@ section {
         background-color: #fff;
         padding: 20px 0 0 0;
         box-shadow: 0 2px 9px -3px grey;
+        position: fixed;
+        width: 100%;
+        z-index: 3;
 
         .d-flex {
-            width: 50%;
+            width: 100%;
         }
 
         p {
@@ -164,7 +167,9 @@ section {
         }
 
         .select-state {
-            width: 40%;
+            width: 20%;
+            margin-right: 20px;
+
             .css-tlfecz-indicatorContainer {
                 svg {
                     fill: #fff !important;
@@ -174,7 +179,7 @@ section {
             .css-yk16xz-control {
                 .css-g1d714-ValueContainer {
                    .css-1uccc91-singleValue {
-                       color: #fff;
+                       color: #fff !important;
                    }
                 }
             }
@@ -257,6 +262,7 @@ section {
     &.products {
         padding: 40px 0;
         position: relative;
+        // margin-top: 100px;
 
         h4 {
             text-transform: uppercase;
@@ -342,8 +348,8 @@ section {
             background: #fff;
             width: 36%;
             border-radius: 44px 0px 0px;
-            position: absolute;
-            top: 40px;
+            position: fixed;
+            top: 25%;
             right: -25%;
             transition: all 0.3s;
 
@@ -397,6 +403,16 @@ section {
             .cart-product-list {
                 // padding: 40px 60px 40px 300px;
                 display: none;
+
+                .cart-listing-container {
+                    overflow: scroll;
+                    height: 273px;
+                    padding-right: 10px;
+                }
+
+                .cart-listing-height {
+                    height: auto !important;
+                }
 
                 .product-list {
                     display: flex;

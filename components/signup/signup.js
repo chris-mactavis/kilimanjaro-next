@@ -57,7 +57,6 @@ const Signup = () => {
         } catch (error) {
 
         }
-
     }
 
     const verifyPhoneHandler = async phone => {

@@ -26,6 +26,7 @@ class document extends Document  {
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
                         crossOrigin="anonymous" />
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
                     <script type="text/javascript" src="/slick/slick.min.js" />
                     <script src="/js/bootstrap.min.js" />
                     <script src="/js/main.js" />
