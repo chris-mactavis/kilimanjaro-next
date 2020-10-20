@@ -214,7 +214,7 @@ const Menu = ({ productCategories }) => {
         const prodInCartIndex = prevCart.findIndex(cart => cart.product.id === prod.id);
 
         const productType = prod.product_type;
-        
+        // Kindly help me check whats wrong in the variation, both for normal and increased product
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
