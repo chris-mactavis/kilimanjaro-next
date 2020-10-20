@@ -59,12 +59,7 @@ const Menu = ({ productCategories }) => {
                 Array.from(headers).forEach(header => {
                     const itemHeight = header.getBoundingClientRect().top;
                     if (itemHeight <= 189.54 && itemHeight > 100) {
-<<<<<<< Updated upstream
                         setCategoryActiveName(header.id)
-                        // console.log(header.id);
-=======
-                        setCategoryActiveName(header.id);
->>>>>>> Stashed changes
                     }
                 })
             });
@@ -114,7 +109,6 @@ const Menu = ({ productCategories }) => {
     }, []);
 
     useEffect(() => {
-        // const categotyTop = $('category-top');
 
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
@@ -153,15 +147,11 @@ const Menu = ({ productCategories }) => {
     //     setProducts(products);
     // };
 
-<<<<<<< Updated upstream
-    const categoryListHandler = (categoryId) => {
-        console.log(categoryId);
-=======
+
     const categoryListHandler = (categoryName) => {
         setCategoryActiveName(categoryName);
         categoryName.scrollIntoView();
-        // console.log(categoryName);
->>>>>>> Stashed changes
+        console.log(categoryName);
     }
 
     const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
@@ -232,12 +222,6 @@ const Menu = ({ productCategories }) => {
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-<<<<<<< Updated upstream
-                // console.log(productVariation);
-=======
-                // console.log(productVariation, 'product variation');
-                // console.log(productVariation, 'test-varaition');
->>>>>>> Stashed changes
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
@@ -245,7 +229,6 @@ const Menu = ({ productCategories }) => {
                     salePrice: productVariation.salePrice || productVariation.price,
                     totalPrice: +prodInCart.totalPrice + ((productVariation.salePrice || productVariation.price) * parseInt(quantitySelected))
                 }
-                console.log(prevCart);
                 // return;
             } else {
                 const newTotalPrice = prod.sale_price ? +quantitySelected * parseInt(prod.sale_price) : +quantitySelected *  parseInt(prod.price);
@@ -264,10 +247,6 @@ const Menu = ({ productCategories }) => {
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
                 const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * productVariation.salePrice};
-<<<<<<< Updated upstream
-=======
-                console.log(productVariation,  'product variation');
->>>>>>> Stashed changes
                 prevCart.push(newCart);
             } else {
                 prevCart.push({
@@ -305,12 +284,7 @@ const Menu = ({ productCategories }) => {
         setValue(value => ++value);
     };
 
-<<<<<<< Updated upstream
-    let cartDisplay = <p>Your cart is empty</p>;
-    console.log(allCart);
-=======
     let cartDisplay = <p>Your cart is currently empty</p>;
->>>>>>> Stashed changes
 
     if (allCart.length > 0) {
         cartDisplay =  <>
@@ -381,7 +355,7 @@ const Menu = ({ productCategories }) => {
                                 </div>
                                 <ul className="product-cat">
                                     {restaurantCategories.map((productCategory) => {
-                                        return <a onClick={() => categoryListHandler(productCategory.id)} key={productCategory.id}><li className={categoryActiveName === productCategory.category ? 'product-cat-list active' : 'product-cat-list'}>{productCategory.category}</li></a>
+                                        return <a onClick={() => categoryListHandler(productCategory.category)} key={productCategory.id}><li className={categoryActiveName === productCategory.category ? 'product-cat-list active' : 'product-cat-list'}>{productCategory.category}</li></a>
                                     })}
                                 </ul>
                             </div>
@@ -485,7 +459,7 @@ const Menu = ({ productCategories }) => {
                             <p className="cart-text">Cart</p>
                         </div>
                         <div className="cart-product-list">
-                            <div className={allCart.length > 0 ? "cart-listing-container" :  "cart-listing-container cart-listing-height"}>
+                            <div className={!allCart.length > 0 ? "cart-listing-container cart-listing-height" :  "cart-listing-container"}>
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">

@@ -132,6 +132,7 @@ const Signup = () => {
                         callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
+                        isDisabled="true"
                     />
                     <div className="gle-btn">
                         <GoogleLogin

@@ -38,17 +38,17 @@ const Home = ({cities}) => {
             </div>
             <div className="row">
               <div className="col-md-4 text-center">
-                <img className="img-fluid" src="/images/Rectangle.png" alt=""/>
+                <img className="w-75" src="/images/icon/location-icon.svg" alt=""/>
                 <p className="text-red">Select nearest location</p>
                 <p>Select the state and restaurant closest to your pick-up/delivery location.</p>
               </div>
               <div className="col-md-4 text-center">
-                <img className="img-fluid" src="/images/Rectangle.png" alt="" />
+                <img className="w-75" src="/images/icon/menu-icon.svg" alt="" />
                 <p className="text-red">Choose your meal</p>
                 <p>Place your order by choosing from the numerous delicacies on our menu</p>
               </div>
               <div className="col-md-4 text-center">
-                <img className="img-fluid" src="/images/Rectangle.png" alt="" />
+                <img className="w-75" src="/images/icon/delivery-pickup.svg" alt="" />
                 <p className="text-red">Enjoy your meal</p>
                 <p>Pick up your tasty meal in store or have it delivered to your doorstep</p>
               </div>

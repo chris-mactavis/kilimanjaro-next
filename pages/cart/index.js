@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
+import Link from 'next/link';
 
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
@@ -20,7 +21,6 @@ const ShoppingCart = () => {
         { url: '/images/fanta.svg', id: 2 },
         { url: '/images/coke.svg', id: 3 }
     ];
-
     const [value, setValue] = useState(0);
 
     const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const ShoppingCart = () => {
     
     useEffect(() => {
         // Fetch cart
-        setLocalCart(JSON.parse(Cookies.get('setCart')))
+        Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
 
         const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
         const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
@@ -98,10 +98,12 @@ const ShoppingCart = () => {
         console.log('hello');
     }
 
-    let cartDisplay = <p className="text-center">Your cart is empty</p>;
+    let cartDisplay = <p className="text-center">Your cart is currently empty</p>;
     if (localCart.length > 0) {
         cartDisplay = <>
             {localCart.map((cart, index) => {
+                let price = cart.salePrice ? +cart.salePrice : +cart.price;
+                console.log(cart);
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
@@ -111,7 +113,7 @@ const ShoppingCart = () => {
                         {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
                         <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
                     </div>
-                    <p>{'₦' + cart.totalPrice}</p>
+                    <p>{'₦' + price}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
                 </div>
             })}
@@ -125,6 +127,19 @@ const ShoppingCart = () => {
                     <title>Cart | Kilimanjaro</title>
                 </Head>
 
+               {!localCart.length > 0 ? <section className="shopping-cart empty-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="empty-cart-container">
+                                <p>Your cart is currently empty.</p>
+                                <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                :
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1]} />
@@ -133,7 +148,7 @@ const ShoppingCart = () => {
                                 <h4>Review Your Order</h4>
                                 {cartDisplay}
                                 <div className="text-right mt-4 mb-3">
-                                    <button onClick={updateCartHander} className="btn">Update Cart</button>
+                                    <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-8">
@@ -170,17 +185,17 @@ const ShoppingCart = () => {
                                                 <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                         </div>
-                                        <button onClick={() => Router.push('/checkout')} className="btn btn-order w-100">Checkout</button>
+                                        <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 ?"btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-
+                }
 
                 {/* Related Product shown on the review order */}
-                <section className="shopping-cart">
+               {!localCart > 0 ? <section className="shopping-cart">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
@@ -191,7 +206,7 @@ const ShoppingCart = () => {
                             {drinks.map((drink) => <RelatedProducts url={drink.url} key={drink.id} />)}
                         </div>
                     </div>
-                </section>
+                </section> : ''}
             </Layout>
         </>
     );

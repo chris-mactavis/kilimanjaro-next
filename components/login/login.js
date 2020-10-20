@@ -78,6 +78,7 @@ const Login = () => {
                         callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
+                        isDisabled="true"
                     />
                     <div className="gle-btn">
                         <GoogleLogin

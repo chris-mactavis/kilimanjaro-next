@@ -83,8 +83,7 @@ section {
         padding: 80px 0;
         background-color: $primary;
         position: relative;
-        margin-bottom: 100px;
-        // background-image: url('/images/app-image.png');
+        margin-bottom: 120px;
 
         p {
             color: #fff;
@@ -151,7 +150,7 @@ section {
         background-color: #fff;
         padding: 20px 0 0 0;
         box-shadow: 0 2px 9px -3px grey;
-        position: fixed;
+        // position: fixed;
         width: 100%;
         z-index: 3;
 
@@ -552,6 +551,7 @@ section {
                 background: transparent;
                 color: #a5a5a5;
                 text-transform: uppercase;
+                font-size: 12px;
 
                 span {
                     color: $light-black;
@@ -868,7 +868,7 @@ section {
     }
 
     &.signup {
-        padding: 80px 0;
+        padding: 80px 0 120px;
         background: #fff;
 
         h3 {
@@ -972,6 +972,12 @@ section {
                 bottom: 38px;
             }
         }
+
+        .border-line {
+            padding: 40px 50px;
+            border: 1px solid #A5A5A5;
+            border-radius: 5px;
+        }
     }
 
     &.store-location {
@@ -999,6 +1005,11 @@ section {
                 margin-bottom: 10px;
                 font-size: 17px;
             }
+        }
+        .card {
+            padding: 23px;
+            border: none;
+            box-shadow: -1px -2px 19px -11px rgba(0,0,0,0.75);
         }
     }
 
@@ -1117,6 +1128,62 @@ section {
 
     &.pickupPayment {
 
+    }
+
+    &.tandc {
+        p {
+            color: #7F7F7F;
+        }
+        .head-text {
+            color: $light-black;
+            margin: 20px 0 20px;
+        }
+
+        .desc-text {
+            margin-top: 20px;
+        }
+
+        a {
+            color: #DC042A;
+            text-decoration: none;
+        }
+    }
+
+    &.empty-cart {
+        padding: 100px 0;
+
+        .empty-cart-container {
+            p {
+                background: #eeeff2;
+                text-align: center;
+                padding: 20px;
+            }
+        }
+    }
+
+    &.restaurant-display {
+        .modal-dialog {
+            max-width: 900px;
+        }
+
+        .modal-body {
+            padding: 5rem;
+
+            .restaurants {
+                border-bottom: 1px solid #EDEDED;
+                width: 60%;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+
+                p {
+                    color: $light-black;
+                }
+
+                p.name {
+                    color: $primary;
+                }
+            }
+        }
     }
 
 }
