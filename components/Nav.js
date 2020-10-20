@@ -38,6 +38,10 @@ const Nav = () => {
                     </li>
 
                     <li className="nav-item">
+                        <Link href="/cart"><a className="nav-link">Cart</a></Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link href="/contact"><a className="nav-link">Contact</a></Link>
                     </li>
 
@@ -51,9 +55,9 @@ const Nav = () => {
                            {`${user.first_name} ${user.last_name}`}
                         </a>
                         <div className="dropdown-menu">
-                            <a className="dropdown-item">My Account</a>
-                            <a className="dropdown-item">Cart</a>
-                            <a className="dropdown-item">Lost password</a>
+                            <Link href="/account"><a className="dropdown-item">My Account</a></Link>
+                            <Link href="/cart"><a className="dropdown-item">Cart</a></Link>
+                            <Link href="/forgot-password"><a className="dropdown-item">Lost password</a></Link>
                             <a onClick={logoutHandler} className="dropdown-item">Log out</a>
                         </div>
                     </div> }

@@ -40,12 +40,12 @@ const Footer = ({showSecFooter}) => {
                                     </li>
                                 </ul>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-4 text-center">
                             <p>Copyright 2020 Kilimanjaro Restaurants</p>
                         </div>
 
                         <div className="col-md-4">
-                            <div className="social-media d-flex align-items-center justify-content-center flex-wrap">
+                            <div className="social-media d-flex align-items-center justify-content-end flex-wrap">
                                 <a href="https://www.instagram.com/kilirestaurant/" target="_blank">
                                     <img src="/images/icon/instagram.svg" alt="" className="img-fluid" />
                                 </a>

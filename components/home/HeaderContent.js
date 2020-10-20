@@ -32,6 +32,9 @@ const HeaderContent = ({cities}) => {
 
     const handleRestaurantInputChange = (value) => {
         dispatch(loader());
+        Cookies.remove('totalPrice');
+        Cookies.remove('setCart');
+        Cookies.remove('orderItem');
         Router.push('/menu');
         setTimeout(() => {
             dispatch(loader());

@@ -13,7 +13,7 @@ const relatedProducts = ({url}) => {
                             <p className="card-amt">N1000</p>
                             <div className="d-flex">
                                 <p className="product-qty">Quantity</p>
-                                <input type='number' />
+                                <input defaultValue={1} type='number' />
                             </div>
                         </div>
                         <button className="btn w-100">Add to cart</button>
