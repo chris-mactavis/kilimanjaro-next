@@ -2,11 +2,12 @@ import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UP
 import Cookies from 'js-cookie';
 
 const totalPrice = Cookies.get('totalPrice');
+const  cart = Cookies.get('setCart');
 
 const initialState = {
     allRestaurants : [],
     selectedRestaurant: null,
-    cart: [],
+    cart: cart || [],
     totalPrice: 0,
     updatedPrice : totalPrice || 0,
     variablePrice: null

@@ -1,4 +1,3 @@
-import Layout from "../../components/Layout";
 import Head from "next/head";
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
@@ -6,7 +5,11 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Link from 'next/link'
+import Link from 'next/link';
+
+import axiosInstance from '../../config/axios';
+import Layout from "../../components/Layout";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,7 +25,19 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const Faq = () => {
+const Faq = (faqs) => {
+    console.log(faqs);
+    // const newFaqs = faqs.data.data;
+    // console.log(newFaqs);
+
+    // const newFaq = faqs.map((faq) => {
+    //     return faq;
+    // });
+
+    // const latestArray = newFaq.map((arr) => {
+    //     return arr;
+    // });
+    // console.log(latestArray);
     const classes = useStyles();
 
     return (
@@ -39,36 +54,24 @@ const Faq = () => {
                         </div>
                         <div className="col-md-10 mx-auto">
                             <div className={classes.root}>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography className={classes.heading}>How many stores do you have and in what locations?</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography>
-                                            Kilimanjaro is one of Sundry Foods’ restaurant brands, operating in the Quick Service Restaurant (QSR) segment, 
-                                            the brand has established itself as a market leader and one of the fastest growing restaurant brands in the country 
-                                            with currently 31 stores across Nigeria and more to come.
+                                {/* {latestArray.map((faq)=> {
+                                    
+                                    return <Accordion key={faq.id}>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header">
+                                            <Typography className={classes.heading}>{faq.question}</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography>
+                                                {faq.answer}
                                         </Typography>
-                                    </AccordionDetails>
-                                    <AccordionDetails>
-                                        <Typography>
-                                           Kilimanjaro caters to the unique preference of the general populace in this part of sub-Saharan Africa for their local dishes.
-                                            Our unique menu consists of select popular contemporary and Nigerian offerings. Items on our menu can also be found on dining 
-                                            tables in other African countries. The Kilimanjaro brand was born out the quest to satisfy both local and continental food cravings 
-                                            of our people. We deliver fresh, hot and mouth-watering meals, pastries, sandwiches and beverages to thousands of customers in the finest environment each day. 
-                                            Our restaurants stand out for their bright colours and lovely ambience inviting you to dine-in or grab-and-go with the best quality meals.
-                                        </Typography>
-                                    </AccordionDetails>
-                                    <AccordionDetails>
-                                        <Typography>
-                                            We are working to ensure there is a Kilimanjaro restaurant in every major city in the country.
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                })} */}
+
+
                                 <Accordion>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -91,6 +94,19 @@ const Faq = () => {
             </section>
         </Layout>
     );
+};
+
+Faq.getInitialProps = async() => {
+
+    try {
+        const {data: {data}} = await axiosInstance.get('faqs');
+         console.log(data);
+        //  return faqs;
+        
+    } catch  (error) {
+        console.log(error);
+        return {};
+    }
 };
 
 export default Faq;
