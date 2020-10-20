@@ -17,7 +17,7 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const Menu = ({ productCategories }) => {
-   
+
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
     const [restaurantCategories, setRestaurantCategories] = useState(productCategories);
@@ -246,7 +246,8 @@ const Menu = ({ productCategories }) => {
             
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-                const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * productVariation.salePrice};
+                productVariation.salePrice = productVariation.salePrice || null;
+                const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * (productVariation.salePrice || productVariation.price)};
                 prevCart.push(newCart);
             } else {
                 prevCart.push({
