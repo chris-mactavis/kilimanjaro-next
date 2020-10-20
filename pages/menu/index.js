@@ -60,7 +60,6 @@ const Menu = ({ productCategories }) => {
                     const itemHeight = header.getBoundingClientRect().top;
                     if (itemHeight <= 189.54 && itemHeight > 100) {
                         setCategoryActiveName(header.id)
-                        console.log(header.id);
                     }
                 })
             });
@@ -148,6 +147,7 @@ const Menu = ({ productCategories }) => {
     //     setProducts(products);
     // };
 
+
     const categoryListHandler = (categoryName) => {
         setCategoryActiveName(categoryName);
         categoryName.scrollIntoView();
@@ -157,7 +157,7 @@ const Menu = ({ productCategories }) => {
     const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
         dispatch(loader());
         let newRestaurants = allCities.find(city => city.id === restaurantId).restaurants;
-        newRestaurants = newRestaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));console.log(newRestaurants);
+        newRestaurants = newRestaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurantName( null )
         setNewRestaurants(newRestaurants);
         dispatch(saveRestaurants(newRestaurants));
@@ -201,7 +201,7 @@ const Menu = ({ productCategories }) => {
             const newQuantityArray = {productId: prodId, quantity: +e.target.value};
             quantitiesArray.push(newQuantityArray);
         }
-        console.log(quantitiesArray);
+        // console.log(quantitiesArray);
         
         setQuantitiesArray(quantitiesArray);
     };
@@ -218,16 +218,15 @@ const Menu = ({ productCategories }) => {
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
+            console.log(prodInCart);
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-                // console.log(productVariation, 'product variation');
-                // console.log(productVariation);
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
                     price: productVariation.price,
-                    salePrice: productVariation.salePrice,
+                    salePrice: productVariation.salePrice || productVariation.price,
                     totalPrice: +prodInCart.totalPrice + ((productVariation.salePrice || productVariation.price) * parseInt(quantitySelected))
                 }
                 // return;
@@ -248,7 +247,6 @@ const Menu = ({ productCategories }) => {
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
                 const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * productVariation.salePrice};
-                console.log(newCart,  'product variation');
                 prevCart.push(newCart);
             } else {
                 prevCart.push({
@@ -287,7 +285,6 @@ const Menu = ({ productCategories }) => {
     };
 
     let cartDisplay = <p>Your cart is currently empty</p>;
-    console.log(allCart);
 
     if (allCart.length > 0) {
         cartDisplay =  <>
@@ -314,7 +311,6 @@ const Menu = ({ productCategories }) => {
 
     const handleVariationChange = (value, prod) =>  {
         // if (prod.id === )
-        console.log(prod);
         changeVariationClass({
             active: !addClass.active
         });
@@ -398,7 +394,7 @@ const Menu = ({ productCategories }) => {
                                                 if (prod.product_type === 'variable'){
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
+                                                    // btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
                                                 }
 
                                                 return <>
