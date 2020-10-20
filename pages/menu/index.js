@@ -59,8 +59,12 @@ const Menu = ({ productCategories }) => {
                 Array.from(headers).forEach(header => {
                     const itemHeight = header.getBoundingClientRect().top;
                     if (itemHeight <= 189.54 && itemHeight > 100) {
+<<<<<<< Updated upstream
                         setCategoryActiveName(header.id)
                         // console.log(header.id);
+=======
+                        setCategoryActiveName(header.id);
+>>>>>>> Stashed changes
                     }
                 })
             });
@@ -149,14 +153,21 @@ const Menu = ({ productCategories }) => {
     //     setProducts(products);
     // };
 
+<<<<<<< Updated upstream
     const categoryListHandler = (categoryId) => {
         console.log(categoryId);
+=======
+    const categoryListHandler = (categoryName) => {
+        setCategoryActiveName(categoryName);
+        categoryName.scrollIntoView();
+        // console.log(categoryName);
+>>>>>>> Stashed changes
     }
 
     const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
         dispatch(loader());
         let newRestaurants = allCities.find(city => city.id === restaurantId).restaurants;
-        newRestaurants = newRestaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));console.log(newRestaurants);
+        newRestaurants = newRestaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurantName( null )
         setNewRestaurants(newRestaurants);
         dispatch(saveRestaurants(newRestaurants));
@@ -200,7 +211,7 @@ const Menu = ({ productCategories }) => {
             const newQuantityArray = {productId: prodId, quantity: +e.target.value};
             quantitiesArray.push(newQuantityArray);
         }
-        console.log(quantitiesArray);
+        // console.log(quantitiesArray);
         
         setQuantitiesArray(quantitiesArray);
     };
@@ -217,15 +228,21 @@ const Menu = ({ productCategories }) => {
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
+            console.log(prodInCart);
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
+<<<<<<< Updated upstream
                 // console.log(productVariation);
+=======
+                // console.log(productVariation, 'product variation');
+                // console.log(productVariation, 'test-varaition');
+>>>>>>> Stashed changes
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
                     price: productVariation.price,
-                    salePrice: productVariation.salePrice,
+                    salePrice: productVariation.salePrice || productVariation.price,
                     totalPrice: +prodInCart.totalPrice + ((productVariation.salePrice || productVariation.price) * parseInt(quantitySelected))
                 }
                 console.log(prevCart);
@@ -247,6 +264,10 @@ const Menu = ({ productCategories }) => {
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
                 const newCart = {...productVariation, quantity: quantitySelected, totalPrice: quantitySelected * productVariation.salePrice};
+<<<<<<< Updated upstream
+=======
+                console.log(productVariation,  'product variation');
+>>>>>>> Stashed changes
                 prevCart.push(newCart);
             } else {
                 prevCart.push({
@@ -284,8 +305,12 @@ const Menu = ({ productCategories }) => {
         setValue(value => ++value);
     };
 
+<<<<<<< Updated upstream
     let cartDisplay = <p>Your cart is empty</p>;
     console.log(allCart);
+=======
+    let cartDisplay = <p>Your cart is currently empty</p>;
+>>>>>>> Stashed changes
 
     if (allCart.length > 0) {
         cartDisplay =  <>
@@ -312,7 +337,6 @@ const Menu = ({ productCategories }) => {
 
     const handleVariationChange = (value, prod) =>  {
         // if (prod.id === )
-        console.log(prod);
         changeVariationClass({
             active: !addClass.active
         });
@@ -396,7 +420,7 @@ const Menu = ({ productCategories }) => {
                                                 if (prod.product_type === 'variable'){
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
+                                                    // btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
                                                 }
 
                                                 return <>
