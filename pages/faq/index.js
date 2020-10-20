@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const Faq = (faqs) => {
+const Faq = ({faqs}) => {
     console.log(faqs);
     // const newFaqs = faqs.data.data;
     // console.log(newFaqs);
@@ -101,11 +101,11 @@ Faq.getInitialProps = async() => {
     try {
         const {data: {data}} = await axiosInstance.get('faqs');
          console.log(data);
-        //  return faqs;
+         return {faqs: data};
         
     } catch  (error) {
         console.log(error);
-        return {};
+        return {faqs: []};
     }
 };
 
