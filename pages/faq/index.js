@@ -27,17 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Faq = ({faqs}) => {
     console.log(faqs);
-    // const newFaqs = faqs.data.data;
-    // console.log(newFaqs);
-
-    // const newFaq = faqs.map((faq) => {
-    //     return faq;
-    // });
-
-    // const latestArray = newFaq.map((arr) => {
-    //     return arr;
-    // });
-    // console.log(latestArray);
     const classes = useStyles();
 
     return (
@@ -54,7 +43,7 @@ const Faq = ({faqs}) => {
                         </div>
                         <div className="col-md-10 mx-auto">
                             <div className={classes.root}>
-                                {/* {latestArray.map((faq)=> {
+                                {faqs.map((faq)=> {
                                     
                                     return <Accordion key={faq.id}>
                                         <AccordionSummary
@@ -69,24 +58,7 @@ const Faq = ({faqs}) => {
                                         </Typography>
                                         </AccordionDetails>
                                     </Accordion>
-                                })} */}
-
-
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography className={classes.heading}>How do I order?</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography>
-                                            Simply call up our ping-a-meal service on 0700 5454 3663,  08100393579 to place your order and enjoy delicious meals delivered to your doorstep like abracadabra.
-                                            You can also use our <Link href="/"><a>online ordering service.</a></Link>
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
+                                })}
                             </div> 
                         </div>
                     </div>
@@ -97,7 +69,6 @@ const Faq = ({faqs}) => {
 };
 
 Faq.getInitialProps = async() => {
-
     try {
         const {data: {data}} = await axiosInstance.get('faqs');
          console.log(data);

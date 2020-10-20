@@ -1161,6 +1161,31 @@ section {
         }
     }
 
+    &.restaurant-display {
+        .modal-dialog {
+            max-width: 900px;
+        }
+
+        .modal-body {
+            padding: 5rem;
+
+            .restaurants {
+                border-bottom: 1px solid #EDEDED;
+                width: 60%;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+
+                p {
+                    color: $light-black;
+                }
+
+                p.name {
+                    color: $primary;
+                }
+            }
+        }
+    }
+
 }
 
 

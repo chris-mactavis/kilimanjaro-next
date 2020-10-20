@@ -1276,6 +1276,19 @@ section.empty-cart {
     background: #eeeff2;
     text-align: center;
     padding: 20px; }
+section.restaurant-display .modal-dialog {
+  max-width: 900px; }
+section.restaurant-display .modal-body {
+  padding: 5rem; }
+  section.restaurant-display .modal-body .restaurants {
+    border-bottom: 1px solid #EDEDED;
+    width: 60%;
+    margin-bottom: 15px;
+    padding-bottom: 10px; }
+    section.restaurant-display .modal-body .restaurants p {
+      color: #383838; }
+    section.restaurant-display .modal-body .restaurants p.name {
+      color: #DC042A; }
 
 .notification-push {
   position: fixed;
