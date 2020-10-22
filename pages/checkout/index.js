@@ -39,7 +39,7 @@ const Checkout = () => {
 
     const isLoggedIn = useSelector( state => state.auth.loggedIn);
     let user = useSelector(state => state.auth.user);
-    user = JSON.parse(user);
+    user = typeof user === 'object' ? user : JSON.parse(user);
     
     // let orderTotal = allTotalPrice;
 
@@ -269,7 +269,7 @@ const Checkout = () => {
     };
 
     const loginRedirect = () => {
-        Cookies.set('checkoutToLogin', 'check-redirect');
+        localStorage.setItem('checkoutToLogin', '/checkout');
         Router.push('/signup');
     }
 
@@ -425,7 +425,7 @@ const Checkout = () => {
                                             error={errors.houseNumber && 'This field is required.'}
                                         /> 
                                         </>}
-                                        {!isLoggedIn && <p>ALready a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
                                             // className={errors.message ? 'textarea-error' : null}

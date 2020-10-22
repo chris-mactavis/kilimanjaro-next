@@ -28,11 +28,12 @@ const Login = () => {
         }
         dispatch(storeAuth(user));
         NotificationManager.success('Account Registeration Successful', '', 3000);
-        let checkoutCookies = Cookies.get('checkoutToLogin') ? Cookies.get('checkoutToLogin') : '';
-        checkoutCookies = String(checkoutCookies);
-        console.log(checkoutCookies, 'true');
-        if (checkoutCookies === 'check-redirect') {
-            Router.push('/checkout');
+        let redirectTo = localStorage.getItem('checkoutToLogin');
+        // checkoutCookies = String(checkoutCookies);
+        console.log(redirectTo, 'true');
+        if (redirectTo) {
+            Router.push(redirectTo);
+            localStorage.removeItem('checkoutToLogin');
         } else {
             Router.push('/');
         } 
