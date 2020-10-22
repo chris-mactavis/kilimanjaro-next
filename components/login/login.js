@@ -17,6 +17,7 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const facebookLoginHandler = (data) => {
+        return;
         console.log(data);
     }
 
@@ -27,7 +28,14 @@ const Login = () => {
         }
         dispatch(storeAuth(user));
         NotificationManager.success('Account Registeration Successful', '', 3000);
-        Router.push('/');
+        let checkoutCookies = Cookies.get('checkoutToLogin') ? Cookies.get('checkoutToLogin') : '';
+        checkoutCookies = String(checkoutCookies);
+        console.log(checkoutCookies, 'true');
+        if (checkoutCookies === 'check-redirect') {
+            Router.push('/checkout');
+        } else {
+            Router.push('/');
+        } 
     }
 
     const loginHandler = async data =>  {

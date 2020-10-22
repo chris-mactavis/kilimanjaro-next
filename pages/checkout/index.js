@@ -34,7 +34,13 @@ const Checkout = () => {
     const [ total, setTotal ] = useState(allTotalPrice)
     const [value, setValue] = useState(0);
 
+    const [localCart, setLocalCart] = useState([]);
+
     const dispatch = useDispatch();
+
+    const isLoggedIn = useSelector( state => state.auth.loggedIn);
+    let user = useSelector(state => state.auth.user);
+    user = JSON.parse(user);
     
     // let orderTotal = allTotalPrice;
 
@@ -43,14 +49,15 @@ const Checkout = () => {
     // }
     
     useEffect(() => {
-        const allProductCart = JSON.parse(Cookies.get('setCart'));
+        const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
+        Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
         const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
         const selectedRes =  Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
         setSelectedRestaurant(selectedRes);
 
         dispatch(updateTotalPrice(tolPrice));
 
-        if (!allCart.length > 0) {
+        if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
         }
     }, []);
@@ -59,35 +66,109 @@ const Checkout = () => {
 
     const billingInfoHandler = async data => {
        dispatch(loader());
-        // console.log(data);
-        const cartItems = allCart.map(cart => ({
+        const cartItems = localCart.map(cart => ({
             restaurant_product_id: cart.product.id,
             product_cost: cart.price,
             quantity: cart.quantity,
             subtotal: cart.totalPrice,
             variation: cart.product.product_type === 'variable' ? cart.product_variation : ''
-        }))
+        }));
+
         if (data) {
-            const orderData = {
-                first_name: data.first_name,
-                last_name: data.last_name,
-                email: data.email,
-                phone: data.phone,
-                signup_device: 'web',
-                restaurant_id : selectedRestaurant.id,
-                street_address: streetAddress,
-                house_number: data.houseNumber,
-                longitude: latLng.lng,
-                latitude: latLng.lat,
-                payment_method: 'webPay',
-                quantity: allCart.length,
-                subtotal: allTotalPrice,
-                delivery: deliveryPrice,
-                total: total,
-                order_type: paymentOption,
-                ordered_from: 'web',
-                delivery_note: data.message,
-                order_items: cartItems
+            let orderData = {};
+
+            if (isLoggedIn) {
+                orderData = {
+                    email: user.email,
+                    phone: data.phone,
+                    signup_device: 'web',
+                    restaurant_id : selectedRestaurant.id,
+                    street_address: streetAddress,
+                    house_number: data.houseNumber,
+                    longitude: latLng.lng,
+                    latitude: latLng.lat,
+                    payment_method: 'webPay',
+                    quantity: localCart.length,
+                    subtotal: allTotalPrice,
+                    delivery: deliveryPrice,
+                    total: total,
+                    order_type: paymentOption,
+                    ordered_from: 'web',
+                    delivery_note: data.message,
+                    order_items: cartItems
+                }
+            } else {
+                orderData = {
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    email: data.email,
+                    phone: data.phone,
+                    signup_device: 'web',
+                    restaurant_id : selectedRestaurant.id,
+                    street_address: streetAddress,
+                    house_number: data.houseNumber,
+                    longitude: latLng.lng,
+                    latitude: latLng.lat,
+                    payment_method: 'webPay',
+                    quantity: localCart.length,
+                    subtotal: allTotalPrice,
+                    delivery: deliveryPrice,
+                    total: total,
+                    order_type: paymentOption,
+                    ordered_from: 'web',
+                    delivery_note: data.message,
+                    order_items: cartItems
+                }
+            }
+
+            if ((paymentOption === 'delivery' && paymentMethod === 'pay online') || (paymentOption === 'pickup' && paymentMethod === 'pay online')) {
+                FlutterwaveCheckout({
+                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                    tx_ref: "hooli-tx-1920bbtyt",
+                    amount: total,
+                    currency: "NGN",
+                    country: "NG",
+                    payment_options: "card, mobilemoneyghana, ussd",
+                    redirect_url: // specified redirect URL
+                        Route.push('/order-complete'),
+                    meta: {
+                        consumer_id: 23,
+                        consumer_mac: "92a3-912ba-1192a",
+                    },
+                    customer: {
+                        email: user.email,
+                        phone_number: user.phone,
+                        name: user.first_name + user.last_name,
+                    },
+                    callback: async (data) => {
+                        try {
+                            const data = await axiosInstance.post('orders', orderData);
+                            const orderItem = data.data.data; 
+                            console.log(orderItem);
+                            Cookies.set('orderItem', JSON.stringify(orderItem));
+                            dispatch(loader());
+                            NotificationManager.success('Order added successfully', '', 3000);
+                            Router.push('/complete-order');
+                            dispatch(addToCart([]));
+                            dispatch(updateTotalPrice(0));
+                            Cookies.remove('setCart');
+                            Cookies.remove('totalPrice');
+                        } catch (error) {
+                            console.log(error);
+                            dispatch(loader());
+                            NotificationManager.error(error.response.data.message, '', 3000);
+                        }
+                        console.log(data);
+                    },
+                    onclose: function() {
+                        // close modal
+                    },
+                    customizations: {
+                        title: "My store",
+                        description: "Payment for items in cart",
+                        logo: "https://assets.piedpiper.com/logo.png",
+                    },
+                });
             }
 
             try {
@@ -126,6 +207,7 @@ const Checkout = () => {
     }
 
     const onchangePaymentOption = (e) => {
+        console.log(e.target.value);
         setPaymentOption(e.target.value);
     };
 
@@ -160,6 +242,7 @@ const Checkout = () => {
                 try {
                     dispatch(loader());
                     const {data: {data}} = await axiosInstance.post('delivery-fee', deliveryDataForAmount);
+                    console.log(data);
                     setDeliveryPrice(data.delivery_price);
                     // let calculateTotal = total;
                     const calculateTotal = +data.delivery_price + +allTotalPrice;
@@ -176,13 +259,26 @@ const Checkout = () => {
             })
             .catch(error => console.error('Error', error));
     };
+    
+    const searchOptions = {
+        componentRestrictions: {country: "ng"}
+    }
 
+    const makePayment = () => {
+        
+    };
+
+    const loginRedirect = () => {
+        Cookies.set('checkoutToLogin', 'check-redirect');
+        Router.push('/signup');
+    }
 
     return (
         <>
             <Layout>
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
+                    <script src="https://checkout.flutterwave.com/v3.js"></script>
                 </Head>
                 <section className="shopping-cart">
                     <div className="container">
@@ -221,7 +317,7 @@ const Checkout = () => {
                                                 :
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
                                                     </label>
                                                 </>
                                             }
@@ -280,7 +376,8 @@ const Checkout = () => {
                                         <PlacesAutocomplete 
                                             value={streetAddress}
                                             onChange={handleChange}
-                                            onSelect={handleSelect} 
+                                            onSelect={handleSelect}
+                                            searchOptions={searchOptions} 
                                         >
                                             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                                                 <div>
@@ -328,7 +425,7 @@ const Checkout = () => {
                                             error={errors.houseNumber && 'This field is required.'}
                                         /> 
                                         </>}
-                                        <p>ALready a member? <a className="red-colored">Login</a></p>
+                                        {!isLoggedIn && <p>ALready a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
                                             // className={errors.message ? 'textarea-error' : null}
@@ -343,7 +440,7 @@ const Checkout = () => {
                                             <h4>Order Details</h4>
                                             <div className="order-details-list">
                                                 <div className="order-prod mb-5">
-                                                    {allCart.map((cart, id) => {
+                                                    {localCart.map((cart, id) => {
                                                             return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
                                                             <p>{cart.quantity}x <span>{cart.product.product}</span></p>
                                                             <p key={cart}>{'₦'+cart.totalPrice}</p>
@@ -356,13 +453,15 @@ const Checkout = () => {
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Delivery</p>
-                                                    <p>{`${deliveryPrice === null ? '0' : '₦'+deliveryPrice}`}</p>
+                                                    <p>{`${deliveryPrice === null ? '₦0' : '₦'+deliveryPrice}`}</p>
                                                 </div>
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Order Total </p>
                                                     <p>{'₦'+total}</p>
                                                 </div>
+                                                <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4"><img className="mr-2" src="images/icon/exclamation-mark.svg" alt=""/>Please select a city and restaurant close to you before you can place your order.</p>
                                                 <button className={deliveryPrice === null ? "btn btn-place-order disabled" : "btn btn-place-order"}>Place Order</button>
+                                                {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
                                     </div>

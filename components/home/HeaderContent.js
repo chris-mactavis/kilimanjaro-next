@@ -5,6 +5,7 @@ import Router from 'next/router';
 import Cookies from 'js-cookie';
 
 import { loader } from '../../store/actions/loader';
+import InlineLoading from '../../components/UI/inlineLoader';
 import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
 
 
@@ -21,7 +22,7 @@ const HeaderContent = ({cities}) => {
         dispatch(loader());
         setTimeout(() => {
             dispatch(loader());
-        }, 1500)
+        }, 1000)
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
@@ -36,12 +37,12 @@ const HeaderContent = ({cities}) => {
         Cookies.remove('setCart');
         Cookies.remove('orderItem');
         Router.push('/menu');
-        setTimeout(() => {
-            dispatch(loader());
-        }, 1500)
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1000)
     }
 
 
@@ -59,7 +60,8 @@ const HeaderContent = ({cities}) => {
                             <p>Ordering from:</p>
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
-                                { loadingState ? null : <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} /> }
+                                <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
+                                { loadingState && <div className="inline-loading-css"><InlineLoading /></div>  }
                             </form>
                         </div>
                     </div>

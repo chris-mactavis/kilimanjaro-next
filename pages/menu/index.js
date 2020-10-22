@@ -148,10 +148,20 @@ const Menu = ({ productCategories }) => {
     // };
 
 
-    const categoryListHandler = (categoryName) => {
-        setCategoryActiveName(categoryName);
-        categoryName.scrollIntoView();
-        console.log(categoryName);
+    const categoryListHandler = () => {
+        // setCategoryActiveName(categoryName);
+        return;
+        let headers = document.getElementById(categoryName);
+        const itemHeight = headers.getBoundingClientRect().top;
+        window.scroll({
+            top: itemHeight - 189.16,
+            left: 0,
+            behaviour: 'smooth'
+        });
+        console.log(headers);
+        const height = categoryActiveName.getBoundingClientRect().top;
+        console.log(height);
+       
     }
 
     const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
@@ -168,10 +178,14 @@ const Menu = ({ productCategories }) => {
     }
 
     const handleMenuRestaurantInputChange = async value => {
+        Cookies.remove('setCart');
+        Cookies.set('totalPrice', 0);
+        dispatch(addToCart([]));
+        setProductCart([]);
         setAllProductCategory(null);
         setProducts([]);
         setActiveCategory([]);
-        setRestaurantName( value )
+        setRestaurantName( value );
         try {
             dispatch(loader());
             const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${value.id}`);
@@ -187,6 +201,7 @@ const Menu = ({ productCategories }) => {
         } catch (error) {
             console.log(error);
         }
+        setValue(value => ++value);
     };
 
     // let quantitySelected = 1;
@@ -208,6 +223,7 @@ const Menu = ({ productCategories }) => {
 
     const addtoCartHandler = (prod) => {
         setInlineLoading(prod.id);
+        dispatch(loader());
         const prevCart = [...productCart];
         const quantitySelected = quantitiesArray.find(q => q.productId === prod.id).quantity;
         /** This is an example of checking if a product is in cart and updating it */
@@ -267,7 +283,9 @@ const Menu = ({ productCategories }) => {
 
         Cookies.set('setCart', JSON.stringify(prevCart));
         // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
-
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1500);
         setTimeout(() => {
             setInlineLoading(0);
         }, 1500);
@@ -351,8 +369,11 @@ const Menu = ({ productCategories }) => {
                                         <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
                                     </form>
                                     <form className="select-state">
-                                        {loadingState ? null :<Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />}
+                                        <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
                                     </form>
+                                    {loadingState && inlineLoading === 0 ? <form className="select-state">
+                                        <div className="inline-loading-css-menu-page"><InlineLoading /></div>
+                                    </form> : null}
                                 </div>
                                 <ul className="product-cat">
                                     {restaurantCategories.map((productCategory) => {
@@ -418,7 +439,7 @@ const Menu = ({ productCategories }) => {
                                                                     <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
                                                                 </form>}
                                                                 <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
-                                                                    {inlineLoading === prod.id ? <InlineLoading idProduct={prod.id} /> : btn}
+                                                                    {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
                                                                     <div>
                                                                         {productPrices}
                                                                         {productSalePrice}

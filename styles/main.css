@@ -300,6 +300,12 @@ form {
       background-color: #deebff; }
   form.select-state .css-1n7v3ny-option {
     cursor: pointer; }
+  form.select-state .inline-loading-css {
+    text-align: center;
+    width: 80%; }
+  form.select-state .inline-loading-css-menu-page {
+    height: 55px;
+    text-align: center; }
   form.signup-form label {
     display: block;
     margin-bottom: 10px;

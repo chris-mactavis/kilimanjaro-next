@@ -67,7 +67,7 @@ Home.getInitialProps = async() => {
     
   } catch (error) {
       console.log(error)
-      return {};
+      return {cities: {}};
   }
 }
 

@@ -13,6 +13,7 @@ import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
 import { loader } from '../../store/actions/loader';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 const ShoppingCart = () => {
     const drinks = [
@@ -30,6 +31,8 @@ const ShoppingCart = () => {
 
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
     const varPrice = useSelector(state => state.shop.variablePrice);
+    const loadingState = useSelector(state => state.loader.loading);
+    console.log(allTotalPrice);
    
 
     const [localCart, setLocalCart] = useState([]);
@@ -91,7 +94,7 @@ const ShoppingCart = () => {
         setValue(value => ++value); 
         setTimeout(() => {
             dispatch(loader());
-        }, 1500);
+        }, 1000);
         setTimeout(() => {
             NotificationManager.success('Cart updated successfully', '', 3000);
         }, 1500);
@@ -132,6 +135,7 @@ const ShoppingCart = () => {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="empty-cart-container">
+                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>
                                 <p>Your cart is currently empty.</p>
                                 <Link href="/"><button className="btn">Return to hompage</button></Link>
                                 </div>
@@ -145,10 +149,11 @@ const ShoppingCart = () => {
                         <OrderingSteps activeTabs={[1]} />
                         <div className="row">
                             <div className="col-md-8 mx-auto">
+                                {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
                                 <h4>Review Your Order</h4>
                                 {cartDisplay}
                                 <div className="text-right mt-4 mb-3">
-                                    <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>
+                                { loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button> }
                                 </div>
                                 <div className="row">
                                     <div className="col-md-8">
@@ -185,7 +190,7 @@ const ShoppingCart = () => {
                                                 <p>{'₦'+newTotalPrice}</p>
                                             </div>
                                         </div>
-                                        <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 ?"btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
+                                        <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
                                     </div>
                                 </div>
                             </div>
