@@ -13,6 +13,7 @@ import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { addToCart, updateTotalPrice } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
@@ -37,7 +38,8 @@ const Checkout = () => {
 
     const dispatch = useDispatch();
 
-    const isLoggedIn = useSelector( state => state.auth.loggedIn);
+    const loadingState = useSelector(state => state.loader.loading);
+    const isLoggedIn = useSelector(state => state.auth.loggedIn);
     let user = useSelector(state => state.auth.user);
     user = typeof user === 'object' ? user : JSON.parse(user);
     
@@ -128,7 +130,7 @@ const Checkout = () => {
                     currency: "NGN",
                     country: "NG",
                     payment_options: "card, mobilemoneyghana, ussd",
-                    // redirect_url: '/order-complete',
+                    redirect_url: '/order-complete',
                     meta: {
                         consumer_id: 23,
                         consumer_mac: "92a3-912ba-1192a",
@@ -160,33 +162,32 @@ const Checkout = () => {
                         console.log(data);
                     },
                     onclose: function() {
-                        // close modal
+                        flutterwave.closePaymentModal()
                     },
                     customizations: {
-                        title: "My store",
+                        title: "Killimanjaro",
                         description: "Payment for items in cart",
                         logo: "https://assets.piedpiper.com/logo.png",
                     },
                 });
-            }
-            return;
-
-            try {
-                const data = await axiosInstance.post('orders', orderData);
-                const orderItem = data.data.data; 
-                console.log(orderItem);
-                Cookies.set('orderItem', JSON.stringify(orderItem));
-                dispatch(loader());
-                NotificationManager.success('Order added successfully', '', 3000);
-                Router.push('/complete-order');
-                dispatch(addToCart([]));
-                dispatch(updateTotalPrice(0));
-                Cookies.remove('setCart');
-                Cookies.remove('totalPrice');
-            } catch (error) {
-                console.log(error);
-                dispatch(loader());
-                NotificationManager.error(error.response.data.message, '', 3000);
+            } else {
+                try {
+                    const data = await axiosInstance.post('orders', orderData);
+                    const orderItem = data.data.data;
+                    console.log(orderItem);
+                    Cookies.set('orderItem', JSON.stringify(orderItem));
+                    dispatch(loader());
+                    NotificationManager.success('Order added successfully', '', 3000);
+                    Router.push('/complete-order');
+                    dispatch(addToCart([]));
+                    dispatch(updateTotalPrice(0));
+                    Cookies.remove('setCart');
+                    Cookies.remove('totalPrice');
+                } catch (error) {
+                    console.log(error);
+                    dispatch(loader());
+                    NotificationManager.error(error.response.data.message, '', 3000);
+                }
             }
 
         }
@@ -459,8 +460,8 @@ const Checkout = () => {
                                                     <p>Order Total </p>
                                                     <p>{'₦'+total}</p>
                                                 </div>
-                                                <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4"><img className="mr-2" src="images/icon/exclamation-mark.svg" alt=""/>Please select a city and restaurant close to you before you can place your order.</p>
-                                                <button className={deliveryPrice === null ? "btn btn-place-order disabled" : "btn btn-place-order"}>Place Order</button>
+                                                {deliveryPrice === null  && <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4"><img className="mr-2" src="images/icon/exclamation-mark.svg" alt=""/>Please select a city and restaurant close to you before you can place your order.</p>}
+                                                {loadingState ? <InlineLoading /> :  <button className={deliveryPrice === null ? "btn btn-place-order disabled" : "btn btn-place-order"}>Place Order</button>}
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>

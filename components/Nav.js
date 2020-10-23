@@ -56,7 +56,8 @@ const Nav = () => {
                         </a>
                         <div className="dropdown-menu">
                             <Link href="/account"><a className="dropdown-item">My Account</a></Link>
-                            <Link href="/cart"><a className="dropdown-item">Cart</a></Link>
+                            {/* <Link href="/"><a className="dropdown-item">My Orders</a></Link> */}
+                            <Link href="/change-password"><a className="dropdown-item">Lost password</a></Link>
                             <Link href="/forgot-password"><a className="dropdown-item">Lost password</a></Link>
                             <a onClick={logoutHandler} className="dropdown-item">Log out</a>
                         </div>
