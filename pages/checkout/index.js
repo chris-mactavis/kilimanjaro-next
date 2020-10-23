@@ -123,7 +123,7 @@ const Checkout = () => {
             }
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup' && paymentMethod === 'payment online')) {
-                FlutterwaveCheckout({
+                const trans = FlutterwaveCheckout({
                     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
                     tx_ref: "hooli-tx-1920bbtyt",
                     amount: total,
@@ -154,6 +154,7 @@ const Checkout = () => {
                             dispatch(updateTotalPrice(0));
                             Cookies.remove('setCart');
                             Cookies.remove('totalPrice');
+                            trans.close();
                         } catch (error) {
                             console.log(error);
                             dispatch(loader());
