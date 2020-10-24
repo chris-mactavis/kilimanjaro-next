@@ -21,7 +21,12 @@ export const loginAsync = data => {
             dispatch(loader());
             dispatch(storeAuth(response.data));
             NotificationManager.success(response.message, '', 3000);
-            Router.push('/');
+            const checkoutCookies = localStorage.getItem('checkoutToLogin') ? localStorage.getItem('checkoutToLogin') : '';
+            if (checkoutCookies === '/checkout') {
+                Router.push('/checkout');
+            } else {
+                Router.push('/');1
+            }
         } catch (error) {
             console.log(error);
             dispatch(loader());

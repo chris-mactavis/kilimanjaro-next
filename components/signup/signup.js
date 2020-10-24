@@ -4,6 +4,7 @@ import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
+import Cookies from 'js-cookie';
 
 import FormInput from '../formInput/formInput';
 import axiosInstance from '../../config/axios';
@@ -18,6 +19,7 @@ const Signup = () => {
     const dispatch = useDispatch();
 
     const facebookLoginHandler = (data) => {
+        return;
         console.log(data);
     }
 
@@ -38,7 +40,7 @@ const Signup = () => {
                 const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
                 dispatch(storeAuth(response.data));
                 console.log(response.data);
-                dispatch(loader());
+                dispatch(loader()); 
                 Router.push('/');
             }
             NotificationManager.success('Account Registeration Successful', '', 3000);
@@ -129,7 +131,7 @@ const Signup = () => {
                         appId="699697547406211"
                         autoLoad={true}
                         fields="name,email,picture"
-                        callback={facebookLoginHandler}
+                        // callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
                         isDisabled="true"

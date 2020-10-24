@@ -26,7 +26,7 @@ const Layout = ({children, showSecFooter}) => {
 
             <NavBar />
 
-            <Loader /> 
+            {/* <Loader />  */}
 
             {children}
 

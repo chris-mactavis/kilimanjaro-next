@@ -21,7 +21,7 @@ class document extends Document  {
                     <link rel="stylesheet" type="text/css" href="/slick/slick.css" />
                     <link rel="stylesheet" type="text/css" href="/slick/slick-theme.css" />
 
-
+                        
                     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWajwZf_MGn2k5vVYECfrtphdGTCAKurg&libraries=places"></script>
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
