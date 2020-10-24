@@ -78,7 +78,7 @@ const Checkout = () => {
         if (data) {
             let orderData = {};
 
-            if (isLoggedIn) {
+            if (isLoggedIn && paymentOption === 'payment online' || paymentOption === 'payment') {
                 orderData = {
                     email: user.email,
                     phone: data.phone,
@@ -88,6 +88,24 @@ const Checkout = () => {
                     house_number: data.houseNumber,
                     longitude: latLng.lng,
                     latitude: latLng.lat,
+                    payment_method: 'webPay',
+                    quantity: localCart.length,
+                    subtotal: allTotalPrice,
+                    delivery: deliveryPrice,
+                    total: total,
+                    order_type: paymentOption,
+                    ordered_from: 'web',
+                    delivery_note: data.message,
+                    order_items: cartItems
+                }
+            } else if (isLoggedIn && paymentOption === 'pickup' || paymentOption === 'pickup') {
+                orderData = {
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    email: data.email,
+                    phone: data.phone,
+                    signup_device: 'web',
+                    restaurant_id : selectedRestaurant.id,
                     payment_method: 'webPay',
                     quantity: localCart.length,
                     subtotal: allTotalPrice,
@@ -163,12 +181,12 @@ const Checkout = () => {
                         console.log(data);
                     },
                     onclose: function() {
-                        flutterwave.closePaymentModal()
+                        closePaymentModal();
                     },
                     customizations: {
                         title: "Killimanjaro",
                         description: "Payment for items in cart",
-                        logo: "https://assets.piedpiper.com/logo.png",
+                        logo: "images/logo.png",
                     },
                 });
             } else {
@@ -326,9 +344,7 @@ const Checkout = () => {
                                         </div>
 
                                         {/* Contact Details */}
-                                       { paymentOption === 'delivery' && 
-                                       <>
-                                       <h4 className="mt-5">Billing Details</h4>
+                                        {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4> }
                                        {!loggedIn && <div>
                                         <FormInput
                                             type="text"
@@ -363,70 +379,82 @@ const Checkout = () => {
                                             name="password"
                                             placeholder="Password*"
                                             label="Password"
-                                            register={register({ required: true, minLength: 8 })}
+                                            register={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
                                             error={errors.password && errors.password.message}
                                         />
-                                        </div>}
-                                        <FormInput
-                                            type="number"
-                                            name="phone"
-                                            placeholder="+234 80 1234 5678*"
-                                            label="Mobile Number"
-                                            register={register({ required: 'This field is required.' })}
-                                            error={errors.phone && errors.phone.message}
-                                        />
-                                        <PlacesAutocomplete 
-                                            value={streetAddress}
-                                            onChange={handleChange}
-                                            onSelect={handleSelect}
-                                            searchOptions={searchOptions} 
-                                        >
-                                            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                                <div>
-                                                    <FormInput
-                                                        type="text"
-                                                        name='streetAddress'
-                                                        label="Street/Estate Address"
-                                                        {...getInputProps({
-                                                            placeholder: 'Street/estate address*',
-                                                            className: 'location-search-input',
-                                                        })}
-                                                        register={register({ required: 'This field is required.' })}
-                                                        error={errors.streetAddress && errors.streetAddress.message}
-                                                    />
-                                                    <div className="autocomplete-dropdown-container">
-                                                        {loading && <div>Loading...</div>}
-                                                        {suggestions.map((suggestion) => {
-                                                            const className = suggestion.active
-                                                                ? 'suggestion-item--active'
-                                                                : 'suggestion-item';
-                                                            // inline style for demonstration purpose
-                                                            const style = suggestion.active
-                                                                ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                                                : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                                            return (
-                                                                <div className="input-suggestion" key={suggestion.placeId}
-                                                                    {...getSuggestionItemProps(suggestion, {
-                                                                        style,
-                                                                    })}
-                                                                >
-                                                                    <span>{suggestion.description}</span>
-                                                                </div>
-                                                            );
-                                                        })}
+                                        {paymentOption === 'pickup' && <FormInput
+                                                type="number"
+                                                name="phone"
+                                                placeholder="+234 80 1234 5678*"
+                                                label="Mobile Number"
+                                                register={register({ required: 'This field is required.' })}
+                                                error={errors.phone && errors.phone.message}
+                                            />}
+                                        </div>
+                                        }
+
+                                        {paymentOption === 'delivery' && <div>
+                                            <FormInput
+                                                type="number"
+                                                name="phone"
+                                                placeholder="+234 80 1234 5678*"
+                                                label="Mobile Number"
+                                                register={register({ required: 'This field is required.' })}
+                                                error={errors.phone && errors.phone.message}
+                                            />
+                                            <PlacesAutocomplete
+                                                value={streetAddress}
+                                                onChange={handleChange}
+                                                onSelect={handleSelect}
+                                                searchOptions={searchOptions}
+                                            >
+                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                    <div>
+                                                        <FormInput
+                                                            type="text"
+                                                            name='streetAddress'
+                                                            label="Street/Estate Address"
+                                                            {...getInputProps({
+                                                                placeholder: 'Street/estate address*',
+                                                                className: 'location-search-input',
+                                                            })}
+                                                            register={register({ required: 'This field is required.' })}
+                                                            error={errors.streetAddress && errors.streetAddress.message}
+                                                        />
+                                                        <div className="autocomplete-dropdown-container">
+                                                            {loading && <div>Loading...</div>}
+                                                            {suggestions.map((suggestion) => {
+                                                                const className = suggestion.active
+                                                                    ? 'suggestion-item--active'
+                                                                    : 'suggestion-item';
+                                                                // inline style for demonstration purpose
+                                                                const style = suggestion.active
+                                                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                                                return (
+                                                                    <div className="input-suggestion" key={suggestion.placeId}
+                                                                        {...getSuggestionItemProps(suggestion, {
+                                                                            style,
+                                                                        })}
+                                                                    >
+                                                                        <span>{suggestion.description}</span>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                        </PlacesAutocomplete>
-                                        <FormInput
-                                            type="text"
-                                            name="houseNumber"
-                                            placeholder="House Number*"
-                                            label="House Number"
-                                            register={register({ required: true })}
-                                            error={errors.houseNumber && 'This field is required.'}
-                                        /> 
-                                        </>}
+                                                )}
+                                            </PlacesAutocomplete>
+                                            <FormInput
+                                                type="text"
+                                                name="houseNumber"
+                                                placeholder="House Number*"
+                                                label="House Number"
+                                                register={register({ required: true })}
+                                                error={errors.houseNumber && 'This field is required.'}
+                                            />
+                                        </div> }
+
                                         {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
@@ -453,10 +481,10 @@ const Checkout = () => {
                                                     <p>Subtotal</p>
                                                     <p>{'₦'+allTotalPrice}</p>
                                                 </div>
-                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Delivery</p>
                                                     <p>{`${deliveryPrice === null ? '₦0' : '₦'+deliveryPrice}`}</p>
-                                                </div>
+                                                </div>}
                                                 <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                     <p>Order Total </p>
                                                     <p>{'₦'+total}</p>

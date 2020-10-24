@@ -28,7 +28,7 @@ const HeaderContent = ({cities}) => {
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurants(restaurants);
         dispatch(saveRestaurants(restaurants));
-        Cookies.set('setRestaurants', JSON.stringify(restaurants));
+        Cookies.set('setRestaurants', JSON.stringify(restaurants))
     };
 
     const handleRestaurantInputChange = (value) => {

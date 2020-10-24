@@ -21,8 +21,8 @@ export const loginAsync = data => {
             dispatch(loader());
             dispatch(storeAuth(response.data));
             NotificationManager.success(response.message, '', 3000);
-            const checkoutCookies = Cookies.get('checkoutToLogin') ? Cookies.get('checkoutToLogin') : '';
-            if (checkoutCookies === 'check-redirect') {
+            const checkoutCookies = localStorage.getItem('checkoutToLogin') ? localStorage.getItem('checkoutToLogin') : '';
+            if (checkoutCookies === '/checkout') {
                 Router.push('/checkout');
             } else {
                 Router.push('/');1

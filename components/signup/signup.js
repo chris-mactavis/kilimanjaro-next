@@ -131,7 +131,7 @@ const Signup = () => {
                         appId="699697547406211"
                         autoLoad={true}
                         fields="name,email,picture"
-                        callback={facebookLoginHandler}
+                        // callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
                         isDisabled="true"
