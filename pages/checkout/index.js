@@ -77,102 +77,112 @@ const Checkout = () => {
 
         if (data) {
             let orderData = {};
-
-            if (isLoggedIn && paymentOption === 'payment online' || paymentOption === 'payment') {
-                orderData = {
-                    email: user.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    street_address: streetAddress,
-                    house_number: data.houseNumber,
-                    longitude: latLng.lng,
-                    latitude: latLng.lat,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
-                }
-                // I did this tp test for pickup, it says data is invalid, hel pme check it
-            } else if (isLoggedIn && paymentOption === 'pickup' || paymentOption === 'pickup') {
-                orderData = {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    email: data.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
+            if (isLoggedIn) {
+                // if logged in
+                if (paymentOption === 'delivery') {
+                    // delivery (online and on delivery)
+                    orderData = {
+                        email: user.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id : selectedRestaurant.id,
+                        street_address: streetAddress,
+                        house_number: data.houseNumber,
+                        longitude: latLng.lng,
+                        latitude: latLng.lat,
+                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        delivery: deliveryPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    }
+                } else if (paymentOption === 'pickup') {
+                    // if pickup
+                    orderData = {
+                        email: user.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id : selectedRestaurant.id,
+                        payment_method: 'webPay',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    };
                 }
             } else {
-                orderData = {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    email: data.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    street_address: streetAddress,
-                    house_number: data.houseNumber,
-                    longitude: latLng.lng,
-                    latitude: latLng.lat,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
+                //  if not logged in
+                if (paymentOption === 'delivery') {
+                    // If delivery (both online and pay on delivery)
+                    orderData = {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        email: data.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id: selectedRestaurant.id,
+                        street_address: streetAddress,
+                        house_number: data.houseNumber,
+                        longitude: latLng.lng,
+                        latitude: latLng.lat,
+                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        delivery: deliveryPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    }
+                } else if (paymentOption === 'pickup') {
+                    // if pickup
+                    orderData = {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        email: data.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id: selectedRestaurant.id,
+                        payment_method: 'webPay',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    };
                 }
             }
 
-            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup' && paymentMethod === 'payment online')) {
+            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup')) {
                 const trans = FlutterwaveCheckout({
                     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                    tx_ref: "hooli-tx-1920bbtyt",
+                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
                     amount: total,
                     currency: "NGN",
                     country: "NG",
                     payment_options: "card, mobilemoneyghana, ussd",
-                    redirect_url: '/order-complete',
                     meta: {
                         consumer_id: 23,
                         consumer_mac: "92a3-912ba-1192a",
                     },
                     customer: {
-                        email: user.email,
-                        phone_number: user.phone,
-                        name: user.first_name + user.last_name,
+                        email: isLoggedIn ? user.email : data.email,
+                        phone_number: isLoggedIn ? user.phone : data.phone,
+                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
                     },
                     callback: async (data) => {
-                        console.log(data);
                         try {
-                            const data = await axiosInstance.post('orders', orderData);
-                            const orderItem = data.data.data; 
-                            console.log(orderItem);
-                            Cookies.set('orderItem', JSON.stringify(orderItem));
-                            dispatch(loader());
-                            NotificationManager.success('Order added successfully', '', 3000);
-                            Router.push('/complete-order');
-                            dispatch(addToCart([]));
-                            dispatch(updateTotalPrice(0));
-                            Cookies.remove('setCart');
-                            Cookies.remove('totalPrice');
+                            await submitOrder(orderData);
                             trans.close();
                         } catch (error) {
                             console.log(error);
@@ -182,7 +192,6 @@ const Checkout = () => {
                         console.log(data);
                     },
                     onclose: function() {
-                        closePaymentModal();
                     },
                     customizations: {
                         title: "Killimanjaro",
@@ -192,17 +201,7 @@ const Checkout = () => {
                 });
             } else {
                 try {
-                    const data = await axiosInstance.post('orders', orderData);
-                    const orderItem = data.data.data;
-                    console.log(orderItem);
-                    Cookies.set('orderItem', JSON.stringify(orderItem));
-                    dispatch(loader());
-                    NotificationManager.success('Order added successfully', '', 3000);
-                    Router.push('/complete-order');
-                    dispatch(addToCart([]));
-                    dispatch(updateTotalPrice(0));
-                    Cookies.remove('setCart');
-                    Cookies.remove('totalPrice');
+                    await submitOrder(orderData);
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
@@ -217,6 +216,19 @@ const Checkout = () => {
         setStreetAddress('');
         reset({});
     };
+
+    const submitOrder = async (orderData) => {
+        const data = await axiosInstance.post('orders', orderData);
+        const orderItem = data.data.data;
+        Cookies.set('orderItem', JSON.stringify(orderItem));
+        dispatch(loader());
+        NotificationManager.success('Order added successfully', '', 3000);
+        Router.push('/complete-order');
+        dispatch(addToCart([]));
+        dispatch(updateTotalPrice(0));
+        Cookies.remove('setCart');
+        Cookies.remove('totalPrice');
+    }
 
     const verifyEmailHandler = async email => {
         try {
@@ -394,15 +406,16 @@ const Checkout = () => {
                                         </div>
                                         }
 
+                                        {isLoggedIn && <FormInput
+                                            type="number"
+                                            name="phone"
+                                            placeholder="+234 80 1234 5678*"
+                                            label="Mobile Numbers"
+                                            register={register({required: 'This field is required.'})}
+                                            error={errors.phone && errors.phone.message}
+                                        />}
+
                                         {paymentOption === 'delivery' && <div>
-                                            <FormInput
-                                                type="number"
-                                                name="phone"
-                                                placeholder="+234 80 1234 5678*"
-                                                label="Mobile Number"
-                                                register={register({ required: 'This field is required.' })}
-                                                error={errors.phone && errors.phone.message}
-                                            />
                                             <PlacesAutocomplete
                                                 value={streetAddress}
                                                 onChange={handleChange}
