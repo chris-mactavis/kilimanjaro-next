@@ -98,6 +98,7 @@ const Checkout = () => {
                     delivery_note: data.message,
                     order_items: cartItems
                 }
+                // I did this tp test for pickup, it says data is invalid, hel pme check it
             } else if (isLoggedIn && paymentOption === 'pickup' || paymentOption === 'pickup') {
                 orderData = {
                     first_name: data.first_name,
