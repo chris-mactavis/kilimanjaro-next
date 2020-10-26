@@ -196,7 +196,7 @@ const Checkout = () => {
                     customizations: {
                         title: "Killimanjaro",
                         description: "Payment for items in cart",
-                        logo: "images/logo.png",
+                        logo: "/images/logo.png",
                     },
                 });
             } else {

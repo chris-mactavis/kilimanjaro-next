@@ -36,6 +36,7 @@ const HeaderContent = ({cities}) => {
         Cookies.remove('totalPrice');
         Cookies.remove('setCart');
         Cookies.remove('orderItem');
+        localStorage.removeItem('checkoutToLogin');
         Router.push('/menu');
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));

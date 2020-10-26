@@ -5,14 +5,22 @@ import Router from 'next/router';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import FormInput from '../formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import { storeAuth } from '../../store/actions/auth';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const Signup = () => {
+
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+
+    // All store
+    const loadingState = useSelector(state => state.loader.loading);
 
     const { register, handleSubmit, errors, reset } = useForm();
 
@@ -35,17 +43,20 @@ const Signup = () => {
 
     const signupHandler = async (data) =>  {
         dispatch(loader());
+        setInlineLoader(true);
         try {
             if (data) {
                 const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
                 dispatch(storeAuth(response.data));
                 console.log(response.data);
-                dispatch(loader()); 
+                dispatch(loader());
+                setInlineLoader(false); 
                 Router.push('/');
             }
             NotificationManager.success('Account Registeration Successful', '', 3000);
         } catch (error) {
             dispatch(loader());
+            setInlineLoader(false);
             NotificationManager.error(error.response.data.message, '', 3000);
             console.log(error);
         }
@@ -123,7 +134,7 @@ const Signup = () => {
                         register={register ({required : true, minLength: 8})}
                         error={errors.password && errors.password.message} 
                     />
-                    <button className="btn btn-login mt-3">Register</button>
+                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3">Register</button>}
                 </form>
                 <p className="mt-3">Or sign up with</p>
                 <div className="other-signin-option">

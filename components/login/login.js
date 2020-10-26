@@ -5,6 +5,7 @@ import GoogleLogin from 'react-google-login';
 import Router from 'next/router';
 import { NotificationManager } from 'react-notifications';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 
 import FormInput from "../formInput/formInput";
@@ -15,7 +16,11 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 const Login = () => {
 
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+
+    // All store
     const loadingState = useSelector(state => state.loader.loading);
+
 
     const { register, handleSubmit, errors , reset} = useForm();
     const dispatch = useDispatch();
@@ -44,11 +49,14 @@ const Login = () => {
     }
 
     const loginHandler = async data =>  {
+        setInlineLoader(true);
         if (data) {
             try {
                 await dispatch(loginAsync(data));
+                setInlineLoader(false);
             } catch (error) {
                 console.log(error);
+                setInlineLoader(false);
             }
         }
         reset({});
@@ -80,7 +88,7 @@ const Login = () => {
                         <label className="contain">Remember me<input name="rememberAccount" type="checkbox" /><span className="checkmark"></span></label>
                         <a>Forgot Password?</a>
                     </div>
-                    {loadingState ? <InlineLoading />  : <button className="btn btn-login">Login</button>}
+                    {loadingState && inlineLoader ? <InlineLoading />  : <button className="btn btn-login">Login</button>}
                 </form>
                 <p className="mt-3">Or sign in with</p>
                 <div className="other-signin-option">

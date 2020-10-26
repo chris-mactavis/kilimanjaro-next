@@ -21,6 +21,11 @@ const Nav = () => {
         Router.push('/');  
     } 
 
+    const signupHandle = () => {
+        localStorage.removeItem('checkoutToLogin');
+        console.log('hello');
+    };
+
     return (
         <>
             <div className="navbar-collapse ml-auto" id="navbarSupportedContent">
@@ -46,7 +51,7 @@ const Nav = () => {
                     </li>
 
                     { !loggedIn ? 
-                    <li className="nav-item nav-bg-white">
+                    <li onClick={signupHandle} className="nav-item nav-bg-white">
                         <Link href="/signup"><a className="nav-link">Sign Up/Login</a></Link>
                     </li> : null }
 
