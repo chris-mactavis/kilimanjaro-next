@@ -7,6 +7,7 @@ import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
+import Link from 'next/link';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
@@ -40,7 +41,7 @@ const Checkout = () => {
 
     const loadingState = useSelector(state => state.loader.loading);
     const isLoggedIn = useSelector(state => state.auth.loggedIn);
-    let user = useSelector(state => state.auth.user);
+    let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
     
     // let orderTotal = allTotalPrice;
@@ -192,6 +193,7 @@ const Checkout = () => {
                         console.log(data);
                     },
                     onclose: function() {
+                        dispatch(loader());
                     },
                     customizations: {
                         title: "Killimanjaro",
@@ -313,6 +315,21 @@ const Checkout = () => {
                     <title>Checkout | Kilimanjaro</title>
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
                 </Head>
+
+                {!localCart.length > 0 ? <section className="shopping-cart empty-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="empty-cart-container">
+                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦0</p>
+                                <p>Your cart is currently empty.</p>
+                                <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                :
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
@@ -323,10 +340,10 @@ const Checkout = () => {
                                     <h4>Payment Option</h4>
                                     <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
                                         <label className="pay-opt">
-                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} defaultChecked />Delivery
+                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
                                             </label>
                                         <label className="pay-opt">
-                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} />Pickup
+                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
                                             </label>
                                     </div>
                                 </div>
@@ -341,20 +358,22 @@ const Checkout = () => {
                                                 ?
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked />Pay On Delivery
+                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
                                                     </label>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
                                                     </label>
                                                 </> 
                                                 :
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline-2'} />Pay Online
                                                     </label>
                                                 </>
                                             }
                                         </div>
+
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
 
                                         {/* Contact Details */}
                                         {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4> }
@@ -469,7 +488,6 @@ const Checkout = () => {
                                             />
                                         </div> }
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
                                             // className={errors.message ? 'textarea-error' : null}
@@ -513,7 +531,7 @@ const Checkout = () => {
                             </form>
                         </div>
                     </div>
-                </section>
+                </section>}
             </Layout>
         </>
     );

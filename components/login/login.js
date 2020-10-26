@@ -84,9 +84,9 @@ const Login = () => {
                         register={register ({required : true, minLength: 8})}
                         error={errors.password && 'Password must be more than 8 characters'} 
                     />
-                    <div className="d-flex justify-content-between flex-wrap remember-account">
+                    <div className="d-flex align-items-center justify-content-between flex-wrap remember-account">
                         <label className="contain">Remember me<input name="rememberAccount" type="checkbox" /><span className="checkmark"></span></label>
-                        <a>Forgot Password?</a>
+                        <div><a onClick={() => Router.push('/forgot-password')}>Forgot Password?</a></div>
                     </div>
                     {loadingState && inlineLoader ? <InlineLoading />  : <button className="btn btn-login">Login</button>}
                 </form>

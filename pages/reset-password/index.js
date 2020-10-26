@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
@@ -9,9 +9,13 @@ import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import { storeAuth } from '../../store/actions/auth';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const ForgotPassword = () => {
+
+    // All store
+    const loadingState = useSelector(state => state.loader.loading);
 
     const { register, handleSubmit, errors, reset } = useForm();
 
@@ -57,7 +61,7 @@ const ForgotPassword = () => {
                                             register={register({required: true})}
                                             error={errors.email && errors.email.message}
                                         />
-                                        <button className="btn w-100 btn-order mt-3">Reset Password</button>
+                                        {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3">Reset Password</button>}
                                     </form>
                                 </div>
                             </div>

@@ -1296,6 +1296,12 @@ section.restaurant-display .modal-body {
       color: #383838; }
     section.restaurant-display .modal-body .restaurants p.name {
       color: #DC042A; }
+section.account h5 {
+  margin-top: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid; }
+section.account .name {
+  text-transform: capitalize; }
 
 .notification-push {
   position: fixed;
