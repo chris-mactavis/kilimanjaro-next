@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 
 
+
 import Layout from '../../components/Layout';
 import { selectedRestaurant, saveRestaurants, addToCart, setTotalPrice, updateVariablePrice  } from '../../store/actions/shop';
 import axiosInstance from '../../config/axios';
@@ -33,6 +34,7 @@ const Menu = ({ productCategories }) => {
     const [selectedVariableProducts, setSelectedVariableProducts] = useState([]);
     const [quantitiesArray, setQuantitiesArray] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
+    const [disableScrollEvent, setDisableScrollEvent] = useState(false);
     // const [allProducts, setAllProducts] = useState([]);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
@@ -53,7 +55,7 @@ const Menu = ({ productCategories }) => {
     }, [])
 
     useEffect(() => {
-        if (process.browser) {
+        if (process.browser && !disableScrollEvent) {
             let headers = document.querySelectorAll('.category-header');
             window.addEventListener("scroll", (event) => {
                 Array.from(headers).forEach(header => {
@@ -148,20 +150,17 @@ const Menu = ({ productCategories }) => {
     // };
 
 
-    const categoryListHandler = () => {
-        // setCategoryActiveName(categoryName);
-        return;
+    const categoryListHandler = (categoryName) => {
+        setDisableScrollEvent(true);
+        setTimeout(() => setCategoryActiveName(categoryName), 500);
         let headers = document.getElementById(categoryName);
-        const itemHeight = headers.getBoundingClientRect().top;
+        const itemHeight = headers.offsetTop;
         window.scroll({
-            top: itemHeight - 189.16,
+            top: itemHeight,
             left: 0,
             behaviour: 'smooth'
         });
-        console.log(headers);
-        const height = categoryActiveName.getBoundingClientRect().top;
-        console.log(height);
-       
+        setTimeout(() => setDisableScrollEvent(false), 500);
     }
 
     const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
@@ -487,13 +486,13 @@ const Menu = ({ productCategories }) => {
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
                                 <div className="d-flex">
                                     <label className="contain">Save Basket
-                                        <input type="checkbox" />
+                                        <input type="checkbox" key={'save-basket'} />
                                         <span className="checkmark"></span>
                                     </label>
                                 </div>
                                 <div>
-                                    <button className={!allCart.length > 0 ? 'btn btn-grey mr-4 disabled' : 'btn btn-grey mr-4'} onClick={() => Router.push('/cart')}>View/Edit Cart</button>
-                                    <button className={!allCart.length > 0 ? 'btn disabled' : 'btn'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
+                                    <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
                                 </div>
                             </div>
                         </div>

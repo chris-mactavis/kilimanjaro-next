@@ -7,6 +7,7 @@ import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
+import Link from 'next/link';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import FormInput from '../../components/formInput/formInput';
@@ -40,7 +41,7 @@ const Checkout = () => {
 
     const loadingState = useSelector(state => state.loader.loading);
     const isLoggedIn = useSelector(state => state.auth.loggedIn);
-    let user = useSelector(state => state.auth.user);
+    let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
     
     // let orderTotal = allTotalPrice;
@@ -77,101 +78,112 @@ const Checkout = () => {
 
         if (data) {
             let orderData = {};
-
-            if (isLoggedIn && paymentOption === 'payment online' || paymentOption === 'payment') {
-                orderData = {
-                    email: user.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    street_address: streetAddress,
-                    house_number: data.houseNumber,
-                    longitude: latLng.lng,
-                    latitude: latLng.lat,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
-                }
-            } else if (isLoggedIn && paymentOption === 'pickup' || paymentOption === 'pickup') {
-                orderData = {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    email: data.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
+            if (isLoggedIn) {
+                // if logged in
+                if (paymentOption === 'delivery') {
+                    // delivery (online and on delivery)
+                    orderData = {
+                        email: user.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id : selectedRestaurant.id,
+                        street_address: streetAddress,
+                        house_number: data.houseNumber,
+                        longitude: latLng.lng,
+                        latitude: latLng.lat,
+                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        delivery: deliveryPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    }
+                } else if (paymentOption === 'pickup') {
+                    // if pickup
+                    orderData = {
+                        email: user.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id : selectedRestaurant.id,
+                        payment_method: 'webPay',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    };
                 }
             } else {
-                orderData = {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    email: data.email,
-                    phone: data.phone,
-                    signup_device: 'web',
-                    restaurant_id : selectedRestaurant.id,
-                    street_address: streetAddress,
-                    house_number: data.houseNumber,
-                    longitude: latLng.lng,
-                    latitude: latLng.lat,
-                    payment_method: 'webPay',
-                    quantity: localCart.length,
-                    subtotal: allTotalPrice,
-                    delivery: deliveryPrice,
-                    total: total,
-                    order_type: paymentOption,
-                    ordered_from: 'web',
-                    delivery_note: data.message,
-                    order_items: cartItems
+                //  if not logged in
+                if (paymentOption === 'delivery') {
+                    // If delivery (both online and pay on delivery)
+                    orderData = {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        email: data.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id: selectedRestaurant.id,
+                        street_address: streetAddress,
+                        house_number: data.houseNumber,
+                        longitude: latLng.lng,
+                        latitude: latLng.lat,
+                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        delivery: deliveryPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    }
+                } else if (paymentOption === 'pickup') {
+                    // if pickup
+                    orderData = {
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        email: data.email,
+                        phone: data.phone,
+                        signup_device: 'web',
+                        restaurant_id: selectedRestaurant.id,
+                        payment_method: 'webPay',
+                        quantity: localCart.length,
+                        subtotal: allTotalPrice,
+                        total: total,
+                        order_type: paymentOption,
+                        ordered_from: 'web',
+                        delivery_note: data.message,
+                        order_items: cartItems
+                    };
                 }
             }
 
-            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup' && paymentMethod === 'payment online')) {
+            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup')) {
                 const trans = FlutterwaveCheckout({
                     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                    tx_ref: "hooli-tx-1920bbtyt",
+                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
                     amount: total,
                     currency: "NGN",
                     country: "NG",
                     payment_options: "card, mobilemoneyghana, ussd",
-                    redirect_url: '/order-complete',
                     meta: {
                         consumer_id: 23,
                         consumer_mac: "92a3-912ba-1192a",
                     },
                     customer: {
-                        email: user.email,
-                        phone_number: user.phone,
-                        name: user.first_name + user.last_name,
+                        email: isLoggedIn ? user.email : data.email,
+                        phone_number: isLoggedIn ? user.phone : data.phone,
+                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
                     },
                     callback: async (data) => {
-                        console.log(data);
                         try {
-                            const data = await axiosInstance.post('orders', orderData);
-                            const orderItem = data.data.data; 
-                            console.log(orderItem);
-                            Cookies.set('orderItem', JSON.stringify(orderItem));
-                            dispatch(loader());
-                            NotificationManager.success('Order added successfully', '', 3000);
-                            Router.push('/complete-order');
-                            dispatch(addToCart([]));
-                            dispatch(updateTotalPrice(0));
-                            Cookies.remove('setCart');
-                            Cookies.remove('totalPrice');
+                            await submitOrder(orderData);
                             trans.close();
                         } catch (error) {
                             console.log(error);
@@ -181,27 +193,17 @@ const Checkout = () => {
                         console.log(data);
                     },
                     onclose: function() {
-                        closePaymentModal();
+                        dispatch(loader());
                     },
                     customizations: {
                         title: "Killimanjaro",
                         description: "Payment for items in cart",
-                        logo: "images/logo.png",
+                        logo: "/images/logo.png",
                     },
                 });
             } else {
                 try {
-                    const data = await axiosInstance.post('orders', orderData);
-                    const orderItem = data.data.data;
-                    console.log(orderItem);
-                    Cookies.set('orderItem', JSON.stringify(orderItem));
-                    dispatch(loader());
-                    NotificationManager.success('Order added successfully', '', 3000);
-                    Router.push('/complete-order');
-                    dispatch(addToCart([]));
-                    dispatch(updateTotalPrice(0));
-                    Cookies.remove('setCart');
-                    Cookies.remove('totalPrice');
+                    await submitOrder(orderData);
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
@@ -216,6 +218,19 @@ const Checkout = () => {
         setStreetAddress('');
         reset({});
     };
+
+    const submitOrder = async (orderData) => {
+        const data = await axiosInstance.post('orders', orderData);
+        const orderItem = data.data.data;
+        Cookies.set('orderItem', JSON.stringify(orderItem));
+        dispatch(loader());
+        NotificationManager.success('Order added successfully', '', 3000);
+        Router.push('/complete-order');
+        dispatch(addToCart([]));
+        dispatch(updateTotalPrice(0));
+        Cookies.remove('setCart');
+        Cookies.remove('totalPrice');
+    }
 
     const verifyEmailHandler = async email => {
         try {
@@ -300,6 +315,21 @@ const Checkout = () => {
                     <title>Checkout | Kilimanjaro</title>
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
                 </Head>
+
+                {!localCart.length > 0 ? <section className="shopping-cart empty-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="empty-cart-container">
+                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦0</p>
+                                <p>Your cart is currently empty.</p>
+                                <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                :
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
@@ -310,10 +340,10 @@ const Checkout = () => {
                                     <h4>Payment Option</h4>
                                     <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
                                         <label className="pay-opt">
-                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} defaultChecked />Delivery
+                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
                                             </label>
                                         <label className="pay-opt">
-                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} />Pickup
+                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
                                             </label>
                                     </div>
                                 </div>
@@ -328,20 +358,22 @@ const Checkout = () => {
                                                 ?
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked />Pay On Delivery
+                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
                                                     </label>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
                                                     </label>
                                                 </> 
                                                 :
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline-2'} />Pay Online
                                                     </label>
                                                 </>
                                             }
                                         </div>
+
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
 
                                         {/* Contact Details */}
                                         {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4> }
@@ -393,15 +425,16 @@ const Checkout = () => {
                                         </div>
                                         }
 
+                                        {isLoggedIn && <FormInput
+                                            type="number"
+                                            name="phone"
+                                            placeholder="+234 80 1234 5678*"
+                                            label="Mobile Numbers"
+                                            register={register({required: 'This field is required.'})}
+                                            error={errors.phone && errors.phone.message}
+                                        />}
+
                                         {paymentOption === 'delivery' && <div>
-                                            <FormInput
-                                                type="number"
-                                                name="phone"
-                                                placeholder="+234 80 1234 5678*"
-                                                label="Mobile Number"
-                                                register={register({ required: 'This field is required.' })}
-                                                error={errors.phone && errors.phone.message}
-                                            />
                                             <PlacesAutocomplete
                                                 value={streetAddress}
                                                 onChange={handleChange}
@@ -455,7 +488,6 @@ const Checkout = () => {
                                             />
                                         </div> }
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
                                         <h4 className="mt-5">Additional Informations</h4>
                                         <textarea
                                             // className={errors.message ? 'textarea-error' : null}
@@ -499,7 +531,7 @@ const Checkout = () => {
                             </form>
                         </div>
                     </div>
-                </section>
+                </section>}
             </Layout>
         </>
     );
