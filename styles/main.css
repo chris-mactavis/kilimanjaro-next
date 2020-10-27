@@ -592,7 +592,7 @@ section.select-restaurant {
     margin-right: 20px; }
     section.select-restaurant .select-state .css-tlfecz-indicatorContainer svg {
       fill: #fff !important; }
-    section.select-restaurant .select-state .css-yk16xz-control .css-g1d714-ValueContainer .css-1uccc91-singleValue {
+    section.select-restaurant .select-state .css-yk16xz-control .css-1uccc91-singleValue {
       color: #fff !important; }
     section.select-restaurant .select-state .css-yk16xz-control {
       background-color: #DC042A;
@@ -1334,6 +1334,9 @@ nav.navbar {
   background: #DC042A;
   width: 100%;
   z-index: 2; }
+  @media only screen and (max-width: 767px) {
+    nav.navbar {
+      padding: 15px 20px; } }
   nav.navbar .navbar-collapse {
     flex-grow: 0; }
   nav.navbar ul.navbar-nav {
@@ -1341,8 +1344,17 @@ nav.navbar {
     flex-wrap: inherit;
     align-items: center;
     padding-left: 1rem; }
+    @media only screen and (max-width: 992px) {
+      nav.navbar ul.navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 0; } }
     nav.navbar ul.navbar-nav li.nav-item {
       margin-right: 3rem; }
+      @media only screen and (max-width: 992px) {
+        nav.navbar ul.navbar-nav li.nav-item {
+          margin-bottom: 1rem;
+          margin-right: 0; } }
       nav.navbar ul.navbar-nav li.nav-item .nav-link {
         font-family: "Lato", sans-serif;
         font-size: 15px;
