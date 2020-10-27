@@ -4,6 +4,10 @@ nav.navbar {
   width: 100%;
   z-index: 2;
 
+  @media only screen and (max-width: $tablet_width) {
+    padding: 15px 20px;
+  }
+
   .navbar-collapse {
     flex-grow: 0;
   }
@@ -14,8 +18,19 @@ nav.navbar {
     align-items: center;
     padding-left: 1rem;
 
+    @media only screen and (max-width: $desktop_width) {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: 0;
+    }
+
     li.nav-item {
       margin-right: 3rem;
+
+      @media only screen and (max-width: $desktop_width) {
+        margin-bottom: 1rem;
+        margin-right: 0;
+      }
 
       .nav-link {
         font-family: $ffn;
