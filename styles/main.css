@@ -1116,6 +1116,10 @@ section.signup {
     color: #DC042A; }
   section.signup p {
     color: #7F7F7F; }
+  section.signup p.small-text {
+    font-size: 13px; }
+    section.signup p.small-text .notification-icon {
+      width: 23px; }
   section.signup .other-signin-option {
     display: inline-flex;
     align-items: flex-end; }
@@ -1302,6 +1306,8 @@ section.account h5 {
   border-bottom: 1px solid; }
 section.account .name {
   text-transform: capitalize; }
+section.account .col-black {
+  color: #383838; }
 
 .notification-push {
   position: fixed;

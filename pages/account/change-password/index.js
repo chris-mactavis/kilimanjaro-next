@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
+import Cookies from 'js-cookie';
 
-import Layout from '../../components/Layout';
-import FormInput from '../../components/formInput/formInput';
-import axiosInstance from '../../config/axios';
-import { loader } from '../../store/actions/loader';
-import { storeAuth } from '../../store/actions/auth';
-import InlineLoading from '../../components/UI/inlineLoader';
+import Layout from '../../../components/Layout';
+import FormInput from '../../../components/formInput/formInput';
+import axiosInstance from '../../../config/axios';
+import { loader } from '../../../store/actions/loader';
+import { storeAuth } from '../../../store/actions/auth';
+import InlineLoading from '../../../components/UI/inlineLoader';
 
 
 const ForgotPassword = () => {
@@ -22,13 +23,25 @@ const ForgotPassword = () => {
     const dispatch = useDispatch();
 
     const changePasswordHandler = async (data) => {
+        const changedPasswordData = {
+            current_password: data.current_password,
+            new_password: data.new_password
+        };
+        const userToken = Cookies.get('token');
         dispatch(loader());
-            if (data) {
-               console.log(data);
-            }
-            setTimeout(() => {
-                dispatch(loader());
-            }, 1000);
+        try {
+            if (changedPasswordData) {
+               const { data: response } = await axiosInstance.post('change-password', changedPasswordData, {headers: {'Authorization': `Bearer ${userToken}`}});
+                console.log(response);
+               dispatch(loader());
+               NotificationManager.success(response.message, '', 3000);
+               Router.push('/account');
+             }
+        } catch (error) {
+            dispatch(loader());
+            NotificationManager.error(error.response.data.message, '', 3000);
+            console.log(error);
+        }
         reset({});
     };
 
@@ -44,16 +57,16 @@ const ForgotPassword = () => {
                         <div className="row">
                             <div className="col-md-6 mx-auto">
                                 <div className="border-line">
-                                    <h3>Change Password </h3>
+                                    <h3 className="text-center">Change Password </h3>
                                     <p className="mb-3"> Is your password vulnerable? You can change it here.</p>
                                     <form onSubmit={handleSubmit(changePasswordHandler)} className="signup-form">
                                         <FormInput
                                             type="password"
-                                            name="old_password"
+                                            name="current_password"
                                             placeholder="Old Password*"
                                             label="Old Password"
                                             register={register({required: 'This field is required'})}
-                                            error={errors.old_password && errors.old_password.message}
+                                            error={errors.current_password && errors.current_password.message}
                                         />
                                          <FormInput
                                             type="password"
