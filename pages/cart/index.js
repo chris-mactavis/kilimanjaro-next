@@ -130,73 +130,75 @@ const ShoppingCart = () => {
                     <title>Cart | Kilimanjaro</title>
                 </Head>
 
-               {!localCart.length > 0 ? <section className="shopping-cart empty-cart">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="empty-cart-container">
-                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>
-                                <p>Your cart is currently empty.</p>
-                                <Link href="/"><button className="btn">Return to hompage</button></Link>
+               {!localCart.length > 0
+                ? 
+                    <section className="shopping-cart empty-cart">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="empty-cart-container">
+                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p>Your cart is currently empty.</p>
+                                        <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
                 :
-                <section className="shopping-cart">
-                    <div className="container">
-                        <OrderingSteps activeTabs={[1]} />
-                        <div className="row">
-                            <div className="col-md-8 mx-auto">
-                                {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
-                                <h4>Review Your Order</h4>
-                                {cartDisplay}
-                                <div className="text-right mt-4 mb-3">
-                                { loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button> }
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <label className="review">Coupon</label>
-                                                <input type="text" name="coupon" id="coupon" />
-                                            </div>
+                    <section className="shopping-cart">
+                        <div className="container">
+                            <OrderingSteps activeTabs={[1]} />
+                            <div className="row">
+                                <div className="col-md-8 mx-auto">
+                                    {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
+                                    <h4>Review Your Order</h4>
+                                    {cartDisplay}
+                                    <div className="text-right mt-4 mb-3">
+                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>}
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-8">
+                                            <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <label className="review">Coupon</label>
+                                                    <input type="text" name="coupon" id="coupon" />
+                                                </div>
 
-                                            {/* <label>
+                                                {/* <label>
                                 <input type="radio" value="delivery" name="radio" />Delivery
                             </label>
                             <label>
                                 <input type="radio" value="pick up" name="radio" />Pick up
                             </label> */}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="col md-4">
-                                        <div className="price-review coupon-delivery-sect">
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Coupon</p>
-                                                <p>{'₦'+0}</p>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Subtotal</p>
-                                                <p>{'₦'+newTotalPrice}</p>
-                                            </div>
-                                            {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                        <div className="col md-4">
+                                            <div className="price-review coupon-delivery-sect">
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Coupon</p>
+                                                    <p>{'₦' + 0}</p>
+                                                </div>
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Subtotal</p>
+                                                    <p>{'₦' + newTotalPrice}</p>
+                                                </div>
+                                                {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Delivery fee</p>
                                                 <p>N500</p>
                                             </div> */}
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Total</p>
-                                                <p>{'₦'+newTotalPrice}</p>
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Total</p>
+                                                    <p>{'₦' + newTotalPrice}</p>
+                                                </div>
                                             </div>
+                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
                                         </div>
-                                        <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
                 }
 
                 {/* Related Product shown on the review order */}
