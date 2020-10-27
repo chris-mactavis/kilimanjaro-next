@@ -49,7 +49,8 @@ export const storeAuth = data => {
 export const logout = () => {
     Cookies.remove('token');
     Cookies.remove('user');
-
+    Cookies.remove('singleOrderId');
+    
     return {
         type: LOGOUT
     }

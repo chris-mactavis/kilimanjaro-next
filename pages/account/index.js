@@ -7,10 +7,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 import Layout from '../../components/Layout';
-import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
-import { loader } from '../../store/actions/loader';
-import { storeAuth } from '../../store/actions/auth';
 import { useEffect, useState } from 'react';
 
 
@@ -19,7 +16,11 @@ const Account = ({orders}) => {
     // All store
     let user = useSelector(state => state.auth.user) || {};
     user =  typeof user === 'object' ? user : JSON.parse(user);
-    console.log(orders);
+
+    const ViewSingleOrderHandler = (id) => {
+        Cookies.set('singleOrderId', id);
+        Router.push('/account/view-order');
+    };
 
     return (
         <>
@@ -40,8 +41,8 @@ const Account = ({orders}) => {
                                     <p>Phone Number: <span>{user.phone}</span></p>
                                 </div>
                                 <div className="d-flex">
-                                    <Link href="/edit-account"><button className="btn mr-5">Edit</button></Link> 
-                                    <Link href="/change-password"><button className="btn">Change password</button></Link>
+                                    <Link href="/account/edit-account"><button className="btn mr-5">Edit</button></Link> 
+                                    <Link href="/account/change-password"><button className="btn">Change password</button></Link>
                                 </div>
                                 <h5 className="mt-5">My Orders</h5>
                                 {!orders.length > 0 && <p>You have not made any orders yet.</p>}
@@ -70,8 +71,8 @@ const Account = ({orders}) => {
                                                     <Td>{order.order_number}</Td>
                                                     <Td>{`${day} ${month} ${year}`}</Td>
                                                     <Td>Processing</Td>
-                                                    <Td>{`₦${order.total} for ${order.quantity} ${qtyItem}`}</Td>
-                                                    <button onClick={() => Router.push('/account/view-order')} className="btn mt-3 mb-3">View</button>
+                                                    <Td>₦{order.total}</Td>
+                                                    <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3">View</button></Td>
                                                 </Tr>
                                             })}
                                              {/* <Tr>

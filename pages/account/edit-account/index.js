@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
+import Cookies from 'js-cookie';
 
-import Layout from '../../components/Layout';
-import FormInput from '../../components/formInput/formInput';
-import axiosInstance from '../../config/axios';
-import { loader } from '../../store/actions/loader';
-import { storeAuth } from '../../store/actions/auth';
-import InlineLoading from '../../components/UI/inlineLoader';
+import Layout from '../../../components/Layout';
+import FormInput from '../../../components/formInput/formInput';
+import axiosInstance from '../../../config/axios';
+import { loader } from '../../../store/actions/loader';
+import { storeAuth } from '../../../store/actions/auth';
+import InlineLoading from '../../../components/UI/inlineLoader';
 
 
 const EditAccount = () => {
@@ -24,10 +25,22 @@ const EditAccount = () => {
     const dispatch = useDispatch();
 
     const eidtAccountHandler = async (data) => {
+        const userToken = Cookies.get('token');
         dispatch(loader());
-            if (data) {
-               console.log(data);
+            try {
+                if (data) {
+                    const { data: response } = await axiosInstance.post('user', data, {headers: {'Authorization': `Bearer ${userToken}`}});
+                    console.log(response);
+                    dispatch(loader());
+                    NotificationManager.success(response.message, '', 3000);
+                    Router.push('/account');
+                }
+            } catch (error) {
+                dispatch(loader());
+                console.log(error);
+                NotificationManager.error(error.response.data.message, '', 3000);
             }
+            
            
         reset({});
     };
@@ -44,7 +57,7 @@ const EditAccount = () => {
                         <div className="row">
                             <div className="col-md-6 mx-auto">
                                 <div className="border-line">
-                                    <h3>Account information </h3>
+                                    <h3 className="text-center">Account information</h3>
                                     <p className="mb-3"> Change or update your account information here.</p>
                                     <form onSubmit={handleSubmit(eidtAccountHandler)} className="signup-form">
                                         <FormInput
@@ -72,8 +85,7 @@ const EditAccount = () => {
                                             label="Email Address"
                                             register={register({
                                                 required: 'Please input a valid email address',
-                                                pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                                                validate: async value => verifyEmailHandler(value)
+                                                pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/
                                             })}
                                             defaultValue={user.email}
                                             error={errors.email && errors.email.message}
@@ -83,10 +95,7 @@ const EditAccount = () => {
                                             name="phone"
                                             placeholder="+234 80 1234 5678"
                                             label="Mobile Number"
-                                            register={register({
-                                                required: true,
-                                                validate: async value => verifyPhoneHandler(value)
-                                            })}
+                                            register={register({required: true})}
                                             defaultValue={user.phone}
                                             error={errors.phone && errors.phone.message}
                                         />

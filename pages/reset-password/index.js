@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
+import { useState } from 'react';
 
 import Layout from '../../components/Layout';
 import FormInput from '../../components/formInput/formInput';
@@ -12,7 +13,13 @@ import { storeAuth } from '../../store/actions/auth';
 import InlineLoading from '../../components/UI/inlineLoader';
 
 
-const ForgotPassword = () => {
+
+const ResetPassword = () => {
+    // console.log(tokenIsValid, reason);
+
+    const [ tokenIsValid, setTokenIsValid ] = useState(true);
+    const [ reason, setReason ] = useState('Token isValid');
+
 
     // All store
     const loadingState = useSelector(state => state.loader.loading);
@@ -22,10 +29,22 @@ const ForgotPassword = () => {
     const dispatch = useDispatch();
 
     const resetPasswordHandler = async (data) => {
-        dispatch(loader());
-            if (data) {
-               console.log(data);
-            }
+        console.log(data);
+        // const userToken = Cookies.get('token');
+        // const resetData = {
+        //     code: code,
+        //     password: data.password
+        // }
+        // dispatch(loader());
+        // try {
+        //     const { data: response } = await axiosInstance.post('update-password', resetData, {headers: {'Authorization': `Bearer ${userToken}`}});
+        //     NotificationManager.success('Password updated!', '', 3000);
+        //     dispatch(loader());
+        // } catch(error) {
+        //     dispatch(loader());
+        //     NotificationManager.error(error.response.data.message, '', 3000);
+        //     console.log(error);
+        // }
            
         reset({});
     };
@@ -42,9 +61,10 @@ const ForgotPassword = () => {
                         <div className="row">
                             <div className="col-md-6 mx-auto">
                                 <div className="border-line">
-                                    <h3>Reset Password</h3>
-                                    <p className="mb-3"> Sorry! Now you can reset you password</p>
-                                    <form onSubmit={handleSubmit(resetPasswordHandler)} className="signup-form">
+                                    <h3 className="text-center">Reset Password</h3>
+                                    {tokenIsValid && <p className="mb-3"> Sorry! Now you can reset you password</p>} 
+                                   { tokenIsValid
+                                   ? <form onSubmit={handleSubmit(resetPasswordHandler)} className="signup-form">
                                         <FormInput
                                             type="password"
                                             name="password"
@@ -63,6 +83,25 @@ const ForgotPassword = () => {
                                         />
                                         {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3">Reset Password</button>}
                                     </form>
+                                    : <>
+                                        <div>
+                                            {
+                                                reason === 'The reset link has expired!'
+                                                ?   <>
+                                                        <h5 className="text-center mb-3">Token Expired</h5>
+                                                        <p>The link you supplied has expired. Please generate another link to reset your password.</p>
+                                                    </>
+                                                :
+                                                    <>
+                                                        <h5  className="text-center mb-3">Wrong Link</h5>
+                                                        <p>
+                                                            You have clicked on an invalid link. Please make sure that you have typed the link correctly.
+                                                            If are copying this link from a mail reader please ensure that you have copied all the lines in the link.
+                                                        </p>
+                                                    </>
+                                            }
+                                        </div>
+                                    </>}
                                 </div>
                             </div>
                         </div>
@@ -73,4 +112,28 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+ResetPassword.getInitialProps = async ({query}) => {
+    console.log(query);
+    let token = null;
+    if (query) {
+        return token = {
+            code: query.code
+        }
+    }
+    
+    try {
+        const {data: response } = await axiosInstance.post('validate-reset-token', token);
+        return {
+            code: token.code,
+            tokenIsValid: response.message === 'reset link valid',
+            reason: null
+        }
+    } catch (error) {
+        return {
+            tokenIsValid: false,
+            reason: error.response.data.message
+        }
+    }
+}
+
+export default ResetPassword;

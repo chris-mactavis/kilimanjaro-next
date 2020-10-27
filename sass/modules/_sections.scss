@@ -880,6 +880,14 @@ section {
             color: #7F7F7F;
         }
 
+        p.small-text {
+            font-size: 13px;
+
+            .notification-icon {
+                width: 23px;
+            }
+        }
+
         .other-signin-option {
             display: inline-flex;
             align-items: flex-end;
@@ -1195,6 +1203,10 @@ section {
 
         .name {
             text-transform: capitalize;
+        }
+
+        .col-black {
+            color: $light-black;
         }
     }
 
