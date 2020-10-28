@@ -73,7 +73,7 @@ const Login = () => {
                         name="email"
                         placeholder="Example@email.com*"
                         label="Email Address"
-                        register={register ({ required : true, pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/ })}
+                        register={register ({ required : true })}
                         error={errors.email && 'Please input a valid email address'} 
                     />
                     <FormInput

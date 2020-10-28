@@ -31,7 +31,7 @@ const StoreLocation = ({storeLocations}) => {
                                return <div key={storeLocation.id} className="col-md-4 mb-5">
                                    <div className="card">
                                        <img className="img-fluid" src={storeLocation.image_url} alt="" />
-                                       <div className="d-flex mt-5 align-items-center justify-content-between">
+                                       <div className="d-flex mt-5 align-items-center justify-content-between flex-wrap">
                                             <h5>{storeLocation.state}</h5>
                                             <button onClick={() => viewOuletHandler(storeLocation.id)} className="btn" data-toggle="modal" data-target="#myModal">
                                                 View Outlets
@@ -52,6 +52,9 @@ const StoreLocation = ({storeLocations}) => {
                                     <div className="modal-dialog">
                                         {/* <!-- Modal content--> */}
                                         <div className="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
                                             <div className="modal-body">
                                                 {restaurants.map((res) => {
                                                     return <div key={res.id} className="restaurants">
