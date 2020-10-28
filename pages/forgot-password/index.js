@@ -73,7 +73,7 @@ const ForgotPassword = () => {
                                                 placeholder="email@gmail.com"
                                                 register={register({
                                                     required: 'Please input a valid email address',
-                                                    pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/
+                                                    // pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/
                                                 })}
                                                 error={errors.email && errors.email.message}
                                             />

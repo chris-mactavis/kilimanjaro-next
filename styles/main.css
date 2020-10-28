@@ -1213,6 +1213,11 @@ section.store-location {
     padding: 23px;
     border: none;
     box-shadow: -1px -2px 19px -11px rgba(0, 0, 0, 0.75); }
+    section.store-location .card img {
+      height: 240px; }
+      @media only screen and (max-width: 992px) {
+        section.store-location .card img {
+          height: auto; } }
 section.contact-us h4 {
   text-transform: initial;
   font-family: "Lato", sans-serif; }
@@ -1289,8 +1294,19 @@ section.empty-cart {
     padding: 20px; }
 section.restaurant-display .modal-dialog {
   max-width: 900px; }
+section.restaurant-display .modal-header {
+  border-bottom: none;
+  display: none; }
+  @media only screen and (max-width: 576px) {
+    section.restaurant-display .modal-header {
+      display: block; } }
+  section.restaurant-display .modal-header .close {
+    font-size: 35px; }
 section.restaurant-display .modal-body {
   padding: 5rem; }
+  @media only screen and (max-width: 576px) {
+    section.restaurant-display .modal-body {
+      padding: 0 5rem; } }
   section.restaurant-display .modal-body .restaurants {
     border-bottom: 1px solid #EDEDED;
     width: 60%;

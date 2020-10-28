@@ -5,6 +5,7 @@ import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
+// import { useForm } from "react-hook-form";
 
 
 
@@ -31,13 +32,15 @@ const Menu = ({ productCategories }) => {
     const [value, setValue] = useState(0);
     const [ inlineLoading, setInlineLoading ] = useState(0);
     const [ restaurantName, setRestaurantName ] = useState(null);
-    const [selectedVariableProducts, setSelectedVariableProducts] = useState([]);
-    const [quantitiesArray, setQuantitiesArray] = useState([]);
+    const [ selectedVariableProducts, setSelectedVariableProducts] = useState([]);
+    const [ quantitiesArray, setQuantitiesArray] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
     const [disableScrollEvent, setDisableScrollEvent] = useState(false);
     // const [allProducts, setAllProducts] = useState([]);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
+
+    // const { register, handleSubmit } = useForm();
 
   
     //  All Store
@@ -352,6 +355,7 @@ const Menu = ({ productCategories }) => {
         // console.log(newValue);
     } 
 
+
     return (
         <>
             <Layout>
@@ -418,6 +422,7 @@ const Menu = ({ productCategories }) => {
                                                     // btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
                                                 }
 
+
                                                 return <>
                                                     <div key={prod.id} className="single-product">
                                                         <div className="row">
@@ -434,16 +439,44 @@ const Menu = ({ productCategories }) => {
                                                                 </div>
                                                                 <p className="product-description">{prod.short_description}</p>
                                                                 
-                                                                {prod.product_type === 'variable' && <form className="select-state mt-4">
-                                                                    <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
-                                                                </form>}
-                                                                <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
-                                                                    {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
-                                                                    <div>
-                                                                        {productPrices}
-                                                                        {productSalePrice}
+                                                                {
+                                                                    prod.product_type === 'variable' &&
+                                                                    <>
+                                                                        <form className="select-state mt-4">
+                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                        </form>
+                                                                        <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                                                            {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
+                                                                            <div>
+                                                                                {productPrices}
+                                                                                {productSalePrice}
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                }
+                                                                {/* {
+                                                                    prod.product_type === 'variable' &&
+                                                                    <form onSubmit={handleSubmit(sub)} className="select-state mt-4">
+                                                                        <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                        <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                                                            {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
+                                                                            <div>
+                                                                                {productPrices}
+                                                                                {productSalePrice}
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                } */}
+                                                                {
+                                                                    prod.product_type === 'simple' &&
+                                                                    <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                                                        {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
+                                                                        <div>
+                                                                            {productPrices}
+                                                                            {productSalePrice}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>

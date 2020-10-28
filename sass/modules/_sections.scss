@@ -1017,6 +1017,14 @@ section {
             padding: 23px;
             border: none;
             box-shadow: -1px -2px 19px -11px rgba(0,0,0,0.75);
+
+            img {
+                height: 240px;
+
+                @media only screen and (max-width: $desktop_width) {
+                    height: auto;
+                  }
+            }
         }
     }
 
@@ -1173,8 +1181,25 @@ section {
             max-width: 900px;
         }
 
+        .modal-header {
+            border-bottom: none;
+            display: none;
+
+            @media only screen and (max-width: $mobile_width) {
+                display: block;
+            }
+              
+            .close {
+                font-size: 35px;
+            }
+        }
+
         .modal-body {
             padding: 5rem;
+
+            @media only screen and (max-width: $mobile_width) {
+                padding: 0 5rem;
+            }
 
             .restaurants {
                 border-bottom: 1px solid #EDEDED;

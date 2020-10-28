@@ -57,7 +57,7 @@ const Nav = () => {
 
                     { loggedIn && <div className="nav-item nav-bg-white account-toggle">
                         <a className="dropdown-toggle" data-toggle="dropdown">
-                           {`${user.first_name} ${user.last_name}`}
+                           {`${user.first_name}`}
                         </a>
                         <div className="dropdown-menu">
                             <Link href="/account"><a className="dropdown-item">My Account</a></Link>
