@@ -1441,8 +1441,14 @@ nav.navbar {
         font-size: 15px; }
       nav.navbar ul.navbar-nav .account-toggle .dropdown-menu {
         min-width: 100%; }
+        @media only screen and (max-width: 576px) {
+          nav.navbar ul.navbar-nav .account-toggle .dropdown-menu {
+            border: none; } }
       nav.navbar ul.navbar-nav .account-toggle .dropdown-item {
         padding: 0.7rem 1.5rem; }
+        @media only screen and (max-width: 576px) {
+          nav.navbar ul.navbar-nav .account-toggle .dropdown-item {
+            padding: 0.7rem 0; } }
         nav.navbar ul.navbar-nav .account-toggle .dropdown-item:active {
           background-color: transparent !important; }
       nav.navbar ul.navbar-nav .account-toggle .dropdown-item.active {

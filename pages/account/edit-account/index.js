@@ -4,6 +4,8 @@ import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
+import { useState } from 'react';
+
 
 import Layout from '../../../components/Layout';
 import FormInput from '../../../components/formInput/formInput';

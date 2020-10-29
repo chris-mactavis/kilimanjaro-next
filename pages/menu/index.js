@@ -541,17 +541,18 @@ Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
         selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+        console.log(selRestaurant, 'browser');
         if (!selRestaurant) {
             Router.push("/");
-        } else {
-            selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
         }
     } else {
+        // selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
         if (!selRestaurant) {
-            res.redirect("/");
+            return res.redirect("/"); 
         } else {
             selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
         }
+        console.log(selRestaurant, 'server');
     }
 
     let restaurantId = selRestaurant.id;
