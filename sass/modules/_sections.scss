@@ -112,7 +112,7 @@ section {
         padding: 70px 0;
 
         h2 {
-            margin-bottom: 30px;
+            margin-bottom: 30px; 
         }
 
         img {
@@ -765,6 +765,7 @@ section {
                 border: 1px solid #707070;
                 padding: 10px 20px;
                 border-radius: 3px;
+                font-weight: normal;
     
                 &:not(:last-child) {
                     margin-right: 30px;

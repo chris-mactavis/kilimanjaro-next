@@ -5,6 +5,7 @@ import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
+import nookies from 'nookies';
 // import { useForm } from "react-hook-form";
 
 
@@ -540,9 +541,19 @@ Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
         selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+        if (!selRestaurant) {
+            Router.push("/");
+        } else {
+            selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+        }
     } else {
-        selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        if (!selRestaurant) {
+            res.redirect("/");
+        } else {
+            selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        }
     }
+
     let restaurantId = selRestaurant.id;
 
     try {

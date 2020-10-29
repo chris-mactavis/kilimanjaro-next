@@ -4,6 +4,7 @@ import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import Head from 'next/head';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 import Layout from '../../components/Layout';
 import FormInput from '../../components/formInput/formInput';
@@ -14,11 +15,11 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const ResetPassword = () => {
-    // console.log(tokenIsValid, reason);
+const ResetPassword = ({token, tokenIsValid, reason, code}) => {
+    console.log(tokenIsValid, reason, code);
 
-    const [ tokenIsValid, setTokenIsValid ] = useState(true);
-    const [ reason, setReason ] = useState('Token isValid');
+    // const [ tokenIsValid, setTokenIsValid ] = useState(true);
+    // const [ reason, setReason ] = useState('Token isValid');
 
 
     // All store
@@ -30,21 +31,22 @@ const ResetPassword = () => {
 
     const resetPasswordHandler = async (data) => {
         console.log(data);
-        // const userToken = Cookies.get('token');
-        // const resetData = {
-        //     code: code,
-        //     password: data.password
-        // }
-        // dispatch(loader());
-        // try {
-        //     const { data: response } = await axiosInstance.post('update-password', resetData, {headers: {'Authorization': `Bearer ${userToken}`}});
-        //     NotificationManager.success('Password updated!', '', 3000);
-        //     dispatch(loader());
-        // } catch(error) {
-        //     dispatch(loader());
-        //     NotificationManager.error(error.response.data.message, '', 3000);
-        //     console.log(error);
-        // }
+        const userToken = Cookies.get('token');
+        const resetData = {
+            code: code,
+            password: data.password
+        }
+        dispatch(loader());
+        try {
+            const { data: response } = await axiosInstance.post('update-password', resetData, {headers: {'Authorization': `Bearer ${userToken}`}});
+            NotificationManager.success(response.message, '', 3000);
+            dispatch(loader());
+            Router.push('/signup');
+        } catch(error) {
+            dispatch(loader());
+            NotificationManager.error(error.response.data.message, '', 3000);
+            console.log(error);
+        }
            
         reset({});
     };
@@ -114,17 +116,18 @@ const ResetPassword = () => {
 
 ResetPassword.getInitialProps = async ({query}) => {
     console.log(query);
-    let token = null;
-    if (query) {
-        return token = {
-            code: query.code
+    if (!query.hasOwnProperty('code')) {
+        return {
+            tokenIsValid: false,
+            reason: null
         }
     }
+  
     
     try {
-        const {data: response } = await axiosInstance.post('validate-reset-token', token);
+        const {data: response } = await axiosInstance.post('validate-reset-token', query);
         return {
-            code: token.code,
+            code: query.code,
             tokenIsValid: response.message === 'reset link valid',
             reason: null
         }

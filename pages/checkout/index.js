@@ -339,12 +339,12 @@ const Checkout = () => {
                                 <div className="col-md-7">
                                     <h4>Payment Option</h4>
                                     <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                        <label className="pay-opt">
+                                        <label className="payment">
                                             <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
-                                            </label>
-                                        <label className="pay-opt">
+                                        </label>
+                                        <label className="payment">
                                             <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
-                                            </label>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -448,7 +448,7 @@ const Checkout = () => {
                                                             name='streetAddress'
                                                             label="Street/Estate Address"
                                                             {...getInputProps({
-                                                                placeholder: 'Street/estate address*',
+                                                                placeholder: 'Manually type your street/estate address',
                                                                 className: 'location-search-input',
                                                             })}
                                                             register={register({ required: 'This field is required.' })}
