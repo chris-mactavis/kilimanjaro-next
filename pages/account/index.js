@@ -15,12 +15,16 @@ import { auth } from '../../components/hoc/auth';
 
 const Account = ({orders}) => {
 
+    const [value, setValue] = useState(0);
+
+    useEffect(() => {setValue(value => ++value);}, []);
+
     // All store
     let user = useSelector(state => state.auth.user) || {};
     user =  typeof user === 'object' ? user : JSON.parse(user);
 
     const ViewSingleOrderHandler = (id) => {
-        Cookies.set('singleOrderId', id);
+        Cookies.set('singleOrderId', id); 
         Router.push('/account/view-order');
     };
 
