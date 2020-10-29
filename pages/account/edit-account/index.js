@@ -15,6 +15,8 @@ import InlineLoading from '../../../components/UI/inlineLoader';
 
 const EditAccount = () => {
 
+    const [value, setValue] = useState(0);
+
     // All store
     const loadingState = useSelector(state => state.loader.loading);
     let user = useSelector(state => state.auth.user) || {};
@@ -30,7 +32,7 @@ const EditAccount = () => {
             try {
                 if (data) {
                     const { data: response } = await axiosInstance.post('user', data, {headers: {'Authorization': `Bearer ${userToken}`}});
-                    console.log(response);
+                    setValue(value => ++value);
                     dispatch(loader());
                     NotificationManager.success(response.message, '', 3000);
                     Router.push('/account');

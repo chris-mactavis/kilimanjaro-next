@@ -55,6 +55,11 @@ section {
             width: 70%;
             height: 1.3px;
             background-color: $primary;
+
+            @media only screen and (max-width: $mobile_width) {
+                width: 95%; 
+            }
+              
         }
 
         .mv-down {
@@ -85,19 +90,41 @@ section {
         position: relative;
         margin-bottom: 120px;
 
+        @media only screen and (max-width: $desktop_width) {
+            margin-bottom: 30px;
+        }
+
+        @media only screen and (max-width: $mobile_width) {
+            padding: 40px 0;
+            margin-bottom: 0;
+        }
+
         p {
             color: #fff;
             margin-bottom: 20px;
         }
 
         .mobile-link-container {
+
+            @media only screen and (max-width: $mobile_width) {
+                text-align: center;
+            }
+
             a:first-child {
                 margin-right: 15px;
+
+                // @media only screen and (max-width: $mobile_width) {
+                //     margin-right: 0;
+                // }
             }
 
             img {
                 max-height: 50px;
                 width: auto;
+
+                @media only screen and (max-width: $mobile_width) {
+                    margin-bottom: 15px;
+                }
             }
         }
 

@@ -207,7 +207,7 @@ html, body {
   scroll-behavior: smooth; }
 
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-size: 18px;
   line-height: 1.5;
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.527), rgba(255, 255, 255, 0.527)), url("/images/background-cover.jpg"); }
@@ -229,7 +229,7 @@ li {
   color: #383838; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Lato", sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-weight: 600;
   color: #383838; }
 
@@ -238,6 +238,9 @@ h1 {
 
 h2 {
   font-size: 40px; }
+  @media only screen and (max-width: 576px) {
+    h2 {
+      font-size: 30px; } }
 
 h3 {
   font-size: 40px; }
@@ -246,7 +249,7 @@ h4 {
   font-size: 30px; }
 
 h5 {
-  font-family: "Lato", sans-serif;
+  font-family: "Ubuntu", sans-serif;
   font-weight: 600;
   font-size: 20px; }
 
@@ -524,6 +527,9 @@ section.coupon-products {
     width: 70%;
     height: 1.3px;
     background-color: #DC042A; }
+    @media only screen and (max-width: 576px) {
+      section.coupon-products::before {
+        width: 95%; } }
   section.coupon-products .mv-down {
     margin-top: 32px; }
 section.how-it-works {
@@ -540,14 +546,27 @@ section.sec-footer {
   background-color: #DC042A;
   position: relative;
   margin-bottom: 120px; }
+  @media only screen and (max-width: 992px) {
+    section.sec-footer {
+      margin-bottom: 30px; } }
+  @media only screen and (max-width: 576px) {
+    section.sec-footer {
+      padding: 40px 0;
+      margin-bottom: 0; } }
   section.sec-footer p {
     color: #fff;
     margin-bottom: 20px; }
+  @media only screen and (max-width: 576px) {
+    section.sec-footer .mobile-link-container {
+      text-align: center; } }
   section.sec-footer .mobile-link-container a:first-child {
     margin-right: 15px; }
   section.sec-footer .mobile-link-container img {
     max-height: 50px;
     width: auto; }
+    @media only screen and (max-width: 576px) {
+      section.sec-footer .mobile-link-container img {
+        margin-bottom: 15px; } }
   section.sec-footer .app-img {
     max-width: 450px;
     position: absolute;
@@ -1372,7 +1391,7 @@ nav.navbar {
           margin-bottom: 1rem;
           margin-right: 0; } }
       nav.navbar ul.navbar-nav li.nav-item .nav-link {
-        font-family: "Lato", sans-serif;
+        font-family: "Ubuntu", sans-serif;
         font-size: 15px;
         text-transform: uppercase; }
     nav.navbar ul.navbar-nav .nav-bg-white {
@@ -1409,11 +1428,17 @@ footer.footer {
     color: #fff; }
   footer.footer .navbar-nav {
     flex-direction: row; }
+    @media only screen and (max-width: 767px) {
+      footer.footer .navbar-nav {
+        justify-content: center; } }
     footer.footer .navbar-nav .nav-link {
       font-size: 15px; }
   footer.footer p {
     margin-bottom: 0;
     font-size: 15px; }
+    @media only screen and (max-width: 576px) {
+      footer.footer p {
+        margin: 10px 0; } }
   footer.footer .social-media a:hover {
     transform: rotate(360deg) scale(1.3); }
   footer.footer .social-media a:not(:last-child) {
