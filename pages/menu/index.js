@@ -541,7 +541,6 @@ Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
         selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        console.log(selRestaurant, 'browser');
         if (!selRestaurant) {
             Router.push("/");
         }
