@@ -27,7 +27,7 @@ const Home = ({cities}) => {
         {hasToken && <Orders  />}
         {/* <Orders  /> */}
         <section className="coupon-products">
-          <CouponProduct />
+          {/* <CouponProduct /> */}
         </section>
         <section className="how-it-works">
           <div className="container">

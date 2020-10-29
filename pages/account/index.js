@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
@@ -8,7 +9,8 @@ import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 import Layout from '../../components/Layout';
 import axiosInstance from '../../config/axios';
-import { useEffect, useState } from 'react';
+import { auth } from '../../components/hoc/auth';
+
 
 
 const Account = ({orders}) => {
@@ -119,4 +121,4 @@ Account.getInitialProps = async({ req, res }) => {
     }
 }
 
-export default Account;
+export default auth(Account);

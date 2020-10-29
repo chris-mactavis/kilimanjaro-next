@@ -267,6 +267,9 @@ form {
     font-size: 15px;
     border-radius: 5px;
     outline: none; }
+    @media only screen and (max-width: 992px) {
+      form.select-state .select-tool {
+        width: 100%; } }
   form.select-state .select-disabled {
     pointer-events: none; }
     form.select-state .select-disabled .css-yk16xz-control {
@@ -492,13 +495,36 @@ form {
 section.header-content {
   height: 100vh;
   padding: 150px 0; }
+  @media only screen and (max-width: 992px) {
+    section.header-content {
+      padding: 100px 0;
+      height: 70vh; } }
+  @media only screen and (max-width: 576px) {
+    section.header-content {
+      padding: 0;
+      height: auto; } }
   section.header-content h1 {
     margin-bottom: 10px; }
+    @media only screen and (max-width: 992px) {
+      section.header-content h1 {
+        font-size: 40px; } }
+    @media only screen and (max-width: 576px) {
+      section.header-content h1 {
+        font-size: 25px; } }
   section.header-content p {
     font-weight: 600;
     margin-bottom: 15px; }
   section.header-content .headtext-container {
     padding: 100px 0 0 100px; }
+    @media only screen and (max-width: 1200px) {
+      section.header-content .headtext-container {
+        padding: 0 0 0 100px; } }
+    @media only screen and (max-width: 992px) {
+      section.header-content .headtext-container {
+        padding: 0; } }
+    @media only screen and (max-width: 576px) {
+      section.header-content .headtext-container {
+        padding: 30px 0; } }
   section.header-content .left-banner-image {
     width: auto;
     height: 100%;
@@ -507,6 +533,9 @@ section.header-content {
     top: 0;
     bottom: 0;
     z-index: -1; }
+    @media only screen and (max-width: 1200px) {
+      section.header-content .left-banner-image {
+        display: none; } }
   section.header-content .right-banner-image {
     width: auto;
     height: 100%;
@@ -515,8 +544,10 @@ section.header-content {
     top: 0;
     bottom: 0;
     z-index: -1; }
+    @media only screen and (max-width: 1200px) {
+      section.header-content .right-banner-image {
+        display: none; } }
 section.coupon-products {
-  padding: 50px 0;
   position: relative; }
   section.coupon-products::before {
     content: "";
