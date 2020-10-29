@@ -11,9 +11,10 @@ import axiosInstance from '../../../config/axios';
 import { loader } from '../../../store/actions/loader';
 import { storeAuth } from '../../../store/actions/auth';
 import InlineLoading from '../../../components/UI/inlineLoader';
+import { auth } from '../../../components/hoc/auth';
 
 
-const ForgotPassword = () => {
+const ChangePassword = () => {
 
     // All store
     const loadingState = useSelector(state => state.loader.loading);
@@ -96,4 +97,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default auth(ChangePassword);

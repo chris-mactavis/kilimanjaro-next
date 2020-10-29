@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 import Layout from '../../../components/Layout';
 import axiosInstance from '../../../config/axios';
+import { auth } from '../../../components/hoc/auth';
 // import { loader } from '../../store/actions/loader';
 // import { storeAuth } from '../../store/actions/auth';
 // import { useEffect, useState } from 'react';
@@ -90,4 +91,4 @@ ViewOrder.getInitialProps = async({ req, res}) => {
     }
 }
 
-export default ViewOrder;
+export default auth(ViewOrder);

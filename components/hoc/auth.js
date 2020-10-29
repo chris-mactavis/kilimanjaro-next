@@ -72,41 +72,41 @@ export const withoutAuth = Component => {
     return Wrapper;
 }
 
-export const profileMiddleWare = Component => {
-    const isServer = typeof window === 'undefined';
-    const Wrapper = (props) => {
-        if (props.isLoggedIn && !props.hasProfile && !isServer && props.currentPage !== '/profile/edit') {
-            Router.push(props.user && JSON.parse(props.user).user_type.user_type === 'Investor' ? '/profile/edit' : '/profile/edit-levels');
-        }
-        return <Component {...props} />
-    }
+// export const profileMiddleWare = Component => {
+//     const isServer = typeof window === 'undefined';
+//     const Wrapper = (props) => {
+//         if (props.isLoggedIn && !props.hasProfile && !isServer && props.currentPage !== '/profile/edit') {
+//             Router.push(props.user && JSON.parse(props.user).user_type.user_type === 'Investor' ? '/profile/edit' : '/profile/edit-levels');
+//         }
+//         return <Component {...props} />
+//     }
 
-    Wrapper.getInitialProps = async (ctx) => {
-        let isLoggedIn, hasProfile, currentPage, user;
-        if (isServer && ctx.res) {
-            isLoggedIn = !!ctx.req.cookies.token;
-            user = ctx.req.cookies.user;
-            console.log(user);
-            hasProfile = user ? JSON.parse(user).has_profile : false;
-            currentPage = ctx.pathname;
-            if (isLoggedIn && !hasProfile && currentPage !== '/profile/edit-levels') {
-                const location = user && JSON.parse(user).user_type.user_type === 'Investor' ? '/profile/edit' : '/profile/edit-levels';
-                ctx.res.writeHead(302, {Location: location});
-                ctx.res.end();
-            }
-        } else {
-            isLoggedIn = !!Cookies.get('token');
-            user = Cookies.get('user');
-            hasProfile = user ? JSON.parse(user).has_profile : false;
-            currentPage = ctx.pathname;
-        }
+//     Wrapper.getInitialProps = async (ctx) => {
+//         let isLoggedIn, hasProfile, currentPage, user;
+//         if (isServer && ctx.res) {
+//             isLoggedIn = !!ctx.req.cookies.token;
+//             user = ctx.req.cookies.user;
+//             console.log(user);
+//             hasProfile = user ? JSON.parse(user).has_profile : false;
+//             currentPage = ctx.pathname;
+//             if (isLoggedIn && !hasProfile && currentPage !== '/profile/edit-levels') {
+//                 const location = user && JSON.parse(user).user_type.user_type === 'Investor' ? '/profile/edit' : '/profile/edit-levels';
+//                 ctx.res.writeHead(302, {Location: location});
+//                 ctx.res.end();
+//             }
+//         } else {
+//             isLoggedIn = !!Cookies.get('token');
+//             user = Cookies.get('user');
+//             hasProfile = user ? JSON.parse(user).has_profile : false;
+//             currentPage = ctx.pathname;
+//         }
 
-        const componentProps =
-            Component.getInitialProps &&
-            (await Component.getInitialProps(ctx));
+//         const componentProps =
+//             Component.getInitialProps &&
+//             (await Component.getInitialProps(ctx));
 
-        return {...componentProps, isLoggedIn, hasProfile, currentPage, user};
-    }
+//         return {...componentProps, isLoggedIn, hasProfile, currentPage, user};
+//     }
 
-    return Wrapper;
-}
+//     return Wrapper;
+// }

@@ -11,6 +11,7 @@ import axiosInstance from '../../../config/axios';
 import { loader } from '../../../store/actions/loader';
 import { storeAuth } from '../../../store/actions/auth';
 import InlineLoading from '../../../components/UI/inlineLoader';
+import { auth } from '../../../components/hoc/auth';
 
 
 const EditAccount = () => {
@@ -111,4 +112,4 @@ const EditAccount = () => {
     );
 };
 
-export default EditAccount;
+export default auth(EditAccount);
