@@ -10,6 +10,7 @@ import { NotificationManager } from 'react-notifications';
 import Link from 'next/link';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
+import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { addToCart, updateTotalPrice } from '../../store/actions/shop'
@@ -333,6 +334,7 @@ const Checkout = () => {
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
+                        <OrderingStepsMobile activeTabs={[2]}/>
                         {/* Checkout */}
                         <div className="checkout-section">
                             <div className="row">
@@ -367,7 +369,7 @@ const Checkout = () => {
                                                 :
                                                 <>
                                                     <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline-2'} />Pay Online
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
                                                     </label>
                                                 </>
                                             }

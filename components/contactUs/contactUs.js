@@ -65,10 +65,10 @@ const ContactUs = () => {
                                 <button className="btn">Submit</button>
                             </form>
                         </div>
-                        <div className="col-md-1 offset-md-1">
+                        <div className="col-md-1 d-md-block d-none offset-md-1">
                             <p className="line"></p>
                         </div>
-                        <div className="col-md-4 offset-md-1">
+                        <div className="col-md-4 mt-sm-0 mt-5 offset-md-1">
                             <h4>Opening Hours</h4>
                             {openingHours.map((hours) => {
                                 return <div key={hours.id} className="d-flex align-items-center justify-content-between flex-wrap">
