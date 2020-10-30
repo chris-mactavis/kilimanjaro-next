@@ -16,7 +16,7 @@ const Signin = () => {
                     <div className="container">
                         <div className="row">
                             <Login />
-                            <div className="col-md-2">
+                            <div className="col-md-2 d-md-block d-none">
                                 <p className="or-text">Or</p>
                             </div>  
                             <Signup />

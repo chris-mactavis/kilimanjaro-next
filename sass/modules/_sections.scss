@@ -222,6 +222,10 @@ section {
         width: 100%;
         z-index: 3;
 
+        @media only screen and (max-width: $mobile_width) {
+            padding: 10px 0 0 0;
+        }
+
         .d-flex {
             width: 100%;
         }
@@ -236,6 +240,18 @@ section {
         .select-state {
             width: 20%;
             margin-right: 20px;
+
+            @media only screen and (max-width: $desktop_width) {
+                width: 30%;
+            }
+
+            @media only screen and (max-width: $tablet_width) {
+                width: 50%;
+            }
+
+            @media only screen and (max-width: $mobile_width) {
+                width: 100%;
+            }
 
             .css-tlfecz-indicatorContainer {
                 svg {
@@ -306,6 +322,11 @@ section {
                     left: 50%;
                     transform: translateX(-50%);
                     background: $primary;
+
+                    @media only screen and (max-width: $tablet_width) {
+                        height: 6px;
+                        bottom: 5px;
+                    }
                 }
             }
             a {
@@ -316,6 +337,10 @@ section {
                     text-transform: uppercase;
                     font-size: 15px;
                     padding: 15px 0;
+
+                    @media only screen and (max-width: $tablet_width) {
+                        padding: 10px 0;
+                    }
                 }
             }
         }
@@ -337,6 +362,11 @@ section {
             padding-left: 20px;
             position: relative;
             margin-bottom: 0;
+
+            @media only screen and (max-width: $mobile_width) {
+                font-size: 25px;
+                margin-top: 30px;
+            }
 
             &::before {
                 content: "";
@@ -372,6 +402,10 @@ section {
                 font-size: 20px;
                 text-transform: uppercase;
                 font-weight: $semi-bold;
+
+                @media only screen and (max-width: $mobile_width) {
+                    font-size: 15px;
+                }
             }
 
             .product-qty {
@@ -403,6 +437,7 @@ section {
         .active-cart {
             box-shadow: -2px 3px 11px -7px rgba(0, 0, 0, 0.75);
             right: 0 !important;
+            background: #fff;
 
             .cart-product-list {
                 padding: 40px 40px 40px !important;
@@ -410,8 +445,15 @@ section {
             }
         }
 
+        .cart-mobile-view {
+            display: none;
+
+            @media only screen and (max-width: $mobile_width) {
+                display: block !important;
+            }
+        }
+
         .cart {
-            background: #fff;
             width: 36%;
             border-radius: 44px 0px 0px;
             position: fixed;
@@ -419,12 +461,36 @@ section {
             right: -25%;
             transition: all 0.3s;
 
+            @media only screen and (max-width: $wide_width) {
+                width: 42%;
+            }
+
+            @media only screen and (max-width: $desktop_width) {
+                width: 50%;
+                top: 30%;
+            }
+
+            @media only screen and (max-width: $tablet_width) {
+                width: 58%;
+            }
+
+            @media only screen and (max-width: $mobile_width) {
+                z-index: 4;
+                display: none;
+                top: 56%;
+            }
+
             .cart-container {
                 background: $primary;
                 border-radius: 45px 0 0 45px;
                 display: flex;
                 align-items: flex-end;
                 padding: 20px 0 20px 20px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    padding: 17px 0 13px 17px;
+                    border-radius: 53px 0 0 53px;
+                }
 
                 .cart-icon-container {
                     position: relative;
@@ -437,6 +503,10 @@ section {
                     img {
                         height: 40px;
                         width: auto;
+
+                        @media only screen and (max-width: $mobile_width) {
+                            height: 33px; 
+                        }
                     }
 
                     .product-count {
@@ -451,6 +521,12 @@ section {
                         font-size: 11px;
                         border-radius: 50%;
                         line-height: 2.2;
+
+                        @media only screen and (max-width: $mobile_width) {
+                            width: 20px;
+                            height: 20px;
+                            font-size: 10px;
+                        }
                     }
                 }
 
@@ -463,12 +539,17 @@ section {
                     text-transform: uppercase;
                     border-radius: 5px 0 0 5px;
                     margin-bottom: 0;
+
+                    @media only screen and (max-width: $mobile_width) {
+                        font-size: 10px;
+                    }
                 }
             }
 
             .cart-product-list {
                 // padding: 40px 60px 40px 300px;
                 display: none;
+                background: #fff;
 
                 .cart-listing-container {
                     overflow: scroll;
@@ -487,6 +568,11 @@ section {
                     flex-wrap: wrap;
                     padding: 20px 0;
                     border-bottom: 1px solid #a5a5a5;
+
+                    @media only screen and (max-width: $desktop_width) {
+                       flex-direction: column;
+                       align-items: baseline;
+                    }
 
                     img {
                         max-width: 100px;
@@ -549,6 +635,11 @@ section {
             text-align: center;
             font-size: 25px;
             margin-bottom: 20px;
+
+            @media only screen and (max-width: $mobile_width) {
+                font-size: 20px;
+                font-weight: normal;
+            }
         }
 
         .mid-line {
@@ -562,6 +653,25 @@ section {
                 position: absolute;
                 height: 2px;
                 width: 211px;
+
+                @media only screen and (max-width: $wide_width) {
+                    width: 157px;
+                }
+
+                @media only screen and (max-width: $desktop_width) {
+                    width: 87px;
+                }
+
+                @media only screen and (max-width: $tablet_width) {
+                    width: 147px;
+                }
+
+                @media only screen and (max-width: $mobile_width) {
+                    right: 90px;
+                    top: 31%;
+                    width: 20%;
+                }
+
             }
 
             &::after {
@@ -572,6 +682,31 @@ section {
                 position: absolute;
                 height: 2px;
                 width: 217px;
+
+                @media only screen and (max-width: $wide_width) {
+                    width: 165px;
+                }
+
+                @media only screen and (max-width: $desktop_width) {
+                    width: 94px;
+                }
+
+                @media only screen and (max-width: $tablet_width) {
+                    width: 155px;
+                }
+
+                @media only screen and (max-width: $mobile_width) {
+                    left: 90px;
+                    top: 31%;
+                    width: 20%;
+                }
+            }
+        }
+
+        .view-number {
+
+            @media only screen and (max-width: $mobile_width) {
+                display: none!important;
             }
         }
 
@@ -609,8 +744,17 @@ section {
             margin-bottom: 10px;
             background: #fff;
 
+            @media only screen and (max-width: $desktop_width) {
+               flex-direction: column;
+            }
+
             p {
                 margin-bottom: 0;
+
+                @media only screen and (max-width: $desktop_width) {
+                    flex-direction: column;
+                    margin: 5px 0;
+                }
             }
 
             button {
@@ -619,6 +763,10 @@ section {
                 color: #a5a5a5;
                 text-transform: uppercase;
                 font-size: 12px;
+
+                @media only screen and (max-width: $desktop_width) {
+                    margin-bottom: 5px;
+                }
 
                 span {
                     color: $light-black;
@@ -850,6 +998,10 @@ section {
                     padding: 40px 50px;
                     background: #F2F2F2;
 
+                    @media only screen and (max-width: $mobile_width) {
+                        padding: 30px;
+                    }
+
                     .order-prod {
                         p:first-child {
                             width: 80%;
@@ -886,12 +1038,21 @@ section {
                 color: $primary;
                 font-weight: $semi-bold;
                 margin-bottom: 50px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    font-size: 20px;
+                }
             }
 
             .orders-info-container {
                 border: 1px solid #A5A5A5;
                 padding: 15px 30px;
                 border-radius: 5px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    text-align: center;
+                    background: #F5F5F5;
+                }
 
                 .details {
                     border-bottom: 1px solid #A5A5A5;
@@ -902,10 +1063,20 @@ section {
                     h5 {
                         font-size: 22px;
                         text-transform: uppercase;
+
+                        @media only screen and (max-width: $mobile_width) {
+                            font-size: 15px;
+                            // font-weight: normal;
+                        }
                     }
 
                     .red {
                         color: $primary;
+
+                        @media only screen and (max-width: $mobile_width) {
+                            font-size: 15px;
+                            // font-weight: normal;
+                        }
                     }
 
                     p {
@@ -915,6 +1086,11 @@ section {
                     .amt {
                         font-size: 40px;
                         font-weight: $bold;
+
+                        @media only screen and (max-width: $mobile_width) {
+                            font-size: 30px;
+                            font-weight: normal;
+                        }
                     }
                 }
 
@@ -939,9 +1115,17 @@ section {
         padding: 80px 0 120px;
         background: #fff;
 
+        @media only screen and (max-width: $mobile_width) {
+            padding: 40px 0 10px;
+        }
+
         h3 {
             font-family: $ubuntu;
             color: $primary;
+
+            @media only screen and (max-width: $mobile_width) {
+                font-size: 30px;
+            }
         }
 
         p {
@@ -1053,6 +1237,18 @@ section {
             padding: 40px 50px;
             border: 1px solid #A5A5A5;
             border-radius: 5px;
+
+            @media only screen and (max-width: $mobile_width) {
+                padding: 20px;
+            }
+
+            h3 {
+
+                @media only screen and (max-width: $mobile_width) {
+                   font-size: 30px;
+                }
+
+            }
         }
     }
 
@@ -1208,6 +1404,12 @@ section {
             }
 
         }
+
+        p {
+            @media only screen and (max-width: $mobile_width) {
+                font-size: 15px;
+             }
+        }
     }
 
     &.pickupPayment {
@@ -1236,11 +1438,20 @@ section {
     &.empty-cart {
         padding: 100px 0;
 
+        @media only screen and (max-width: $mobile_width) {
+            padding: 20px 0;
+        }
+
         .empty-cart-container {
             p {
                 background: #eeeff2;
                 text-align: center;
                 padding: 20px;
+
+                @media only screen and (max-width: $mobile_width) {
+                   font-size: 15px;
+                   text-align: left;
+                }
             }
         }
     }
@@ -1282,6 +1493,7 @@ section {
 
                 p.name {
                     color: $primary;
+                    font-weight: 600;
                 }
             }
         }
@@ -1292,6 +1504,10 @@ section {
             margin-top: 20px;
             padding-bottom: 8px;
             border-bottom: 1px solid; 
+
+            @media only screen and (max-width: $mobile_width) {
+               margin-bottom: 15px;
+            }
         }
 
         .name {

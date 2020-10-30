@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Cookies from 'js-cookie';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
+import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import { useEffect, useState } from 'react';
 
 
@@ -28,6 +29,7 @@ const CompleteOrder = () => {
             <section className="shopping-cart">
                 <div className="container">
                     <OrderingSteps activeTabs={[1, 2, 3]} />
+                    <OrderingStepsMobile activeTabs={[3]} />
                     {/* complete order */}
                     <div className="complete-order">
                         <div className="row">
@@ -38,7 +40,7 @@ const CompleteOrder = () => {
                             <div className="col-md-10 mx-auto">
                                 <div className="orders-info-container">
                                     <h4>Your meal will arrive shortly</h4>
-                                    <div className="order-details details pb-5">
+                                    <div className="order-details details pb-sm-5 pb-2">
                                         <div className="row">
                                             <div className="col-md-8">
                                                 <h5 className="red">Order Details</h5>

@@ -11,6 +11,7 @@ import Link from 'next/link';
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
+import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
 import { loader } from '../../store/actions/loader';
 import InlineLoading from '../../components/UI/inlineLoader';
@@ -149,6 +150,7 @@ const ShoppingCart = () => {
                     <section className="shopping-cart">
                         <div className="container">
                             <OrderingSteps activeTabs={[1]} />
+                            <OrderingStepsMobile activeTabs={[1]}/>
                             <div className="row">
                                 <div className="col-md-8 mx-auto">
                                     {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}

@@ -30,6 +30,10 @@ a {
 
 p {
   color: $light-black;
+
+  @media only screen and (max-width: $mobile_width) {
+    font-size: 15px;
+  }
 }
 
 li {

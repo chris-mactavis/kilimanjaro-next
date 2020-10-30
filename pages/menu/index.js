@@ -356,6 +356,10 @@ const Menu = ({ productCategories }) => {
         // console.log(newValue);
     } 
 
+    const gotoCartHandler = () => {
+        Router.push('/cart');
+    };
+
 
     return (
         <>
@@ -369,7 +373,7 @@ const Menu = ({ productCategories }) => {
                             <div className="col">
                                 <div className="d-flex flex-wrap align-items-center">
                                     <p>Ordering from</p>
-                                    <form className="select-state">
+                                    <form className="select-state mb-md-0 mb-2">
                                         <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
                                     </form>
                                     <form className="select-state">
@@ -430,7 +434,7 @@ const Menu = ({ productCategories }) => {
                                                             <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
                                                                 <img className="img-fluid" src={prod.image_url} alt="" />
                                                             </div>
-                                                            <div className="col-md-8 pl-0">
+                                                            <div className="col-md-8 pl-sm-0">
                                                                 <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
                                                                     <p className="product-name">{prod.product}</p>
                                                                     <div className="d-flex">
@@ -529,6 +533,15 @@ const Menu = ({ productCategories }) => {
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className='cart cart-mobile-view'>
+                        <div className="cart-container">
+                            <div className="cart-icon-container">
+                                <button onClick={gotoCartHandler}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <p className="product-count">{allCart.length}</p>
+                            </div>
+                            <p className="cart-text">Cart</p>
                         </div>
                     </div>
                 </section>

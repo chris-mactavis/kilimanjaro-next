@@ -27,7 +27,6 @@ const Signup = () => {
     const dispatch = useDispatch();
 
     const facebookLoginHandler = (data) => {
-        return;
         console.log(data);
     }
 
@@ -83,9 +82,9 @@ const Signup = () => {
 
     return (
         <>
-            <div className="col-md-5">
+            <div className="col-md-5 mt-md-0 mt-5 mb-md-0 mb-5">
                 <h3>Create New Account</h3>
-                <p>Create Your very own Kilimanjaro Account</p>
+                <p>Create your very own Kilimanjaro Account</p>
                 <form onSubmit={handleSubmit(signupHandler)} className="signup-form">
                     <FormInput
                         type="text"
@@ -131,7 +130,7 @@ const Signup = () => {
                         name="password"
                         placeholder="Password*"
                         label="Password"
-                        register={register ({required : true, minLength: 8})}
+                        register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
                         error={errors.password && errors.password.message} 
                     />
                     {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3">Register</button>}
@@ -142,10 +141,10 @@ const Signup = () => {
                         appId="699697547406211"
                         autoLoad={true}
                         fields="name,email,picture"
-                        // callback={facebookLoginHandler}
+                        callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
-                        isDisabled="true"
+                        // isDisabled="true"
                     />
                     <div className="gle-btn">
                         <GoogleLogin

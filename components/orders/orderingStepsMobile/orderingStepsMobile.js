@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { selectedRestaurant } from '../../../store/actions/shop';
 
 
-const OrderingSteps = ({activeTabs}) => {
+const OrderingStepsMobile = ({activeTabs}) => {
 
     const dispatch = useDispatch();
 
@@ -19,12 +19,12 @@ const OrderingSteps = ({activeTabs}) => {
 
     return (
         <>
-            <div className="row d-none d-sm-block">
+            <div className="row d-sm-none d-block">
                 <div className="col-md-12">
                 <h1>{restaurant.name}</h1>
                 </div>
                 <div className="col-md-7 mx-auto">
-                    <div className="view-number d-flex align-items-center justify-content-between mb-5">
+                    {/* <div className="view-number d-flex align-items-center justify-content-between mb-5">
                         <div className="number-container text-center">
                             <p className={`number ${activeTabs.includes(1) ? "active-number" : null}`}>1</p>
                             <p className="number-text">Shopping Cart</p>
@@ -39,7 +39,7 @@ const OrderingSteps = ({activeTabs}) => {
                             <p className={`number ${activeTabs.includes(3) ? "active-number" : null}`}>3</p>
                             <p className="number-text">Order Complete</p>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="text-center d-sm-none d-block mb-5">
                         { activeTabs.includes(1) &&
                             <div className="number-container mid-line text-center">
@@ -64,8 +64,9 @@ const OrderingSteps = ({activeTabs}) => {
                     </div>
                 </div>
             </div>
+
         </>
     );
 }
 
-export default OrderingSteps;
+export default OrderingStepsMobile;

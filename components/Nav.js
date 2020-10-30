@@ -28,7 +28,7 @@ const Nav = () => {
 
     return (
         <>
-            <div className="navbar-collapse ml-auto" id="navbarSupportedContent">
+            <div className="navbar-collapse ml-auto collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <Link href="/about"><a className="nav-link">About</a></Link>
