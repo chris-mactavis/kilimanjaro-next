@@ -129,7 +129,7 @@ section {
         padding: 80px 0;
         background-color: $primary;
         position: relative;
-        margin-bottom: 120px;
+        margin-bottom: 140px;
 
         @media only screen and (max-width: $desktop_width) {
             margin-bottom: 30px;
@@ -160,10 +160,11 @@ section {
             }
 
             img {
-                max-height: 35px;
+                max-height: 45px;
                 width: auto;
 
                 @media only screen and (max-width: $mobile_width) {
+                    max-height: 35px;
                     margin-bottom: 15px;
                 }
             }

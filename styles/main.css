@@ -579,7 +579,7 @@ section.sec-footer {
   padding: 80px 0;
   background-color: #DC042A;
   position: relative;
-  margin-bottom: 120px; }
+  margin-bottom: 140px; }
   @media only screen and (max-width: 992px) {
     section.sec-footer {
       margin-bottom: 30px; } }
@@ -593,10 +593,11 @@ section.sec-footer {
   section.sec-footer .mobile-link-container a:first-child {
     margin-right: 15px; }
   section.sec-footer .mobile-link-container img {
-    max-height: 35px;
+    max-height: 45px;
     width: auto; }
     @media only screen and (max-width: 576px) {
       section.sec-footer .mobile-link-container img {
+        max-height: 35px;
         margin-bottom: 15px; } }
   section.sec-footer .app-img {
     max-width: 450px;
