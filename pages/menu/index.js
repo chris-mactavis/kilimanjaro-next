@@ -19,7 +19,9 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const Menu = ({ productCategories }) => {
+const Menu = ({ productCategories, show }) => {
+
+    console.log(show, 'no restaurant');
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -560,22 +562,37 @@ Menu.getInitialProps = async ({ req, res }) => {
     } else {
         // selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
         if (!selRestaurant) {
-            return res.redirect("/"); 
+            res.redirect('/');
         } else {
             selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
         }
-        console.log(selRestaurant, 'server');
     }
+
+    // if (process.browser) {
+    //     selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+       
+    // } else {
+
+    //     let sel = {};
+    //     if (selRestaurant === null) {
+    //     return sel = {
+    //         selRestaurant: null,
+    //         selRes: false
+    //     }
+    // }
+    //     selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+    // }
+
 
     let restaurantId = selRestaurant.id;
 
     try {
         const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
         const productCategories = data.filter(cat => cat.category_products.length > 0);
-        return { productCategories };
+        return { productCategories};
     } catch (error) {
         console.log(error)
-        return {productCategories: null};
+        return {productCategories: null} ;
     }
 }
 
