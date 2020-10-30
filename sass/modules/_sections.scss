@@ -147,9 +147,9 @@ section {
 
         .mobile-link-container {
 
-            @media only screen and (max-width: $mobile_width) {
-                text-align: center;
-            }
+            // @media only screen and (max-width: $mobile_width) {
+            //     text-align: center;
+            // }
 
             a:first-child {
                 margin-right: 15px;
@@ -160,7 +160,7 @@ section {
             }
 
             img {
-                max-height: 50px;
+                max-height: 35px;
                 width: auto;
 
                 @media only screen and (max-width: $mobile_width) {

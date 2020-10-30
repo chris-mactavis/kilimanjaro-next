@@ -590,13 +590,10 @@ section.sec-footer {
   section.sec-footer p {
     color: #fff;
     margin-bottom: 20px; }
-  @media only screen and (max-width: 576px) {
-    section.sec-footer .mobile-link-container {
-      text-align: center; } }
   section.sec-footer .mobile-link-container a:first-child {
     margin-right: 15px; }
   section.sec-footer .mobile-link-container img {
-    max-height: 50px;
+    max-height: 35px;
     width: auto; }
     @media only screen and (max-width: 576px) {
       section.sec-footer .mobile-link-container img {
