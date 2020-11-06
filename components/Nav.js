@@ -21,9 +21,14 @@ const Nav = () => {
         Router.push('/');  
     } 
 
+    const signupHandle = () => {
+        localStorage.removeItem('checkoutToLogin');
+        console.log('hello');
+    };
+
     return (
         <>
-            <div className="navbar-collapse ml-auto" id="navbarSupportedContent">
+            <div className="navbar-collapse ml-auto collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <Link href="/about"><a className="nav-link">About</a></Link>
@@ -38,22 +43,24 @@ const Nav = () => {
                     </li>
 
                     <li className="nav-item">
+                        <Link href="/cart"><a className="nav-link">Cart</a></Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link href="/contact"><a className="nav-link">Contact</a></Link>
                     </li>
 
                     { !loggedIn ? 
-                    <li className="nav-item nav-bg-white">
+                    <li onClick={signupHandle} className="nav-item nav-bg-white">
                         <Link href="/signup"><a className="nav-link">Sign Up/Login</a></Link>
                     </li> : null }
 
                     { loggedIn && <div className="nav-item nav-bg-white account-toggle">
                         <a className="dropdown-toggle" data-toggle="dropdown">
-                           {`${user.first_name} ${user.last_name}`}
+                           {`${user.first_name}`}
                         </a>
                         <div className="dropdown-menu">
-                            <a className="dropdown-item">My Account</a>
-                            <a className="dropdown-item">Cart</a>
-                            <a className="dropdown-item">Lost password</a>
+                            <Link href="/account"><a className="dropdown-item">My Account</a></Link>
                             <a onClick={logoutHandler} className="dropdown-item">Log out</a>
                         </div>
                     </div> }

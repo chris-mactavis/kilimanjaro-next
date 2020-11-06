@@ -55,7 +55,7 @@ const About = () => {
                         <div className="col-12 text-center">
                             <h4>About Us</h4>
                         </div>
-                        <div className="col-md-10 text-center mx-auto">
+                        <div className="col-md-10 text-sm-center text-left mx-auto">
                             <p>
                                 Kilimanjaro is one of Sundry Foods’ restaurant brands, operating in the Quick Service Restaurant (QSR) segment,
                                 the brand has established itself as a market leader and one of the fastest growing restaurant brands in the 

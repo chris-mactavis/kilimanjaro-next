@@ -48,12 +48,15 @@
 }
 
 @mixin radio-btn {
-    width: 13px;
-    height: 13px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
-    top: -5px;
-    left: 0;
+    top: -4px;
+    left: -3px;
     position: relative;
+    -o-background-color: transparent;
+    -moz-background-color: transparent;
+    -webkit-background-color: transparent;
     background-color: transparent;
     content: "";
     display: inline-block;
@@ -105,6 +108,9 @@
 
     /* When the checkbox is checked, add a blue background */
     .contain input:checked ~ .checkmark {
+        -o-background-color: $primary;
+        -moz-background-color: $primary;
+        -webkit-background-color: $primary;
         background-color: $primary;
         border: 1px solid $primary;
     }
@@ -130,8 +136,8 @@
     }
 }
 
-$wide_width: 1300px;
-$medium_width: 1200px;
+$wide_width: 1200px;
+// $medium_width: 1200px;
 $desktop_width: 992px;
 $tablet_width: 767px;
 $mobile_width: 576px;

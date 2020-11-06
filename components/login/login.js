@@ -4,14 +4,23 @@ import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import Router from 'next/router';
 import { NotificationManager } from 'react-notifications';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 
 import FormInput from "../formInput/formInput";
 import { loginAsync } from '../../store/actions/auth';
 import { storeAuth } from '../../store/actions/auth';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const Login = () => {
+
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+
+    // All store
+    const loadingState = useSelector(state => state.loader.loading);
+
 
     const { register, handleSubmit, errors , reset} = useForm();
     const dispatch = useDispatch();
@@ -27,15 +36,26 @@ const Login = () => {
         }
         dispatch(storeAuth(user));
         NotificationManager.success('Account Registeration Successful', '', 3000);
-        Router.push('/');
+        let redirectTo = localStorage.getItem('checkoutToLogin');
+        // checkoutCookies = String(checkoutCookies);
+        console.log(redirectTo, 'true');
+        if (redirectTo) {
+            Router.push(redirectTo);
+            localStorage.removeItem('checkoutToLogin');
+        } else {
+            Router.push('/');
+        } 
     }
 
     const loginHandler = async data =>  {
+        setInlineLoader(true);
         if (data) {
             try {
                 await dispatch(loginAsync(data));
+                setInlineLoader(false);
             } catch (error) {
                 console.log(error);
+                setInlineLoader(false);
             }
         }
         reset({});
@@ -45,29 +65,29 @@ const Login = () => {
         <>
             <div className="col-md-5">
                 <h3>Sign In</h3>
-                <p>Welcome back! Sign in to Your Account</p>
+                <p>Welcome back! Sign in to your Account</p>
                 <form onSubmit={handleSubmit(loginHandler)} className="signup-form">
                     <FormInput
                         type="email"
                         name="email"
                         placeholder="Example@email.com*"
                         label="Email Address"
-                        register={register ({ required : true, pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/ })}
-                        error={errors.email && 'Please input a valid email address'} 
+                        register={register ({ required : 'Please input a valid email address' })}
+                        error={errors.email &&errors.email.message } 
                     />
                     <FormInput
                         type="password"
                         name="password"
                         placeholder="Password*"
                         label="Password"
-                        register={register ({required : true, minLength: 8})}
-                        error={errors.password && 'Password must be more than 8 characters'} 
+                        register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
+                        error={errors.password && errors.password.message} 
                     />
-                    <div className="d-flex justify-content-between flex-wrap remember-account">
+                    <div className="d-flex align-items-center justify-content-between flex-wrap remember-account">
                         <label className="contain">Remember me<input name="rememberAccount" type="checkbox" /><span className="checkmark"></span></label>
-                        <a>Forgot Password?</a>
+                        <div><a onClick={() => Router.push('/forgot-password')}>Forgot Password?</a></div>
                     </div>
-                    <button className="btn btn-login">Login</button>
+                    {loadingState && inlineLoader ? <InlineLoading />  : <button className="btn btn-login">Login</button>}
                 </form>
                 <p className="mt-3">Or sign in with</p>
                 <div className="other-signin-option">
@@ -78,6 +98,7 @@ const Login = () => {
                         callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
+                        // isDisabled="true"
                     />
                     <div className="gle-btn">
                         <GoogleLogin

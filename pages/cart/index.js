@@ -4,11 +4,17 @@ import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import Router from 'next/router';
+import Link from 'next/link';
 
 
 import RelatedProducts from '../../components/relatedProducts/relatedProducts';
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
-import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice } from '../../store/actions/shop';
+import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
+import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
+import { loader } from '../../store/actions/loader';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 const ShoppingCart = () => {
     const drinks = [
@@ -17,24 +23,45 @@ const ShoppingCart = () => {
         { url: '/images/fanta.svg', id: 2 },
         { url: '/images/coke.svg', id: 3 }
     ];
-
     const [value, setValue] = useState(0);
-    
+
     const dispatch = useDispatch();
 
     //  All store 
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
-    const allCart = useSelector(state => state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.updatedPrice); 
+
+    const allTotalPrice = useSelector(state => state.shop.updatedPrice);
+    const varPrice = useSelector(state => state.shop.variablePrice);
+    const loadingState = useSelector(state => state.loader.loading);
+    console.log(allTotalPrice);
+   
+
+    const [localCart, setLocalCart] = useState([]);
+    
+    
+    // Displaying the total price with variable products
+    let newTotalPrice = 0;
+    if (varPrice) {
+        newTotalPrice = parseInt(allTotalPrice) + varPrice.totalVariablePrice;
+    } else {
+        newTotalPrice = parseInt(allTotalPrice)
+    }
     
     useEffect(() => {
-        const allProductCart = JSON.parse(Cookies.get('setCart'));
-        const selectRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        const tolPrice = Cookies.get('setCart') ? JSON.parse(Cookies.get('totalPrice')) : null;
-        dispatch(updateTotalPrice(tolPrice));
-        console.log(tolPrice);
+        // Fetch cart
+        Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
 
-        if (!allCart.length > 0) {
+        const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
+        const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
+        const tolPrice = Cookies.get('totalPrice') ? Cookies.get('totalPrice') : null;
+        const cookiesVariablePrice = Cookies.get('variable') ? JSON.parse(Cookies.get('variable')) : null;
+        dispatch(updateTotalPrice(tolPrice));
+
+        if (!varPrice) {
+            dispatch(updateVariablePrice(cookiesVariablePrice));
+        }
+
+        if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
         }
 
@@ -43,31 +70,54 @@ const ShoppingCart = () => {
         }
     }, []); 
     
-    const updateQuantityChangeHandle = (e) => {
-        const quantitySelected = e.target.value;
+    const updateQuantityChangeHandle = (e, cartIndex) => {
+        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price
+        console.log(localCart[cartIndex].salePrice);
+        localCart[cartIndex].quantity = +e.target.value;
+        localCart[cartIndex].totalPrice = +e.target.value * price;
+
+        setLocalCart(localCart);
     }
 
     const deleteProductCartHandler = (index) => {
-        allCart.splice(index, 1);
-        dispatch(addToCart(allCart));
-        Cookies.set('setCart', JSON.stringify(allCart));
+        localCart.splice(index, 1);
+        dispatch(addToCart(localCart));
+        Cookies.set('setCart', JSON.stringify(localCart));
         dispatch(setTotalPrice());
         setValue(value => ++value); 
     };
 
-    let cartDisplay = <p className="text-center">Your cart is empty</p>;
-    if (allCart.length > 0) {
+    const updateCartHander = () => {
+        dispatch(loader());
+        dispatch(addToCart(localCart));
+        Cookies.set('setCart', JSON.stringify(localCart));
+        dispatch(setTotalPrice());
+        setValue(value => ++value); 
+        setTimeout(() => {
+            dispatch(loader());
+        }, 1000);
+        setTimeout(() => {
+            NotificationManager.success('Cart updated successfully', '', 3000);
+        }, 1500);
+        console.log('hello');
+    }
+
+    let cartDisplay = <p className="text-center">Your cart is currently empty</p>;
+    if (localCart.length > 0) {
         cartDisplay = <>
-            {allCart.map((cart, index) => {
+            {localCart.map((cart, index) => {
+                let price = cart.salePrice ? +cart.salePrice : +cart.price;
+                console.log(cart);
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
                     <p className="product-name">{cart.product.product} </p>
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
-                        <input onChange={updateQuantityChangeHandle} defaultValue={cart.quantity} type='number' />
+                        {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
+                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
                     </div>
-                    <p>{'₦' + cart.totalPrice}</p>
+                    <p>{'₦' + price}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
                 </div>
             })}
@@ -81,59 +131,80 @@ const ShoppingCart = () => {
                     <title>Cart | Kilimanjaro</title>
                 </Head>
 
-                <section className="shopping-cart">
-                    <div className="container">
-                        <OrderingSteps activeTabs={[1]} />
-                        <div className="row">
-                            <div className="col-md-8 mx-auto">
-                                <h4>Review Your Order</h4>
-                                {cartDisplay}
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <label className="review">Coupon</label>
-                                                <input type="text" name="coupon" id="coupon" />
-                                            </div>
+               {!localCart.length > 0
+                ? 
+                    <section className="shopping-cart empty-cart">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="empty-cart-container">
+                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p>Your cart is currently empty.</p>
+                                        <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                :
+                    <section className="shopping-cart">
+                        <div className="container">
+                            <OrderingSteps activeTabs={[1]} />
+                            <OrderingStepsMobile activeTabs={[1]}/>
+                            <div className="row">
+                                <div className="col-md-8 mx-auto">
+                                    {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
+                                    <h4>Review Your Order</h4>
+                                    {cartDisplay}
+                                    <div className="text-right mt-4 mb-3">
+                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>}
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-8">
+                                            <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <label className="review">Coupon</label>
+                                                    <input type="text" name="coupon" id="coupon" />
+                                                </div>
 
-                                            {/* <label>
+                                                {/* <label>
                                 <input type="radio" value="delivery" name="radio" />Delivery
                             </label>
                             <label>
                                 <input type="radio" value="pick up" name="radio" />Pick up
                             </label> */}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="col md-4">
-                                        <div className="price-review coupon-delivery-sect">
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Coupon</p>
-                                                <p>{'₦'+0}</p>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Subtotal</p>
-                                                <p>{'₦'+allTotalPrice}</p>
-                                            </div>
-                                            {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                        <div className="col md-4">
+                                            <div className="price-review coupon-delivery-sect">
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Coupon</p>
+                                                    <p>{'₦' + 0}</p>
+                                                </div>
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Subtotal</p>
+                                                    <p>{'₦' + newTotalPrice}</p>
+                                                </div>
+                                                {/* <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                 <p>Delivery fee</p>
                                                 <p>N500</p>
                                             </div> */}
-                                            <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                <p>Total</p>
-                                                <p>{'₦'+allTotalPrice}</p>
+                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
+                                                    <p>Total</p>
+                                                    <p>{'₦' + newTotalPrice}</p>
+                                                </div>
                                             </div>
+                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
                                         </div>
-                                        <button className="btn btn-order w-100">Checkout</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-
+                    </section>
+                }
 
                 {/* Related Product shown on the review order */}
-                <section className="shopping-cart">
+               {!localCart > 0 ? <section className="shopping-cart">
                     <div className="container">
                         <div className="row">
                             <div className="col-12">
@@ -144,7 +215,7 @@ const ShoppingCart = () => {
                             {drinks.map((drink) => <RelatedProducts url={drink.url} key={drink.id} />)}
                         </div>
                     </div>
-                </section>
+                </section> : ''}
             </Layout>
         </>
     );

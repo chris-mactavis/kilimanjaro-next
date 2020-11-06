@@ -1,13 +1,11 @@
 import { useSelector } from 'react-redux';
 
 const Loader = () => {
-    const loading = useSelector(state => state.loader.loading);
+   
 
     return (
         <>
-        {
-           loading && <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-        }
+       <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
 
         <style jsx>{` 
             .lds-ring {

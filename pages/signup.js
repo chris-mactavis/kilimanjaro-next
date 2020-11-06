@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import Login from '../components/login/login';
 import Signup from '../components/signup/signup';
+import { withoutAuth } from '../components/hoc/auth';
 
 const Signin = () => {
         return (
@@ -15,7 +16,7 @@ const Signin = () => {
                     <div className="container">
                         <div className="row">
                             <Login />
-                            <div className="col-md-2">
+                            <div className="col-md-2 d-md-block d-none">
                                 <p className="or-text">Or</p>
                             </div>  
                             <Signup />
@@ -26,4 +27,4 @@ const Signin = () => {
         );
 };
 
-export default Signin;
+export default withoutAuth(Signin);

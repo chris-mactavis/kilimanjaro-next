@@ -1,6 +1,7 @@
 html, body {
   overflow-x: hidden;
   font-size: 62.5%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -29,6 +30,10 @@ a {
 
 p {
   color: $light-black;
+
+  @media only screen and (max-width: $mobile_width) {
+    font-size: 15px;
+  }
 }
 
 li {
@@ -50,6 +55,10 @@ h1 {
 h2 {
   @extend %heading;
   font-size: 40px;
+
+  @media only screen and (max-width: $mobile_width) {
+    font-size: 30px;
+  }
 }
 
 h3 {

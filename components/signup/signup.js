@@ -4,14 +4,23 @@ import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import FormInput from '../formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import { storeAuth } from '../../store/actions/auth';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const Signup = () => {
+
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+
+    // All store
+    const loadingState = useSelector(state => state.loader.loading);
 
     const { register, handleSubmit, errors, reset } = useForm();
 
@@ -33,17 +42,20 @@ const Signup = () => {
 
     const signupHandler = async (data) =>  {
         dispatch(loader());
+        setInlineLoader(true);
         try {
             if (data) {
                 const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
                 dispatch(storeAuth(response.data));
                 console.log(response.data);
                 dispatch(loader());
+                setInlineLoader(false); 
                 Router.push('/');
             }
             NotificationManager.success('Account Registeration Successful', '', 3000);
         } catch (error) {
             dispatch(loader());
+            setInlineLoader(false);
             NotificationManager.error(error.response.data.message, '', 3000);
             console.log(error);
         }
@@ -57,7 +69,6 @@ const Signup = () => {
         } catch (error) {
 
         }
-
     }
 
     const verifyPhoneHandler = async phone => {
@@ -71,9 +82,9 @@ const Signup = () => {
 
     return (
         <>
-            <div className="col-md-5">
+            <div className="col-md-5 mt-md-0 mt-5 mb-md-0 mb-5">
                 <h3>Create New Account</h3>
-                <p>Create Your very own Kilimanjaro Account</p>
+                <p>Create your very own Kilimanjaro Account</p>
                 <form onSubmit={handleSubmit(signupHandler)} className="signup-form">
                     <FormInput
                         type="text"
@@ -109,7 +120,7 @@ const Signup = () => {
                         label="Email Address"
                         register={register({ 
                             required : 'Please input a valid email address', 
-                            pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                            // pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
                             validate: async value => verifyEmailHandler(value) 
                         })}
                         error={errors.email && errors.email.message} 
@@ -119,10 +130,10 @@ const Signup = () => {
                         name="password"
                         placeholder="Password*"
                         label="Password"
-                        register={register ({required : true, minLength: 8})}
+                        register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
                         error={errors.password && errors.password.message} 
                     />
-                    <button className="btn btn-login mt-3">Register</button>
+                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3">Register</button>}
                 </form>
                 <p className="mt-3">Or sign up with</p>
                 <div className="other-signin-option">
@@ -133,6 +144,7 @@ const Signup = () => {
                         callback={facebookLoginHandler}
                         icon='fa-facebook'
                         textButton="Facebook"
+                        // isDisabled="true"
                     />
                     <div className="gle-btn">
                         <GoogleLogin
