@@ -1,14 +1,39 @@
 import { useForm } from 'react-hook-form';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from '../../components/formInput/formInput';
+import axiosInstance from '../../config/axios';
+import { loader } from '../../store/actions/loader';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 const ContactUs = () => {
 
     const { register, handleSubmit, errors, reset } = useForm();
 
-    const sendMessageHandler = (data) => {
+    const dispatch = useDispatch();
+
+    const loadingState = useSelector(state => state.loader.loading);
+
+    const sendMessageHandler = async data => {
+        dispatch(loader());
+        const newData = {
+            name: data.name,
+            email: data.email,
+            message: data.message,
+            subject: data.subject
+        }
         if (data) {
-            console.log(data);
+            try {
+                const {data} = await axiosInstance.post('contact', newData);
+                dispatch(loader());
+                NotificationManager.success(data.message, '', 3000);
+                console.log(data);
+            } catch (error) {
+                dispatch(loader());
+                NotificationManager.error(error.response.data.message, '', 3000);
+                console.log(error);
+            }
         }
         reset({});
     };
@@ -62,7 +87,7 @@ const ContactUs = () => {
                                     placeholder="Leave a message*"
                                 />
                                 {errors.message && <p className="error">This field is required.</p>}
-                                <button className="btn">Submit</button>
+                                {loadingState ? <InlineLoading /> : <button className="btn">Submit</button> }
                             </form>
                         </div>
                         <div className="col-md-1 d-md-block d-none offset-md-1">

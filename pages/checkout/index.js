@@ -324,7 +324,7 @@ const Checkout = () => {
                                 <div className="empty-cart-container">
                                 <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦0</p>
                                 <p>Your cart is currently empty.</p>
-                                <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                <Link href="/"><button className="btn">Return to homepage</button></Link>
                                 </div>
                             </div>
                         </div>

@@ -33,8 +33,6 @@ const ShoppingCart = () => {
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
     const varPrice = useSelector(state => state.shop.variablePrice);
     const loadingState = useSelector(state => state.loader.loading);
-    console.log(allTotalPrice);
-   
 
     const [localCart, setLocalCart] = useState([]);
     
@@ -71,11 +69,9 @@ const ShoppingCart = () => {
     }, []); 
     
     const updateQuantityChangeHandle = (e, cartIndex) => {
-        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price
-        console.log(localCart[cartIndex].salePrice);
+        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price;
         localCart[cartIndex].quantity = +e.target.value;
         localCart[cartIndex].totalPrice = +e.target.value * price;
-
         setLocalCart(localCart);
     }
 
@@ -99,7 +95,6 @@ const ShoppingCart = () => {
         setTimeout(() => {
             NotificationManager.success('Cart updated successfully', '', 3000);
         }, 1500);
-        console.log('hello');
     }
 
     let cartDisplay = <p className="text-center">Your cart is currently empty</p>;
@@ -107,7 +102,6 @@ const ShoppingCart = () => {
         cartDisplay = <>
             {localCart.map((cart, index) => {
                 let price = cart.salePrice ? +cart.salePrice : +cart.price;
-                console.log(cart);
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
@@ -140,7 +134,7 @@ const ShoppingCart = () => {
                                     <div className="empty-cart-container">
                                         <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty.</p>
-                                        <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                        <Link href="/"><button className="btn">Return to homepage</button></Link>
                                     </div>
                                 </div>
                             </div>

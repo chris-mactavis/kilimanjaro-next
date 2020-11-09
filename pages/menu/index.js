@@ -19,9 +19,7 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const Menu = ({ productCategories, show }) => {
-
-    console.log(show, 'no restaurant');
+const Menu = ({ productCategories }) => {
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -39,7 +37,9 @@ const Menu = ({ productCategories, show }) => {
     const [ quantitiesArray, setQuantitiesArray] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
     const [disableScrollEvent, setDisableScrollEvent] = useState(false);
+    const [ varId, setVarId ] = useState({});
     // const [allProducts, setAllProducts] = useState([]);
+    // console.log(selectedVariableProducts);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
 
@@ -123,10 +123,10 @@ const Menu = ({ productCategories, show }) => {
                 const $el = $('#category-top');
                 const isPositionFixed = ($el.css('position') === 'fixed');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
-                    $el.css({'position': 'fixed', 'top': '0px'});
+                    $el.css({'position': 'fixed', 'top': '79px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
-                    $el.css({'position': 'static', 'top': '0px'});
+                    $el.css({'position': 'static', 'top': '79px'});
                 }
             })
         }
@@ -203,7 +203,10 @@ const Menu = ({ productCategories, show }) => {
             }
             setRestaurantCategories(productCategories);
             dispatch(loader());
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         } catch (error) {
+            dispatch(loader());
             console.log(error);
         }
         setValue(value => ++value);
@@ -239,10 +242,11 @@ const Menu = ({ productCategories, show }) => {
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
-            console.log(prodInCart);
+            console.log(prodInCart, );
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
+                console.log(productVariation, '2');
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
@@ -250,7 +254,6 @@ const Menu = ({ productCategories, show }) => {
                     salePrice: productVariation.salePrice || productVariation.price,
                     totalPrice: +prodInCart.totalPrice + ((productVariation.salePrice || productVariation.price) * parseInt(quantitySelected))
                 }
-                // return;
             } else {
                 const newTotalPrice = prod.sale_price ? +quantitySelected * parseInt(prod.sale_price) : +quantitySelected *  parseInt(prod.price);
                 prevCart[prodInCartIndex] = {
@@ -285,7 +288,6 @@ const Menu = ({ productCategories, show }) => {
         setProductCart(prevCart);
         dispatch(addToCart(prevCart));
         dispatch(setTotalPrice());
-
         Cookies.set('setCart', JSON.stringify(prevCart));
         // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
         setTimeout(() => {
@@ -327,16 +329,18 @@ const Menu = ({ productCategories, show }) => {
         </>
     };
 
-    let variationButton = ['btn', 'disabled'];
+    // let variationButton = ['btn', 'disabled'];
 
-    if (addVariationClass.active) {
-        variationButton.pop();
-    }
+    // if (addVariationClass.active) {
+    //     variationButton.pop();
+    // }
 
     const handleVariationChange = (value, prod) =>  {
-        // if (prod.id === )
+        // remove if this gives problem
+        setSelectedVariableProducts([]);
+        console.log(selectedVariableProducts, 'array');
         changeVariationClass({
-            active: !addClass.active
+            active: true
         });
         const tempCart = {
             productId: prod.id,
@@ -347,6 +351,7 @@ const Menu = ({ productCategories, show }) => {
             totalPrice: null,
             product_variation: value.name
         }
+        setVarId(tempCart);
         selectedVariableProducts.push(tempCart);
         setSelectedVariableProducts(selectedVariableProducts);
         // return;
@@ -420,15 +425,16 @@ const Menu = ({ productCategories, show }) => {
                                                     });
                                                 }
 
+                                                const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
+
                                                 let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
                                                 let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
                                                 let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
-                                                if (prod.product_type === 'variable'){
+                                                if (prod.product_type === 'variable') {
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    // btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
+                                                    btn = <button onClick={() => addtoCartHandler(prod)} className={newVarBtn}>Add to cart</button>;
                                                 }
-
 
                                                 return <>
                                                     <div key={prod.id} className="single-product">
@@ -450,7 +456,7 @@ const Menu = ({ productCategories, show }) => {
                                                                     prod.product_type === 'variable' &&
                                                                     <>
                                                                         <form className="select-state mt-4">
-                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100 variation" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
                                                                         </form>
                                                                         <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
                                                                             {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
@@ -555,17 +561,19 @@ const Menu = ({ productCategories, show }) => {
 Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
-        selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        if (!selRestaurant) {
-            Router.push("/");
-        }
+         selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+        // if (!selRestaurant) {
+        //     Router.push("/");
+        //     return;
+        // }
     } else {
-        // selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
-        if (!selRestaurant) {
-            res.redirect('/');
-        } else {
-            selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
-        }
+        selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        // if (!selRestaurant) {
+        //     res.redirect('/');
+        //     return; 
+        // } else {
+        //     selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        // }
     }
 
     // if (process.browser) {

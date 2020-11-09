@@ -43,7 +43,7 @@ const Login = () => {
             Router.push(redirectTo);
             localStorage.removeItem('checkoutToLogin');
         } else {
-            Router.push('/');
+            Router.push('/account');
         } 
     }
 

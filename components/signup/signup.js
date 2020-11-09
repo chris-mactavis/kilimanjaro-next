@@ -37,7 +37,7 @@ const Signup = () => {
         }
         dispatch(storeAuth(user));
         NotificationManager.success('Account Registeration Successful', '', 3000);
-        Router.push('/');
+        Router.push('/account');
     }
 
     const signupHandler = async (data) =>  {

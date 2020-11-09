@@ -10,6 +10,7 @@ const OrderingSteps = ({activeTabs}) => {
     const dispatch = useDispatch();
 
     const [restaurant, setRestaurant] = useState({});
+    console.log(restaurant);
 
     useEffect(() => {
         const selectRestaurant = Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : {};

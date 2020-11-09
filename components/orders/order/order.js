@@ -4,11 +4,11 @@ const Order = () => {
             <div className="col-md-8 mx-auto">
                 <div className="orders-container">
                     <div className="row">
-                        <div className="col-md-4 text-center mb-5 mb-sm-0">
+                        {/* <div className="col-md-4 text-center mb-5 mb-sm-0">
                             <img className="img-fluid" src="/images/food-order-image.png" alt="" />
-                            {/* <div style={{backgroundImage: 'url(https://image.shutterstock.com/image-photo/view-lagos-lagoon-victoria-island-260nw-1066980758.jpg)'}}></div> */}
-                        </div>
-                        <div className="col-md-8">
+                            <div style={{backgroundImage: 'url(https://image.shutterstock.com/image-photo/view-lagos-lagoon-victoria-island-260nw-1066980758.jpg)'}}></div>
+                        </div> */}
+                        <div className="col-md-12">
                             <div className="order-details-container">
                                 <div className="d-flex flex-wrap justify-content-between">
                                     <p className="text-red">Food Court, Abia Mall</p>
