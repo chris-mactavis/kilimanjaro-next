@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 
 
 import Layout from '../components/Layout';
@@ -11,7 +13,7 @@ import axiosInstance from '../config/axios';
 
 
 const Home = ({cities}) => {
-  const hasToken = false;
+  const loggedIn = useSelector(state => state.auth.loggedIn);
 
   useEffect(() => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));
@@ -24,7 +26,7 @@ const Home = ({cities}) => {
           <title>Kilimanjaro</title>
         </Head>
         <HeaderContent cities={cities} />
-        {hasToken && <Orders  />}
+        {loggedIn && <Orders  />}
         {/* <Orders  /> */}
         <section className="coupon-products">
           {/* <CouponProduct /> */}

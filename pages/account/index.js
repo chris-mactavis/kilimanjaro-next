@@ -15,7 +15,13 @@ import { auth } from '../../components/hoc/auth';
 
 const Account = ({orders}) => {
 
+    useEffect(() => {
+        localStorage.setItem('orders', JSON.stringify(orders));
+    }, []);
+
     const [value, setValue] = useState(0);
+
+    
 
     useEffect(() => {setValue(value => ++value);}, []);
 
@@ -76,7 +82,7 @@ const Account = ({orders}) => {
                                                 return <Tr key={order.id}>
                                                     <Td>{order.order_number}</Td>
                                                     <Td>{`${day} ${month} ${year}`}</Td>
-                                                    <Td>Processing</Td>
+                                                    <Td>{order.status}</Td>
                                                     <Td>₦{order.total}</Td>
                                                     <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3">View</button></Td>
                                                 </Tr>

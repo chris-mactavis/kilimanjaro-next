@@ -25,7 +25,7 @@ export const loginAsync = data => {
             if (checkoutCookies === '/checkout') {
                 Router.push('/checkout');
             } else {
-                Router.push('/');1
+                Router.push('/account');1
             }
         } catch (error) {
             console.log(error);
@@ -50,6 +50,7 @@ export const logout = () => {
     Cookies.remove('token');
     Cookies.remove('user');
     Cookies.remove('singleOrderId');
+    localStorage.removeItem('orders');
     
     return {
         type: LOGOUT

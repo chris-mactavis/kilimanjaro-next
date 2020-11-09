@@ -318,8 +318,7 @@ form {
     text-align: center; }
   form.signup-form label {
     display: block;
-    margin-bottom: 10px;
-    font-weight: 600; }
+    margin-bottom: 10px; }
   form.signup-form .textbox {
     padding: 1px;
     position: relative;
