@@ -21,8 +21,6 @@ const Account = ({orders}) => {
 
     const [value, setValue] = useState(0);
 
-    
-
     useEffect(() => {setValue(value => ++value);}, []);
 
     // All store

@@ -202,7 +202,6 @@ th {
   padding: 0; }
 
 html, body {
-  overflow-x: hidden;
   font-size: 62.5%;
   scroll-behavior: smooth; }
 
@@ -276,16 +275,16 @@ form {
   form.select-state .select-disabled {
     pointer-events: none; }
     form.select-state .select-disabled .css-yk16xz-control {
-      border-color: #A5A5A5 !important;
-      border: 1.2px solid #A5A5A5 !important;
-      background: #F5F5F5 !important; }
+      border-color: #a5a5a5 !important;
+      border: 1.2px solid #a5a5a5 !important;
+      background: #f5f5f5 !important; }
       form.select-state .select-disabled .css-yk16xz-control:hover {
-        border-color: #A5A5A5 !important; }
+        border-color: #a5a5a5 !important; }
     form.select-state .select-disabled .css-1wa3eu0-placeholder {
-      color: #A5A5A5 !important;
+      color: #a5a5a5 !important;
       font-size: 15px; }
     form.select-state .select-disabled .css-tlfecz-indicatorContainer svg {
-      fill: #A5A5A5 !important; }
+      fill: #a5a5a5 !important; }
     form.select-state .select-disabled .css-g1d714-ValueContainer {
       padding: 0 8px; }
   form.select-state .css-1wa3eu0-placeholder {
@@ -316,6 +315,9 @@ form {
   form.select-state .inline-loading-css-menu-page {
     height: 55px;
     text-align: center; }
+  form.signup-form .sticky {
+    position: sticky;
+    top: 10px; }
   form.signup-form label {
     display: block;
     margin-bottom: 10px; }
@@ -349,13 +351,13 @@ form {
     font-size: 12px; }
   form.signup-form .border {
     position: absolute;
-    content: '';
+    content: "";
     top: -4px;
     left: 0;
     width: 0%;
     height: 0%;
     border: 1px solid transparent !important;
-    background: #18A91F;
+    background: #18a91f;
     z-index: -1;
     -webkit-transition: height 0.3s, width 0.3s 0.1s;
     transition: height 0.3s, width 0.3s 0.1s; }
@@ -372,9 +374,9 @@ form {
   form.signup-form .textarea-error {
     border-color: #DC042A; }
   form.signup-form textarea:focus-within {
-    border-color: #18A91F; }
+    border-color: #18a91f; }
   form.signup-form .input-suggestion {
-    background-color: #F2F2F2 !important;
+    background-color: #f2f2f2 !important;
     padding: 2px 10px;
     font-size: 15px; }
   form.signup-form .red-colored {
@@ -454,7 +456,7 @@ form {
   form input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; }
-  form input[type=number] {
+  form input[type="number"] {
     -moz-appearance: textfield; }
 
 .btn {
@@ -1236,17 +1238,7 @@ section.shopping-cart {
         text-transform: uppercase;
         font-weight: 600; }
   section.shopping-cart .checkout-section .order-details {
-    margin-bottom: 20px;
-    width: 444px; }
-    @media only screen and (max-width: 1200px) {
-      section.shopping-cart .checkout-section .order-details {
-        width: 367px; } }
-    @media only screen and (max-width: 992px) {
-      section.shopping-cart .checkout-section .order-details {
-        width: 269px; } }
-    @media only screen and (max-width: 767px) {
-      section.shopping-cart .checkout-section .order-details {
-        width: auto; } }
+    margin-bottom: 20px; }
     section.shopping-cart .checkout-section .order-details p {
       margin-bottom: 0; }
     section.shopping-cart .checkout-section .order-details h4 {

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Link from 'next/link';
+import Sticky from 'react-sticky-el';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
@@ -37,7 +38,6 @@ const Checkout = () => {
     const [value, setValue] = useState(0);
 
     const [localCart, setLocalCart] = useState([]);
-    console.log(localCart);
 
     const dispatch = useDispatch();
 
@@ -66,19 +66,21 @@ const Checkout = () => {
         }
     }, []);
 
+    // const top = $(window).scrollTop();
+    // console.log(top, 'top'); 
     useEffect(() => {
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('.order-details');
-                const isPositionFixed = ($el.css('position') === 'fixed');
+                const isPositionFixed = ($el.css('position') === 'sticky');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
-                    $el.css({'position': 'fixed', 'top': '160px'});
+                    $el.css({'position': 'sticky', 'top': '95px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
                     $el.css({'position': 'static', 'top': '0'});
                 }
-            })
-        }
+            });
+        } 
     }, []);
 
     const { register, handleSubmit, errors, reset } = useForm();
@@ -259,12 +261,10 @@ const Checkout = () => {
     }
 
     const onchangePaymentOption = (e) => {
-        console.log(e.target.value);
         setPaymentOption(e.target.value);
     };
 
     const onchangePaymentMethod = (e) => {
-        console.log(e.target.value);
         setPaymentmethod(e.target.value);
     }
   
