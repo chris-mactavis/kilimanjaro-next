@@ -16,7 +16,7 @@ import { auth } from '../../components/hoc/auth';
 const Account = ({orders}) => {
 
     useEffect(() => {
-        localStorage.setItem('orders', JSON.stringify(orders));
+        Cookies.set('orders', JSON.stringify(orders));
     }, []);
 
     const [value, setValue] = useState(0);

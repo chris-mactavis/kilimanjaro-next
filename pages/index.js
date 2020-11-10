@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 import Layout from '../components/Layout';
@@ -11,14 +11,12 @@ import Orders from '../components/orders/orders';
 import axiosInstance from '../config/axios';
 
 
-const Home = ({cities}) => {
-
-  const loggedIn = useSelector(state => state.auth.loggedIn);
+const Home = ({ cities }) => {
 
   useEffect(() => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));
-  }, []); 
-  
+  }, []);
+
   return (
     <>
       <Layout showSecFooter>
@@ -26,9 +24,8 @@ const Home = ({cities}) => {
           <title>Kilimanjaro</title>
         </Head>
         <HeaderContent cities={cities} />
-        {loggedIn && <Orders  />}
-        {/* <section className="coupon-products">
-        </section> */}
+        <Orders />
+        <br />
         <section className="how-it-works">
           <div className="container">
             <div className="row">
@@ -38,7 +35,7 @@ const Home = ({cities}) => {
             </div>
             <div className="row">
               <div className="col-md-4 text-center">
-                <img className="w-75" src="/images/icon/location-icon.svg" alt=""/>
+                <img className="w-75" src="/images/icon/location-icon.svg" alt="" />
                 <p className="text-red">Select nearest location</p>
                 <p>Select the state and restaurant closest to your pick-up/delivery location.</p>
               </div>
@@ -60,14 +57,14 @@ const Home = ({cities}) => {
   )
 }
 
-Home.getInitialProps = async() => {
+Home.getInitialProps = async () => {
   try {
-      const {data: {data}} = await axiosInstance.get('cities');
-      return {cities: data};
-    
+    const { data: { data } } = await axiosInstance.get('cities');
+    return { cities: data };
+
   } catch (error) {
-      console.log(error)
-      return {cities: {}};
+    console.log(error)
+    return { cities: {} };
   }
 }
 

@@ -17,8 +17,9 @@ const Orders = () => {
 
     const dispatch = useDispatch();
     const loadingState = useSelector(state => state.loader.loading);
+    const loggedIn = useSelector(state => state.auth.loggedIn);
 
-    const recentOrders = localStorage.getItem('orders') ? JSON.parse(localStorage.getItem('orders')) : [];
+    const recentOrders =  Cookies.get('orders') ? JSON.parse(Cookies.get('orders')) : [];
 
     const reOrderBtnHandler = async (id, resName, resId) => {
         setInlineLoading(id);
@@ -49,7 +50,7 @@ const Orders = () => {
 
     return (
         <>
-            <section className="orders">
+            {loggedIn ? <section className="orders">
                 <div className="container">
                     <div className="row">
                         <div className="col-12 text-center">
@@ -98,7 +99,7 @@ const Orders = () => {
                         }
                     </div>
                 </div>
-            </section>
+                </section> : <div></div> }
         </>
 
     );
