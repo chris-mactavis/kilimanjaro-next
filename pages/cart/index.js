@@ -23,7 +23,6 @@ const ShoppingCart = () => {
         { url: '/images/fanta.svg', id: 2 },
         { url: '/images/coke.svg', id: 3 }
     ];
-    const [value, setValue] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -35,6 +34,8 @@ const ShoppingCart = () => {
     const loadingState = useSelector(state => state.loader.loading);
 
     const [localCart, setLocalCart] = useState([]);
+    const [value, setValue] = useState(0);
+    const [ activeUpdateCart, setActiveUpdateCart ] = useState(false);
     
     
     // Displaying the total price with variable products
@@ -69,6 +70,7 @@ const ShoppingCart = () => {
     }, []); 
     
     const updateQuantityChangeHandle = (e, cartIndex) => {
+        setActiveUpdateCart(true);
         const price = localCart[cartIndex].salePrice || localCart[cartIndex].price;
         localCart[cartIndex].quantity = +e.target.value;
         localCart[cartIndex].totalPrice = +e.target.value * price;
@@ -95,6 +97,7 @@ const ShoppingCart = () => {
         setTimeout(() => {
             NotificationManager.success('Cart updated successfully', '', 3000);
         }, 1500);
+        setActiveUpdateCart(false);
     }
 
     let cartDisplay = <p className="text-center">Your cart is currently empty</p>;
@@ -111,7 +114,7 @@ const ShoppingCart = () => {
                         {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
                         <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
                     </div>
-                    <p>{'₦' + price}</p>
+                    <p>{'₦' + cart.totalPrice}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
                 </div>
             })}
@@ -151,7 +154,7 @@ const ShoppingCart = () => {
                                     <h4>Review Your Order</h4>
                                     {cartDisplay}
                                     <div className="text-right mt-4 mb-3">
-                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>}
+                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={activeUpdateCart ? "btn" : "btn disabled"}>Update Cart</button>}
                                     </div>
                                     <div className="row">
                                         <div className="col-md-8">

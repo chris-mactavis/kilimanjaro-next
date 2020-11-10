@@ -49,7 +49,7 @@ const Orders = () => {
 
     return (
         <>
-            <section className="orders how-it-works">
+            <section className="orders">
                 <div className="container">
                     <div className="row">
                         <div className="col-12 text-center">
@@ -57,7 +57,7 @@ const Orders = () => {
                         </div>
                         { recentOrders.length === 0
                          ? 
-                         <p className="text-center">You have no recent oders yet.</p>  
+                         <p className="text-center w-100 mt-5">You have no recent oders yet.</p>  
                          :
                         <>
                             {recentOrders.slice(0, 2).map((recentOrder) => {
