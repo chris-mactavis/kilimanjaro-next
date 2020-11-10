@@ -75,6 +75,7 @@ const Login = () => {
                         register={register ({ required : 'Please input a valid email address' })}
                         error={errors.email &&errors.email.message } 
                     />
+                    <div>
                     <FormInput
                         type="password"
                         name="password"
@@ -83,6 +84,9 @@ const Login = () => {
                         register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
                         error={errors.password && errors.password.message} 
                     />
+                    {/* <p className="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i> Show password</p> */}
+                    </div>
+
                     <div className="d-flex align-items-center justify-content-between flex-wrap remember-account">
                         <label className="contain">Remember me<input name="rememberAccount" type="checkbox" /><span className="checkmark"></span></label>
                         <div><a onClick={() => Router.push('/forgot-password')}>Forgot Password?</a></div>

@@ -83,8 +83,33 @@ section {
         }
     }
 
-    &.coupon-products {
-        //   border-top: 1px solid $primary;
+    // &.coupon-products {
+    //     //   border-top: 1px solid $primary;
+    //     position: relative;
+
+    //     &::before {
+    //         content: "";
+    //         position: absolute;
+    //         top: 0;
+    //         left: 50%;
+    //         transform: translateX(-50%);
+    //         width: 70%;
+    //         height: 1.3px;
+    //         background-color: $primary;
+
+    //         @media only screen and (max-width: $mobile_width) {
+    //             width: 95%; 
+    //         }
+              
+    //     }
+
+    //     .mv-down {
+    //         margin-top: 32px;
+    //     }
+    // }
+
+    &.how-it-works {
+        padding: 70px 0;
         position: relative;
 
         &::before {
@@ -102,14 +127,6 @@ section {
             }
               
         }
-
-        .mv-down {
-            margin-top: 32px;
-        }
-    }
-
-    &.how-it-works {
-        padding: 70px 0;
 
         h2 {
             margin-bottom: 30px; 
@@ -184,6 +201,7 @@ section {
         h2 {
             padding-bottom: 20px;
             border-bottom: 1px solid #000;
+            margin-bottom: 20px;
         }
 
         .orders-container {
@@ -441,7 +459,7 @@ section {
             background: #fff;
 
             .cart-product-list {
-                padding: 40px 40px 40px !important;
+                padding: 10px 40px 40px !important;
                 display: block !important;
             }
         }
@@ -458,7 +476,7 @@ section {
             width: 36%;
             border-radius: 44px 0px 0px;
             position: fixed;
-            top: 25%;
+            top: 21%;
             right: -25%;
             transition: all 0.3s;
 
@@ -487,6 +505,7 @@ section {
                 display: flex;
                 align-items: flex-end;
                 padding: 20px 0 20px 20px;
+                cursor: pointer;
 
                 @media only screen and (max-width: $mobile_width) {
                     padding: 17px 0 13px 17px;
@@ -556,6 +575,7 @@ section {
                     overflow: scroll;
                     height: 273px;
                     padding-right: 10px;
+                    overflow-x: hidden;
                 }
 
                 .cart-listing-height {
@@ -986,6 +1006,19 @@ section {
             // Order details
             .order-details {
                 margin-bottom: 20px;
+                width: 444px;
+
+                @media only screen and (max-width: $wide_width) {
+                    width: 367px;
+                }
+
+                @media only screen and (max-width: $desktop_width) {
+                    width: 269px;
+                }
+
+                @media only screen and (max-width: $tablet_width) {
+                    width: auto;
+                }
 
                 p {
                     margin-bottom: 0;
@@ -997,10 +1030,18 @@ section {
 
                 .order-details-list {
                     padding: 40px 50px;
-                    background: #F2F2F2;
+                    background: $primary;
 
                     @media only screen and (max-width: $mobile_width) {
                         padding: 30px;
+                    }
+
+                    @media only screen and (max-width: $desktop_width) {
+                        padding: 21px;
+                    }
+
+                    p {
+                        color: #fff;
                     }
 
                     .order-prod {
@@ -1017,7 +1058,7 @@ section {
 
                     .total-order-details {
                         padding-top: 15px;
-                        border-top: 1px solid #A5A5A5;
+                        border-top: 1px solid #fff;
                         margin-top: 15px;
                         
                         p:first-child {

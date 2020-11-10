@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 
-
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
 import CouponProduct from '../components/couponProduct/CouponProduct';
@@ -13,6 +12,7 @@ import axiosInstance from '../config/axios';
 
 
 const Home = ({cities}) => {
+
   const loggedIn = useSelector(state => state.auth.loggedIn);
 
   useEffect(() => {
@@ -27,10 +27,8 @@ const Home = ({cities}) => {
         </Head>
         <HeaderContent cities={cities} />
         {loggedIn && <Orders  />}
-        {/* <Orders  /> */}
-        <section className="coupon-products">
-          {/* <CouponProduct /> */}
-        </section>
+        {/* <section className="coupon-products">
+        </section> */}
         <section className="how-it-works">
           <div className="container">
             <div className="row">

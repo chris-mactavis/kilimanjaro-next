@@ -21,6 +21,14 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 const Menu = ({ productCategories }) => {
 
+    //  All Store
+    const dispatch = useDispatch();
+    const restaurant = useSelector(state => state.shop.selectedRestaurant);
+    const allRestaurants = useSelector(state => state.shop.allRestaurants);
+    const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
+    const allTotalPrice = useSelector(state => state.shop.totalPrice);
+    const loadingState = useSelector(state => state.loader.loading);
+
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
     const [restaurantCategories, setRestaurantCategories] = useState(productCategories);
@@ -38,22 +46,11 @@ const Menu = ({ productCategories }) => {
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
     const [disableScrollEvent, setDisableScrollEvent] = useState(false);
     const [ varId, setVarId ] = useState({});
-    // const [allProducts, setAllProducts] = useState([]);
-    // console.log(selectedVariableProducts);
+    // const [ allCart, setAllCart ] = useState([]);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
 
-    // const { register, handleSubmit } = useForm();
-
   
-    //  All Store
-    const dispatch = useDispatch();
-    const restaurant = useSelector(state => state.shop.selectedRestaurant);
-    const allRestaurants = useSelector(state => state.shop.allRestaurants);
-    const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.totalPrice);
-    const loadingState = useSelector(state => state.loader.loading);
-   
     useEffect(() => {
         const cities = localStorage.getItem('setAllCities') ? JSON.parse(localStorage.getItem('setAllCities')) : [];
         setAllCities(cities);
@@ -126,11 +123,11 @@ const Menu = ({ productCategories }) => {
                     $el.css({'position': 'fixed', 'top': '79px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
-                    $el.css({'position': 'static', 'top': '79px'});
+                    $el.css({'position': 'static', 'top': '0'});
                 }
             })
         }
-    })
+    }, []);
 
     const toggleActiveClass = () => {
         changeClass({
@@ -319,15 +316,27 @@ const Menu = ({ productCategories }) => {
                 <div key={cart.product.id} className="product-list">
                     <img className="img-fluid" src={cart.product.image_url} alt="" />
                     <p>{cart.product.product}</p>
-                    {/* <input type='number' pattern='[0-9]{0,5}' /> */}
-                    <p>{cart.quantity}</p>
-                    {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>}
+                    <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} />
+                    {/* <p>{cart.quantity}</p> */}
+                    {/* {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>} */}
+                    <p className="bold">{'₦'+cart.totalPrice}</p>
                     <button onClick={() => deleteProductCartHandler(index)}>X</button>
                 </div>
             </>
         })} 
         </>
     };
+
+    const updateQuantityChangeHandle = (e, cartIndex) => {
+        const price = allCart[cartIndex].salePrice || allCart[cartIndex].price;
+        allCart[cartIndex].quantity = +e.target.value;
+        allCart[cartIndex].totalPrice = +e.target.value * price;
+        setProductCart(allCart);
+        dispatch(addToCart(allCart));
+        dispatch(setTotalPrice());
+        Cookies.set('setCart', JSON.stringify(allCart));
+        setValue(value => ++value);
+    }
 
     // let variationButton = ['btn', 'disabled'];
 
@@ -518,9 +527,9 @@ const Menu = ({ productCategories }) => {
                         </div>
                     </div>
                     <div className={cartClasses.join(' ')}>
-                        <div className="cart-container">
+                        <div onClick={toggleActiveClass} className="cart-container">
                             <div className="cart-icon-container">
-                                <button onClick={toggleActiveClass}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <button> <img src="/images/icon/cart-icon.svg" alt="" /></button>
                                 <p className="product-count">{allCart.length}</p>
                             </div>
                             <p className="cart-text">Cart</p>
@@ -543,10 +552,10 @@ const Menu = ({ productCategories }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='cart cart-mobile-view'>
+                    <div  onClick={gotoCartHandler} className='cart cart-mobile-view'>
                         <div className="cart-container">
                             <div className="cart-icon-container">
-                                <button onClick={gotoCartHandler}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <button> <img src="/images/icon/cart-icon.svg" alt="" /></button>
                                 <p className="product-count">{allCart.length}</p>
                             </div>
                             <p className="cart-text">Cart</p>

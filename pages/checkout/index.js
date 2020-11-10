@@ -15,7 +15,7 @@ import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { addToCart, updateTotalPrice } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
-import InlineLoading from '../../components/UI/inlineLoader';
+import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
 
 
 
@@ -37,6 +37,7 @@ const Checkout = () => {
     const [value, setValue] = useState(0);
 
     const [localCart, setLocalCart] = useState([]);
+    console.log(localCart);
 
     const dispatch = useDispatch();
 
@@ -62,6 +63,21 @@ const Checkout = () => {
 
         if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
+        }
+    }, []);
+
+    useEffect(() => {
+        if ($(window).width() > 768) {
+            $(window).scroll(function (e) {
+                const $el = $('.order-details');
+                const isPositionFixed = ($el.css('position') === 'fixed');
+                if ($(this).scrollTop() > 140 && !isPositionFixed) {
+                    $el.css({'position': 'fixed', 'top': '160px'});
+                }
+                if ($(this).scrollTop() < 140 && isPositionFixed) {
+                    $el.css({'position': 'static', 'top': '0'});
+                }
+            })
         }
     }, []);
 
@@ -317,14 +333,19 @@ const Checkout = () => {
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
                 </Head>
 
-                {!localCart.length > 0 ? <section className="shopping-cart empty-cart">
+                {!localCart.length > 0 || allTotalPrice < 1000 ? <section className="shopping-cart empty-cart">
                     <div className="container">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="empty-cart-container">
-                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦0</p>
-                                <p>Your cart is currently empty.</p>
-                                <Link href="/"><button className="btn">Return to homepage</button></Link>
+                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                { !localCart.length > 0 && <p>Your cart is currently empty.</p> }
+                                { localCart.length > 0 
+                                ?
+                                    <Link href="/cart"><button className="btn">Return to cart</button></Link>
+                                :
+                                    <Link href="/"><button className="btn">Return to homepage</button></Link>
+                                }                               
                                 </div>
                             </div>
                         </div>
@@ -523,8 +544,8 @@ const Checkout = () => {
                                                     <p>Order Total </p>
                                                     <p>{'₦'+total}</p>
                                                 </div>
-                                                {deliveryPrice === null  && <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4"><img className="mr-2" src="images/icon/exclamation-mark.svg" alt=""/>Please select a city and restaurant close to you before you can place your order.</p>}
-                                                {loadingState ? <InlineLoading /> :  <button className={deliveryPrice === null ? "btn btn-place-order disabled" : "btn btn-place-order"}>Place Order</button>}
+                                                {deliveryPrice === null  && <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
+                                                {loadingState ? <InlineLoadingWhite /> :  <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}>Place Order</button>}
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
