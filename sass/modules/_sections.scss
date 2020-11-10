@@ -1006,19 +1006,19 @@ section {
             // Order details
             .order-details {
                 margin-bottom: 20px;
-                width: 444px;
+              
 
-                @media only screen and (max-width: $wide_width) {
-                    width: 367px;
-                }
+                // @media only screen and (max-width: $wide_width) {
+                //     width: 367px;
+                // }
 
-                @media only screen and (max-width: $desktop_width) {
-                    width: 269px;
-                }
+                // @media only screen and (max-width: $desktop_width) {
+                //     width: 269px;
+                // }
 
-                @media only screen and (max-width: $tablet_width) {
-                    width: auto;
-                }
+                // @media only screen and (max-width: $tablet_width) {
+                //     width: auto;
+                // }
 
                 p {
                     margin-bottom: 0;
