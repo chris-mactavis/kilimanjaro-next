@@ -801,7 +801,8 @@ section.products {
     position: fixed;
     top: 21%;
     right: -25%;
-    transition: all 0.3s; }
+    transition: all 0.3s;
+    z-index: 4; }
     @media only screen and (max-width: 1200px) {
       section.products .cart {
         width: 42%; } }
@@ -879,32 +880,28 @@ section.products {
       section.products .cart .cart-product-list .cart-listing-height {
         height: auto !important; }
       section.products .cart .cart-product-list .product-list {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        padding: 20px 0;
+        padding: 10px 0;
         border-bottom: 1px solid #a5a5a5; }
         @media only screen and (max-width: 992px) {
           section.products .cart .cart-product-list .product-list {
             flex-direction: column;
             align-items: baseline; } }
         section.products .cart .cart-product-list .product-list img {
-          max-width: 100px; }
+          max-width: 80%; }
         section.products .cart .cart-product-list .product-list input {
           width: 50px;
           padding: 3px;
           font-size: 15px; }
         section.products .cart .cart-product-list .product-list p {
-          font-size: 20px;
+          font-size: 17px;
           margin-bottom: 0; }
         section.products .cart .cart-product-list .product-list p.bold {
-          font-weight: 600; }
+          font-weight: 600;
+          padding: 8px 0; }
         section.products .cart .cart-product-list .product-list button {
           padding: 0px 8px;
-          color: #a5a5a5;
+          color: #DC042A;
           border-color: transparent;
-          border: 1.5px solid #a5a5a5;
           outline-color: transparent;
           background: transparent; }
         section.products .cart .cart-product-list .product-list input[type="number"]::-webkit-inner-spin-button,
@@ -1583,7 +1580,7 @@ nav.navbar {
   padding: 15px 70px;
   background: #DC042A;
   width: 100%;
-  z-index: 3; }
+  z-index: 4; }
   @media only screen and (max-width: 767px) {
     nav.navbar {
       padding: 15px 20px; } }

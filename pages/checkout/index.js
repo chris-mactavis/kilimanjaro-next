@@ -46,12 +46,6 @@ const Checkout = () => {
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
     
-    // let orderTotal = allTotalPrice;
-
-    // if (deliveryPrice) {
-    //     orderTotal = deliveryPrice.delivery_price + allTotalPrice;
-    // }
-    
     useEffect(() => {
         const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
         Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
@@ -66,15 +60,13 @@ const Checkout = () => {
         }
     }, []);
 
-    // const top = $(window).scrollTop();
-    // console.log(top, 'top'); 
     useEffect(() => {
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('.order-details');
                 const isPositionFixed = ($el.css('position') === 'sticky');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
-                    $el.css({'position': 'sticky', 'top': '95px'});
+                    $el.css({'position': 'sticky', 'top': '100px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
                     $el.css({'position': 'static', 'top': '0'});
