@@ -118,9 +118,9 @@ const Menu = ({ productCategories }) => {
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('#category-top');
-                const isPositionFixed = ($el.css('position') === 'fixed');
+                const isPositionFixed = ($el.css('position') === 'sticky');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
-                    $el.css({'position': 'fixed', 'top': '79px'});
+                    $el.css({'position': 'sticky', 'top': '79px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
                     $el.css({'position': 'static', 'top': '0'});
@@ -314,13 +314,28 @@ const Menu = ({ productCategories }) => {
         {allCart.map((cart, index) => {
             return <>
                 <div key={cart.product.id} className="product-list">
-                    <img className="img-fluid" src={cart.product.image_url} alt="" />
+                    {/* <img className="img-fluid" src={cart.product.image_url} alt="" />
                     <p>{cart.product.product}</p>
-                    <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} />
+                    <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} /> */}
                     {/* <p>{cart.quantity}</p> */}
                     {/* {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>} */}
-                    <p className="bold">{'₦'+cart.totalPrice}</p>
-                    <button onClick={() => deleteProductCartHandler(index)}>X</button>
+                    {/* <p className="bold">{'₦'+cart.totalPrice}</p>
+                    <button onClick={() => deleteProductCartHandler(index)}>X</button> */}
+                    <div className="row text-md-left text-center">
+                        <div className="col-md-3">
+                            <img className="img-fluid" src={cart.product.image_url} alt="" />
+                        </div>
+                        <div className="col-md-7">
+                            <div className="align-items-center justify-content-around flex-wrap">
+                                <p>{cart.product.product}</p>
+                            </div>
+                            <p className="bold">{'₦'+cart.totalPrice}</p>
+                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} />
+                        </div>
+                        <div className="col-md-2">
+                            <button onClick={() => deleteProductCartHandler(index)}>X</button>
+                        </div>
+                    </div>
                 </div>
             </>
         })} 
