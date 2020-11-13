@@ -112,7 +112,7 @@ const ShoppingCart = () => {
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
                         {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
-                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
+                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' min="1"/>
                     </div>
                     <p>{'₦' + cart.totalPrice}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}

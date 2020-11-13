@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Link from 'next/link';
+import $ from 'jquery';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
@@ -57,6 +58,14 @@ const Checkout = () => {
         if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
         }
+    }, []);
+
+    useEffect(() => {
+        window.$ = $;
+            $(window).ready(function () {
+                const $el = $("html, body");
+                $el.css({'overflow-x': 'unset'});
+            });
     }, []);
 
     useEffect(() => {
@@ -324,228 +333,232 @@ const Checkout = () => {
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
                 </Head>
 
-                {!localCart.length > 0 || allTotalPrice < 1000 ? <section className="shopping-cart empty-cart">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="empty-cart-container">
-                                <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt=""/>A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
-                                { !localCart.length > 0 && <p>Your cart is currently empty.</p> }
-                                { localCart.length > 0 
-                                ?
-                                    <Link href="/cart"><button className="btn">Return to cart</button></Link>
-                                :
-                                    <Link href="/"><button className="btn">Return to homepage</button></Link>
-                                }                               
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                :
-                <section className="shopping-cart">
-                    <div className="container">
-                        <OrderingSteps activeTabs={[1, 2]} />
-                        <OrderingStepsMobile activeTabs={[2]}/>
-                        {/* Checkout */}
-                        <div className="checkout-section">
+                {
+                    !localCart.length > 0 || allTotalPrice < 1000 
+                    ? 
+                    <section className="shopping-cart empty-cart">
+                        <div className="container">
                             <div className="row">
-                                <div className="col-md-7">
-                                    <h4>Payment Option</h4>
-                                    <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                        <label className="payment">
-                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
-                                        </label>
-                                        <label className="payment">
-                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
-                                        </label>
+                                <div className="col-md-12">
+                                    <div className="empty-cart-container">
+                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
+                                        {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
+                                        {localCart.length > 0
+                                            ?
+                                            <Link href="/cart"><button className="btn">Return to cart</button></Link>
+                                            :
+                                            <Link href="/"><button className="btn">Return to homepage</button></Link>
+                                        }
                                     </div>
                                 </div>
                             </div>
-                            <form onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
+                        </div>
+                    </section>
+                    :
+                    <section className="shopping-cart">
+                        <div className="container">
+                            <OrderingSteps activeTabs={[1, 2]} />
+                            <OrderingStepsMobile activeTabs={[2]} />
+                            {/* Checkout */}
+                            <div className="checkout-section">
                                 <div className="row">
                                     <div className="col-md-7">
-                                        {/* Payment Method */}
-                                        <h4 className="mt-4">Payment Method</h4>
+                                        <h4>Payment Option</h4>
                                         <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                            { paymentOption === 'delivery' 
-                                                ?
-                                                <>
-                                                    <label className="payment">
-                                                        <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
-                                                    </label>
-                                                    <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
-                                                    </label>
-                                                </> 
-                                                :
-                                                <>
-                                                    <label className="payment">
-                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
-                                                    </label>
-                                                </>
-                                            }
+                                            <label className="payment">
+                                                <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
+                                            </label>
+                                            <label className="payment">
+                                                <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
+                                            </label>
                                         </div>
+                                    </div>
+                                </div>
+                                <form onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
+                                    <div className="row">
+                                        <div className="col-md-7">
+                                            {/* Payment Method */}
+                                            <h4 className="mt-4">Payment Method</h4>
+                                            <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                                {paymentOption === 'delivery'
+                                                    ?
+                                                    <>
+                                                        <label className="payment">
+                                                            <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
+                                                </label>
+                                                        <label className="payment">
+                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
+                                                </label>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <label className="payment">
+                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
+                                                </label>
+                                                    </>
+                                                }
+                                            </div>
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+                                            {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
 
-                                        {/* Contact Details */}
-                                        {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4> }
-                                       {!loggedIn && <div>
-                                        <FormInput
-                                            type="text"
-                                            name="first_name"
-                                            placeholder="First Name*"
-                                            label="First Name"
-                                            register={register({ required: 'First name is required' })}
-                                            error={errors.first_name && errors.first_name.message}
-                                        />
-                                        <FormInput
-                                            type="text"
-                                            name="last_name"
-                                            placeholder="Last Name*"
-                                            label="Last Name"
-                                            register={register({ required: 'Last name is required' })}
-                                            error={errors.last_name && errors.last_name.message}
-                                        />
-                                         <FormInput
-                                            type="email"
-                                            name="email"
-                                            placeholder="Email*"
-                                            label="Email"
-                                            register={register({ 
-                                                required: 'Please input a valid email address' ,
-                                                pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                                                validate: async value => verifyEmailHandler(value) 
-                                            })}
-                                            error={errors.email && errors.email.message}
-                                        />
-                                         <FormInput
-                                            type="password"
-                                            name="password"
-                                            placeholder="Password*"
-                                            label="Password"
-                                            register={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
-                                            error={errors.password && errors.password.message}
-                                        />
-                                        {paymentOption === 'pickup' && <FormInput
+                                            {/* Contact Details */}
+                                            {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
+                                            {!loggedIn && <div>
+                                                <FormInput
+                                                    type="text"
+                                                    name="first_name"
+                                                    placeholder="First Name*"
+                                                    label="First Name"
+                                                    register={register({ required: 'First name is required' })}
+                                                    error={errors.first_name && errors.first_name.message}
+                                                />
+                                                <FormInput
+                                                    type="text"
+                                                    name="last_name"
+                                                    placeholder="Last Name*"
+                                                    label="Last Name"
+                                                    register={register({ required: 'Last name is required' })}
+                                                    error={errors.last_name && errors.last_name.message}
+                                                />
+                                                <FormInput
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Email*"
+                                                    label="Email"
+                                                    register={register({
+                                                        required: 'Please input a valid email address',
+                                                        pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                                                        validate: async value => verifyEmailHandler(value)
+                                                    })}
+                                                    error={errors.email && errors.email.message}
+                                                />
+                                                <FormInput
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder="Password*"
+                                                    label="Password"
+                                                    register={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
+                                                    error={errors.password && errors.password.message}
+                                                />
+                                                {paymentOption === 'pickup' && <FormInput
+                                                    type="number"
+                                                    name="phone"
+                                                    placeholder="+234 80 1234 5678*"
+                                                    label="Mobile Number"
+                                                    register={register({ required: 'This field is required.' })}
+                                                    error={errors.phone && errors.phone.message}
+                                                />}
+                                            </div>
+                                            }
+
+                                            {isLoggedIn && <FormInput
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
-                                                label="Mobile Number"
+                                                label="Mobile Numbers"
                                                 register={register({ required: 'This field is required.' })}
                                                 error={errors.phone && errors.phone.message}
                                             />}
-                                        </div>
-                                        }
 
-                                        {isLoggedIn && <FormInput
-                                            type="number"
-                                            name="phone"
-                                            placeholder="+234 80 1234 5678*"
-                                            label="Mobile Numbers"
-                                            register={register({required: 'This field is required.'})}
-                                            error={errors.phone && errors.phone.message}
-                                        />}
-
-                                        {paymentOption === 'delivery' && <div>
-                                            <PlacesAutocomplete
-                                                value={streetAddress}
-                                                onChange={handleChange}
-                                                onSelect={handleSelect}
-                                                searchOptions={searchOptions}
-                                            >
-                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                                    <div>
-                                                        <FormInput
-                                                            type="text"
-                                                            name='streetAddress'
-                                                            label="Street/Estate Address"
-                                                            {...getInputProps({
-                                                                placeholder: 'Manually type your street/estate address',
-                                                                className: 'location-search-input',
-                                                            })}
-                                                            register={register({ required: 'This field is required.' })}
-                                                            error={errors.streetAddress && errors.streetAddress.message}
-                                                        />
-                                                        <div className="autocomplete-dropdown-container">
-                                                            {loading && <div>Loading...</div>}
-                                                            {suggestions.map((suggestion) => {
-                                                                const className = suggestion.active
-                                                                    ? 'suggestion-item--active'
-                                                                    : 'suggestion-item';
-                                                                // inline style for demonstration purpose
-                                                                const style = suggestion.active
-                                                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                                                return (
-                                                                    <div className="input-suggestion" key={suggestion.placeId}
-                                                                        {...getSuggestionItemProps(suggestion, {
-                                                                            style,
-                                                                        })}
-                                                                    >
-                                                                        <span>{suggestion.description}</span>
-                                                                    </div>
-                                                                );
-                                                            })}
+                                            {paymentOption === 'delivery' && <div>
+                                                <PlacesAutocomplete
+                                                    value={streetAddress}
+                                                    onChange={handleChange}
+                                                    onSelect={handleSelect}
+                                                    searchOptions={searchOptions}
+                                                >
+                                                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                        <div>
+                                                            <FormInput
+                                                                type="text"
+                                                                name='streetAddress'
+                                                                label="Street/Estate Address"
+                                                                {...getInputProps({
+                                                                    placeholder: 'Manually type your street/estate address',
+                                                                    className: 'location-search-input',
+                                                                })}
+                                                                register={register({ required: 'This field is required.' })}
+                                                                error={errors.streetAddress && errors.streetAddress.message}
+                                                            />
+                                                            <div className="autocomplete-dropdown-container">
+                                                                {loading && <div>Loading...</div>}
+                                                                {suggestions.map((suggestion) => {
+                                                                    const className = suggestion.active
+                                                                        ? 'suggestion-item--active'
+                                                                        : 'suggestion-item';
+                                                                    // inline style for demonstration purpose
+                                                                    const style = suggestion.active
+                                                                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                                                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                                                    return (
+                                                                        <div className="input-suggestion" key={suggestion.placeId}
+                                                                            {...getSuggestionItemProps(suggestion, {
+                                                                                style,
+                                                                            })}
+                                                                        >
+                                                                            <span>{suggestion.description}</span>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
-                                            </PlacesAutocomplete>
-                                            <FormInput
-                                                type="text"
-                                                name="houseNumber"
-                                                placeholder="House Number*"
-                                                label="House Number"
-                                                register={register({ required: true })}
-                                                error={errors.houseNumber && 'This field is required.'}
+                                                    )}
+                                                </PlacesAutocomplete>
+                                                <FormInput
+                                                    type="text"
+                                                    name="houseNumber"
+                                                    placeholder="House Number*"
+                                                    label="House Number"
+                                                    register={register({ required: true })}
+                                                    error={errors.houseNumber && 'This field is required.'}
+                                                />
+                                            </div>}
+
+                                            <h4 className="mt-5">Additional Informations</h4>
+                                            <textarea
+                                                // className={errors.message ? 'textarea-error' : null}
+                                                name="message"
+                                                placeholder='Order/delivery note'
+                                                ref={register}
                                             />
-                                        </div> }
+                                        </div>
 
-                                        <h4 className="mt-5">Additional Informations</h4>
-                                        <textarea
-                                            // className={errors.message ? 'textarea-error' : null}
-                                            name="message"
-                                            placeholder='Order/delivery note'
-                                            ref={register}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-5">
-                                        <div className="order-details text-center">
-                                            <h4>Order Details</h4>
-                                            <div className="order-details-list">
-                                                <div className="order-prod mb-5">
-                                                    {localCart.map((cart, id) => {
+                                        <div className="col-md-5">
+                                            <div className="order-details text-center">
+                                                <h4>Order Details</h4>
+                                                <div className="order-details-list">
+                                                    <div className="order-prod mb-5">
+                                                        {localCart.map((cart, id) => {
                                                             return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
-                                                            <p>{cart.quantity}x <span>{cart.product.product}</span></p>
-                                                            <p key={cart}>{'₦'+cart.totalPrice}</p>
-                                                        </div>
-                                                    })}
+                                                                <p>{cart.quantity}x <span>{cart.product.product}</span></p>
+                                                                <p key={cart}>{'₦' + cart.totalPrice}</p>
+                                                            </div>
+                                                        })}
+                                                    </div>
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Subtotal</p>
+                                                        <p>{'₦' + allTotalPrice}</p>
+                                                    </div>
+                                                    {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Delivery</p>
+                                                        <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
+                                                    </div>}
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Order Total </p>
+                                                        <p>{'₦' + total}</p>
+                                                    </div>
+                                                    {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
+                                                    {loadingState ? <InlineLoadingWhite /> : <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}>Place Order</button>}
+                                                    {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                                 </div>
-                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                    <p>Subtotal</p>
-                                                    <p>{'₦'+allTotalPrice}</p>
-                                                </div>
-                                                {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                    <p>Delivery</p>
-                                                    <p>{`${deliveryPrice === null ? '₦0' : '₦'+deliveryPrice}`}</p>
-                                                </div>}
-                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                    <p>Order Total </p>
-                                                    <p>{'₦'+total}</p>
-                                                </div>
-                                                {deliveryPrice === null  && <p style={{"fontSize":"14px"}} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                {loadingState ? <InlineLoadingWhite /> :  <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}>Place Order</button>}
-                                                {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </section>}
+                    </section>
+                }
             </Layout>
         </>
     );

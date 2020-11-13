@@ -202,6 +202,7 @@ th {
   padding: 0; }
 
 html, body {
+  overflow-x: hidden;
   font-size: 62.5%;
   scroll-behavior: smooth; }
 
@@ -665,7 +666,7 @@ section.select-restaurant {
     @media only screen and (max-width: 992px) {
       section.select-restaurant .select-state {
         width: 30%; } }
-    @media only screen and (max-width: 767px) {
+    @media only screen and (max-width: 768px) {
       section.select-restaurant .select-state {
         width: 50%; } }
     @media only screen and (max-width: 576px) {
@@ -713,7 +714,7 @@ section.select-restaurant {
         left: 50%;
         transform: translateX(-50%);
         background: #DC042A; }
-        @media only screen and (max-width: 767px) {
+        @media only screen and (max-width: 768px) {
           section.select-restaurant ul.product-cat .active::before {
             height: 6px;
             bottom: 5px; } }
@@ -724,7 +725,7 @@ section.select-restaurant {
         text-transform: uppercase;
         font-size: 15px;
         padding: 15px 0; }
-        @media only screen and (max-width: 767px) {
+        @media only screen and (max-width: 768px) {
           section.select-restaurant ul.product-cat a li.product-cat-list {
             padding: 10px 0; } }
 section.active-select-restaurant {
@@ -810,7 +811,7 @@ section.products {
       section.products .cart {
         width: 50%;
         top: 30%; } }
-    @media only screen and (max-width: 767px) {
+    @media only screen and (max-width: 768px) {
       section.products .cart {
         width: 58%; } }
     @media only screen and (max-width: 576px) {
@@ -1003,7 +1004,7 @@ section.shopping-cart {
       @media only screen and (max-width: 992px) {
         section.shopping-cart .mid-line::before {
           width: 87px; } }
-      @media only screen and (max-width: 767px) {
+      @media only screen and (max-width: 768px) {
         section.shopping-cart .mid-line::before {
           width: 147px; } }
       @media only screen and (max-width: 576px) {
@@ -1025,7 +1026,7 @@ section.shopping-cart {
       @media only screen and (max-width: 992px) {
         section.shopping-cart .mid-line::after {
           width: 94px; } }
-      @media only screen and (max-width: 767px) {
+      @media only screen and (max-width: 768px) {
         section.shopping-cart .mid-line::after {
           width: 155px; } }
       @media only screen and (max-width: 576px) {
@@ -1235,7 +1236,11 @@ section.shopping-cart {
         text-transform: uppercase;
         font-weight: 600; }
   section.shopping-cart .checkout-section .order-details {
-    margin-bottom: 20px; }
+    margin-bottom: 20px;
+    margin-top: -118px; }
+    @media only screen and (max-width: 768px) {
+      section.shopping-cart .checkout-section .order-details {
+        margin-top: 0; } }
     section.shopping-cart .checkout-section .order-details p {
       margin-bottom: 0; }
     section.shopping-cart .checkout-section .order-details h4 {
@@ -1581,7 +1586,7 @@ nav.navbar {
   background: #DC042A;
   width: 100%;
   z-index: 4; }
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 768px) {
     nav.navbar {
       padding: 15px 20px; } }
   nav.navbar .navbar-collapse {
@@ -1646,7 +1651,7 @@ footer.footer {
     color: #fff; }
   footer.footer .navbar-nav {
     flex-direction: row; }
-    @media only screen and (max-width: 767px) {
+    @media only screen and (max-width: 768px) {
       footer.footer .navbar-nav {
         justify-content: center; } }
     footer.footer .navbar-nav .nav-link {
