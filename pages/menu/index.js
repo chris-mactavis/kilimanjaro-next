@@ -115,6 +115,14 @@ const Menu = ({ productCategories }) => {
     }, []);
 
     useEffect(() => {
+        window.$ = $;
+            $(window).ready(function () {
+                const $el = $("html, body");
+                $el.css({'overflow-x': 'unset'});
+            });
+    }, []);
+
+    useEffect(() => {
 
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
