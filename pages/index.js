@@ -17,6 +17,14 @@ const Home = ({ cities }) => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));
   }, []);
 
+  useEffect(() => {
+    window.$ = $;
+    $(window).ready(function () {
+      const $el = $("html, body");
+      $el.css({ 'overflow-x': 'hidden' });
+    });
+  }, []);
+
   return (
     <>
       <Layout showSecFooter>

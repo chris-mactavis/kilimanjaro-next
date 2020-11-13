@@ -28,6 +28,7 @@ const Menu = ({ productCategories }) => {
     const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.totalPrice);
     const loadingState = useSelector(state => state.loader.loading);
+    console.log(allCart);
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -202,6 +203,7 @@ const Menu = ({ productCategories }) => {
             dispatch(loader());
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            setTimeout(() => setCategoryActiveName('Combo Deals'), 500);
         } catch (error) {
             dispatch(loader());
             console.log(error);
@@ -226,7 +228,7 @@ const Menu = ({ productCategories }) => {
         setQuantitiesArray(quantitiesArray);
     };
 
-    const addtoCartHandler = (prod) => {
+    const addtoCartHandler = (prod, variations) => {
         setInlineLoading(prod.id);
         dispatch(loader());
         const prevCart = [...productCart];
@@ -243,7 +245,7 @@ const Menu = ({ productCategories }) => {
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-                console.log(productVariation, '2');
+                // console.log(productVariation, '2');
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
@@ -281,11 +283,11 @@ const Menu = ({ productCategories }) => {
             }
             
         }
-        
         setProductCart(prevCart);
         dispatch(addToCart(prevCart));
         dispatch(setTotalPrice());
         Cookies.set('setCart', JSON.stringify(prevCart));
+        setValue(value => ++value);
         // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
         setTimeout(() => {
             dispatch(loader());
@@ -298,7 +300,10 @@ const Menu = ({ productCategories }) => {
         }, 1500);
     };
 
-    const deleteProductCartHandler = (index) => {
+    const deleteProductCartHandler = (index, id) => {
+        console.log(selectedVariableProducts, 'varProd'); 
+        var i = selectedVariableProducts.findIndex(selVar => selVar.productId === id);
+        console.log(i, 'theIndex');
         allCart.splice(index, 1);
         setProductCart(allCart);
         dispatch(addToCart(allCart));
@@ -325,15 +330,15 @@ const Menu = ({ productCategories }) => {
                         <div className="col-md-3">
                             <img className="img-fluid" src={cart.product.image_url} alt="" />
                         </div>
-                        <div className="col-md-7">
+                        <div className="col-md-6">
                             <div className="align-items-center justify-content-around flex-wrap">
                                 <p>{cart.product.product}</p>
                             </div>
                             <p className="bold">{'₦'+cart.totalPrice}</p>
-                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} />
+                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} min="1" />
                         </div>
                         <div className="col-md-2">
-                            <button onClick={() => deleteProductCartHandler(index)}>X</button>
+                            <button onClick={() => deleteProductCartHandler(index, cart.product.id)}>X</button>
                         </div>
                     </div>
                 </div>
@@ -353,16 +358,10 @@ const Menu = ({ productCategories }) => {
         setValue(value => ++value);
     }
 
-    // let variationButton = ['btn', 'disabled'];
-
-    // if (addVariationClass.active) {
-    //     variationButton.pop();
-    // }
-
     const handleVariationChange = (value, prod) =>  {
         // remove if this gives problem
-        setSelectedVariableProducts([]);
-        console.log(selectedVariableProducts, 'array');
+        // selectedVariableProducts.pop();
+        // console.log(selectedVariableProducts, 'array');
         changeVariationClass({
             active: true
         });
@@ -378,13 +377,6 @@ const Menu = ({ productCategories }) => {
         setVarId(tempCart);
         selectedVariableProducts.push(tempCart);
         setSelectedVariableProducts(selectedVariableProducts);
-        // return;
-
-        // dispatch(updateVariablePrice(null));
-        // const newValue = {...value, totalVariablePrice: parseInt(value.value) * quantitySelected}
-        // dispatch(updateVariablePrice(newValue));
-        // Cookies.set('variable', JSON.stringify(newValue));
-        // console.log(newValue);
     } 
 
     const gotoCartHandler = () => {
@@ -457,7 +449,7 @@ const Menu = ({ productCategories }) => {
                                                 if (prod.product_type === 'variable') {
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    btn = <button onClick={() => addtoCartHandler(prod)} className={newVarBtn}>Add to cart</button>;
+                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
                                                 }
 
                                                 return <>
@@ -471,7 +463,7 @@ const Menu = ({ productCategories }) => {
                                                                     <p className="product-name">{prod.product}</p>
                                                                     <div className="d-flex">
                                                                         <p className="product-qty">Quantity</p>
-                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' />
+                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' min="1" />
                                                                     </div>
                                                                 </div>
                                                                 <p className="product-description">{prod.short_description}</p>
@@ -550,7 +542,7 @@ const Menu = ({ productCategories }) => {
                             <p className="cart-text">Cart</p>
                         </div>
                         <div className="cart-product-list">
-                            <div className={!allCart.length > 0 ? "cart-listing-container cart-listing-height" :  "cart-listing-container"}>
+                            <div className={allCart.length > 2 ? "cart-listing-container" :  "cart-listing-container cart-listing-height"}>
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">

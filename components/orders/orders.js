@@ -50,7 +50,7 @@ const Orders = () => {
 
     return (
         <>
-            {loggedIn ? <section className="orders">
+            {loggedIn && recentOrders.length > 0 ? <section className="orders">
                 <div className="container">
                     <div className="row">
                         <div className="col-12 text-center">
@@ -58,7 +58,7 @@ const Orders = () => {
                         </div>
                         { recentOrders.length === 0
                          ? 
-                         <p className="text-center w-100 mt-5">You have no recent oders yet.</p>  
+                         <p className="text-center w-100 mt-0 mb-0">You have no recent orders yet.</p>  
                          :
                         <>
                             {recentOrders.slice(0, 2).map((recentOrder) => {
