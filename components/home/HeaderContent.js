@@ -45,7 +45,7 @@ const HeaderContent = ({cities}) => {
             dispatch(loader());
         }, 1500)
     }
-
+ 
 
     return (
       <>
