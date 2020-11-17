@@ -28,7 +28,6 @@ const Menu = ({ productCategories }) => {
     const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.totalPrice);
     const loadingState = useSelector(state => state.loader.loading);
-    console.log(allCart);
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -50,7 +49,6 @@ const Menu = ({ productCategories }) => {
     // const [ allCart, setAllCart ] = useState([]);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
-
   
     useEffect(() => {
         const cities = localStorage.getItem('setAllCities') ? JSON.parse(localStorage.getItem('setAllCities')) : [];
@@ -119,11 +117,13 @@ const Menu = ({ productCategories }) => {
             $(window).ready(function () {
                 const $el = $("html, body");
                 $el.css({'overflow-x': 'unset'});
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             });
     }, []);
 
     useEffect(() => {
-
+    
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('#category-top');
@@ -216,10 +216,10 @@ const Menu = ({ productCategories }) => {
             dispatch(loader());
             console.log(error);
         }
+        Cookies.set('selectedRestaurant', JSON.stringify(value));
         setValue(value => ++value);
     };
 
-    // let quantitySelected = 1;
     const handleQuantityChange = (e, prodId) => {
         // quantitySelected = e.target.value;
         const prevProdQtyIndex = quantitiesArray.findIndex(x => x.productId === prodId);
@@ -231,12 +231,11 @@ const Menu = ({ productCategories }) => {
             const newQuantityArray = {productId: prodId, quantity: +e.target.value};
             quantitiesArray.push(newQuantityArray);
         }
-        // console.log(quantitiesArray);
         
         setQuantitiesArray(quantitiesArray);
     };
 
-    const addtoCartHandler = (prod, variations) => {
+    const addtoCartHandler = (prod) => {
         setInlineLoading(prod.id);
         dispatch(loader());
         const prevCart = [...productCart];
@@ -249,11 +248,9 @@ const Menu = ({ productCategories }) => {
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
-            console.log(prodInCart, );
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
-                // console.log(productVariation, '2');
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
@@ -311,6 +308,7 @@ const Menu = ({ productCategories }) => {
     const deleteProductCartHandler = (index, id) => {
         console.log(selectedVariableProducts, 'varProd'); 
         var i = selectedVariableProducts.findIndex(selVar => selVar.productId === id);
+        selectedVariableProducts.splice(i, 1);
         console.log(i, 'theIndex');
         allCart.splice(index, 1);
         setProductCart(allCart);
@@ -387,10 +385,13 @@ const Menu = ({ productCategories }) => {
         setSelectedVariableProducts(selectedVariableProducts);
     } 
 
+
     const gotoCartHandler = () => {
         Router.push('/cart');
     };
 
+    
+        
 
     return (
         <>
@@ -447,7 +448,7 @@ const Menu = ({ productCategories }) => {
                                                         variablePrice = v.sale_price || v.price;
                                                         return { ...v, value: variablePrice , label: v.name + " — " + "₦" + variablePrice }
                                                     });
-                                                }
+                                                };
 
                                                 const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
 
