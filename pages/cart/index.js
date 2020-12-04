@@ -135,9 +135,9 @@ const ShoppingCart = () => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="empty-cart-container">
-                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p className=""><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty.</p>
-                                        <Link href="/"><button className="btn">Return to homepage</button></Link>
+                                        <Link href="/"><button class="btn"><span class="text">Return to homepage</span></button></Link>
                                     </div>
                                 </div>
                             </div>
@@ -153,8 +153,8 @@ const ShoppingCart = () => {
                                     {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
                                     <h4>Review Your Order</h4>
                                     {cartDisplay}
-                                    <div className="text-right mt-4 mb-3">
-                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={activeUpdateCart ? "btn" : "btn disabled"}>Update Cart</button>}
+                                    <div className="d-flex justify-content-end mt-4 mb-3">
+                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={activeUpdateCart ? "btn" : "btn disabled"}><span class="text">Update Cart</span></button>}
                                     </div>
                                     <div className="row">
                                         <div className="col-md-8">
@@ -191,7 +191,9 @@ const ShoppingCart = () => {
                                                     <p>{'₦' + newTotalPrice}</p>
                                                 </div>
                                             </div>
-                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
+                                            {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button> */}
+                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span class="text">Checkout</span></button>
+
                                         </div>
                                     </div>
                                 </div>

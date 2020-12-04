@@ -133,7 +133,7 @@ const Signup = () => {
                         register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
                         error={errors.password && errors.password.message} 
                     />
-                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3">Register</button>}
+                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3"><span className="text">Register</span></button>}
                 </form>
                 <p className="mt-3">Or sign up with</p>
                 <div className="other-signin-option">

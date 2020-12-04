@@ -460,43 +460,6 @@ form {
   form input[type="number"] {
     -moz-appearance: textfield; }
 
-.btn {
-  background-color: #DC042A;
-  color: #fff;
-  border-color: transparent;
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-size: 15px;
-  padding: 8px 16px;
-  transition: all .3s; }
-  .btn:hover {
-    box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #DC042A;
-    color: #fff; }
-  .btn:focus {
-    box-shadow: none; }
-
-.btn-white {
-  background-color: #fff;
-  color: #383838;
-  border-color: transparent;
-  border-radius: 3px;
-  text-transform: uppercase;
-  font-size: 15px;
-  padding: 8px 16px;
-  transition: all .3s; }
-  .btn-white:hover {
-    box-shadow: 0px 0px 0px 2.5px #DC042A inset, 0px 0px 0px 2px #fff;
-    color: #383838; }
-  .btn-white:focus {
-    box-shadow: none; }
-
-.btn-grey {
-  background-color: #dddddd;
-  color: #707070; }
-  .btn-grey:hover {
-    box-shadow: 0px 0px 0px 2.5px white inset, 0px 0px 0px 2px #dddddd;
-    color: #707070; }
-
 .btn-order {
   padding: 14px 16px; }
 
@@ -514,7 +477,101 @@ form {
 
 .disabled-white {
   pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.64); }
+  background-color: rgba(255, 255, 255, 0.64) !important; }
+
+.btn-white {
+  background-color: #fff;
+  color: #383838;
+  border-color: transparent;
+  padding: 15px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 2px solid #DC042A;
+  font-size: 15px;
+  text-transform: uppercase; }
+  .btn-white > .text {
+    position: relative;
+    color: #DC042A !important;
+    background-image: linear-gradient(90deg, #DC042A 0%, #DC042A 50%, #fff 50%, #fff 100%);
+    background-repeat: repeat;
+    background-size: 200%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: background-position .4s; }
+  .btn-white::before {
+    background: #DC042A !important;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transform-origin: 100% 0;
+    transform: scale3d(0, 1, 1);
+    transition: transform .4s; }
+  .btn-white:hover {
+    border: 2px solid #fff; }
+    .btn-white:hover .text {
+      background-position: 0 0;
+      color: #fff !important; }
+    .btn-white:hover::before {
+      transform-origin: 0 0;
+      transform: scale3d(1, 1, 2); }
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 2px solid #DC042A;
+  font-size: 15px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background-color: #DC042A; }
+  .btn > .text {
+    position: relative;
+    color: #fff;
+    background-image: linear-gradient(90deg, #DC042A 0%, #DC042A 50%, #fff 50%, #fff 100%);
+    background-repeat: repeat;
+    background-size: 200%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: background-position .4s; }
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transform-origin: 100% 0;
+    transform: scale3d(0, 1, 1);
+    transition: transform .4s; }
+  .btn:hover .text {
+    background-position: 0 0;
+    color: #DC042A; }
+  .btn:hover::before {
+    transform-origin: 0 0;
+    transform: scale3d(1, 1, 1); }
+  .btn:focus {
+    box-shadow: none; }
+
+.btn-grey {
+  border: 2px solid #dddddd;
+  background-color: #dddddd; }
+  .btn-grey > .text {
+    color: #707070;
+    background-image: linear-gradient(90deg, #707070 0%, #707070 50%, #dddddd 50%, #dddddd 100%); }
+  .btn-grey:hover .text {
+    color: #707070; }
+  .btn-grey:hover::before {
+    transform: scale3d(1, 1, 2); }
 
 section.header-content {
   height: 100vh;
@@ -1611,6 +1668,18 @@ nav.navbar {
         font-family: "Ubuntu", sans-serif;
         font-size: 15px;
         text-transform: uppercase; }
+    nav.navbar ul.navbar-nav li.nav-hover {
+      position: relative; }
+      nav.navbar ul.navbar-nav li.nav-hover::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        border-bottom: 1px solid #fff;
+        transition: all 0.4s; }
+      nav.navbar ul.navbar-nav li.nav-hover:hover::before {
+        width: 100%; }
     nav.navbar ul.navbar-nav .nav-bg-white {
       background: #fff;
       padding: 5px 20px; }

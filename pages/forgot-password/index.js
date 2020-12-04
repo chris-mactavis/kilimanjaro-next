@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
@@ -78,7 +79,7 @@ const ForgotPassword = () => {
                                                 error={errors.email && errors.email.message}
                                             />
                                             <p className="d-flex align-items-center mb-3 small-text"> <img className="mr-1 notification-icon" src="/images/icon/caution-icon.svg" alt="" /> You will receive a link to create a new password via email.</p>
-                                            {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3">Send</button>}
+                                            {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Send</span></button>}
                                         </form>
                                     }
 
@@ -89,7 +90,7 @@ const ForgotPassword = () => {
                                     {
                                         showResetMessage && <p>
                                             <Link href="signup">
-                                                <button className="btn">Back to Login</button>
+                                                <button className="btn"> <span className="text"></span>Back to Login</button>
                                             </Link>
                                         </p>
                                     }

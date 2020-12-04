@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// import ScrollReveal from 'scrollreveal';
 
 
 import Layout from '../components/Layout';
@@ -43,19 +44,19 @@ const Home = ({ cities }) => {
             </div>
             <div className="row">
               <div className="col-md-4 text-center">
-                <img className="w-75" src="/images/icon/location-icon.svg" alt="" />
+                <img className="w-75 headline" src="/images/icon/location-icon.svg" alt="" />
                 <p className="text-red">Select nearest location</p>
                 <p>Select the state and restaurant closest to your pick-up/delivery location.</p>
               </div>
               <div className="col-md-4 text-center">
                 <img className="w-75" src="/images/icon/menu-icon.svg" alt="" />
                 <p className="text-red">Choose your meal</p>
-                <p>Place your order by choosing from the numerous delicacies on our menu</p>
+                <p>Place your order by choosing from the numerous delicacies on our menu.</p>
               </div>
               <div className="col-md-4 text-center">
                 <img className="w-75" src="/images/icon/delivery-pickup.svg" alt="" />
                 <p className="text-red">Enjoy your meal</p>
-                <p>Pick up your tasty meal in store or have it delivered to your doorstep</p>
+                <p>Pick up your tasty meal in store or have it delivered to your doorstep.</p>
               </div>
             </div>
           </div>

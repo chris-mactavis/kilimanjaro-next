@@ -88,7 +88,7 @@ const Orders = () => {
                                                         <p className="prices-details bold-text">Total(Including vat)</p>
                                                         <p className="prices-details bold-text">₦{recentOrder.total}</p>
                                                     </div>
-                                                    <div className="text-right">{loadingState && inlineLoading === recentOrder.id ? <InlineLoading /> : <button onClick={() => reOrderBtnHandler(recentOrder.id, recentOrder.restaurant, recentOrder.restaurant_id)} className="btn">Re-order</button>}</div>
+                                                    <div className="text-right">{loadingState && inlineLoading === recentOrder.id ? <InlineLoading /> : <button onClick={() => reOrderBtnHandler(recentOrder.id, recentOrder.restaurant, recentOrder.restaurant_id)} className="btn"><span className="text">Re-order</span></button>}</div>
                                                 </div>
                                             </div>
                                         </div>

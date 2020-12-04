@@ -68,6 +68,28 @@ const Menu = ({ productCategories }) => {
                 })
             });
         }
+
+        (function($){
+         
+        var elements = $(".category-single");
+      
+        for (var i = 0, len = elements.length; i < len; i++) {
+           
+               elements[i].addEventListener("click", function() {
+       
+                var firstEl = $(this).find("a")[0];
+                firstEl.addEventListener("click", function(e) { e.preventDefault() });
+                $(this).find(".subcats").slideToggle();
+              
+              
+          });
+        }
+      
+          
+      
+        })(jQuery);
+      
+    
     }, [])
 
     useEffect(() => {
@@ -454,11 +476,13 @@ const Menu = ({ productCategories }) => {
 
                                                 let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
                                                 let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
-                                                let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
+                                                // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
+                                                let btn = <button onClick={() => addtoCartHandler(prod)} class="btn"><span class="text">Add to cart</span></button>;
                                                 if (prod.product_type === 'variable') {
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
+                                                    // btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
+                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span class="text">Add to cart</span></button>;
                                                 }
 
                                                 return <>
@@ -561,9 +585,11 @@ const Menu = ({ productCategories }) => {
                                         <span className="checkmark"></span>
                                     </label>
                                 </div>
-                                <div>
-                                    <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
+                                <div className="d-flex align-items-center flex-wrap">
+                                    <button class="btn btn-grey mr-4"  onClick={() => Router.push('/cart')}><span class="text">View/Edit Cart</span></button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}><span class="text">Proceed to Checkout</span></button>
+                                    {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
                             </div>
                         </div>

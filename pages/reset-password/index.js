@@ -83,7 +83,7 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
                                             register={register({required: true})}
                                             error={errors.email && errors.email.message}
                                         />
-                                        {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3">Reset Password</button>}
+                                        {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Reset Password</span></button>}
                                     </form>
                                     : <>
                                         <div>

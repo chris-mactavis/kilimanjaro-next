@@ -104,7 +104,7 @@ const EditAccount = () => {
                                             defaultValue={user.phone}
                                             error={errors.phone && errors.phone.message}
                                         />
-                                       {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3">Save</button>}
+                                       {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Save</span></button>}
                                     </form>
                                 </div>
                             </div>
