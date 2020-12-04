@@ -87,7 +87,7 @@ const ContactUs = () => {
                                     placeholder="Leave a message*"
                                 />
                                 {errors.message && <p className="error">This field is required.</p>}
-                                {loadingState ? <InlineLoading /> : <button className="btn">Submit</button> }
+                                {loadingState ? <InlineLoading /> : <button className="btn"><span className="text">Submit</span></button> }
                             </form>
                         </div>
                         <div className="col-md-1 d-md-block d-none offset-md-1">

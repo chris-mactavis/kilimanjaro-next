@@ -91,7 +91,7 @@ const Login = () => {
                         <label className="contain">Remember me<input name="rememberAccount" type="checkbox" /><span className="checkmark"></span></label>
                         <div><a onClick={() => Router.push('/forgot-password')}>Forgot Password?</a></div>
                     </div>
-                    {loadingState && inlineLoader ? <InlineLoading />  : <button className="btn btn-login">Login</button>}
+                    {loadingState && inlineLoader ? <InlineLoading />  : <button className="btn btn-login"><span className="text">Login</span></button>}
                 </form>
                 <p className="mt-3">Or sign in with</p>
                 <div className="other-signin-option">

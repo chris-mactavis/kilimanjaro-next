@@ -62,7 +62,7 @@ const MakePayment = () => {
                                             </table>
                                         </div>
                                         <div className="text-right">
-                                            <button className="btn btn-login">Make Payment</button>
+                                            <button className="btn btn-login"><span className="text">Make Payment</span></button>
                                         </div>
                                     </div>
                                 </div>

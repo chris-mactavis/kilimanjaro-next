@@ -38,6 +38,26 @@ nav.navbar {
         // font-weight: $bold;
         text-transform: uppercase;
       }
+
+    }
+
+    li.nav-hover {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        border-bottom: 1px solid #fff;
+        transition: all 0.4s;
+      }
+
+      &:hover::before {
+        width: 100%;
+      }
+
     }
 
     .nav-bg-white {

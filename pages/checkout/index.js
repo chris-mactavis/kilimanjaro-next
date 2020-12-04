@@ -345,9 +345,9 @@ const Checkout = () => {
                                         {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
                                         {localCart.length > 0
                                             ?
-                                            <Link href="/cart"><button className="btn">Return to cart</button></Link>
+                                            <Link href="/cart"><button className="btn"><span className="text">Return to cart</span></button></Link>
                                             :
-                                            <Link href="/"><button className="btn">Return to homepage</button></Link>
+                                            <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
                                         }
                                     </div>
                                 </div>
@@ -548,7 +548,7 @@ const Checkout = () => {
                                                         <p>{'₦' + total}</p>
                                                     </div>
                                                     {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                    {loadingState ? <InlineLoadingWhite /> : <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}>Place Order</button>}
+                                                    <div className="d-flex justify-content-center">{loadingState ? <InlineLoadingWhite /> : <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                     {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                                 </div>
                                             </div>

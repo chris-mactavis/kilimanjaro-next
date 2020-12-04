@@ -82,7 +82,7 @@ const Account = ({orders}) => {
                                                     <Td>{`${day} ${month} ${year}`}</Td>
                                                     <Td>{order.status}</Td>
                                                     <Td>₦{order.total}</Td>
-                                                    <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3">View</button></Td>
+                                                    <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3"><span className="text">View</span></button></Td>
                                                 </Tr>
                                             })}
                                              {/* <Tr>
