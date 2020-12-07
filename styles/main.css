@@ -645,8 +645,29 @@ section.how-it-works {
         width: 95%; } }
   section.how-it-works h2 {
     margin-bottom: 10px; }
+  section.how-it-works .bounce-hover:hover .bounce {
+    -webkit-animation-name: bounce;
+    animation-name: bounce;
+    -webkit-animation-duration: 1.3s;
+    animation-duration: 1.3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both; }
   section.how-it-works img {
     margin-bottom: 20px; }
+@-webkit-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0); }
+  40% {
+    -webkit-transform: translateY(-30px); }
+  60% {
+    -webkit-transform: translateY(-15px); } }
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0); }
+  40% {
+    transform: translateY(-30px); }
+  60% {
+    transform: translateY(-15px); } }
   section.how-it-works .text-red {
     color: #DC042A;
     font-weight: 600; }
