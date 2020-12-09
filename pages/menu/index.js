@@ -46,7 +46,6 @@ const Menu = ({ productCategories }) => {
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
     const [disableScrollEvent, setDisableScrollEvent] = useState(false);
     const [ varId, setVarId ] = useState({});
-    // const [ allCart, setAllCart ] = useState([]);
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
   
@@ -314,7 +313,6 @@ const Menu = ({ productCategories }) => {
         dispatch(addToCart(prevCart));
         dispatch(setTotalPrice());
         Cookies.set('setCart', JSON.stringify(prevCart));
-        setValue(value => ++value);
         // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
         setTimeout(() => {
             dispatch(loader());
@@ -325,13 +323,12 @@ const Menu = ({ productCategories }) => {
         setTimeout(() => {
             NotificationManager.success('Added successfully', '', 3000);
         }, 1500);
+        setValue(value => ++value);
     };
 
     const deleteProductCartHandler = (index, id) => {
-        console.log(selectedVariableProducts, 'varProd'); 
         var i = selectedVariableProducts.findIndex(selVar => selVar.productId === id);
         selectedVariableProducts.splice(i, 1);
-        console.log(i, 'theIndex');
         allCart.splice(index, 1);
         setProductCart(allCart);
         dispatch(addToCart(allCart));
@@ -362,8 +359,8 @@ const Menu = ({ productCategories }) => {
                             <div className="align-items-center justify-content-around flex-wrap">
                                 <p>{cart.product.product}</p>
                             </div>
-                            <p className="bold">{'₦'+cart.totalPrice}</p>
-                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} min="1" />
+                            <p className="bold">{'₦'+cart.totalPrice}</p> 
+                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' value={cart.quantity} defaultValue={cart.quantity}   min={'1'} />
                         </div>
                         <div className="col-md-2">
                             <button onClick={() => deleteProductCartHandler(index, cart.product.id)}>X</button>
@@ -477,12 +474,12 @@ const Menu = ({ productCategories }) => {
                                                 let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
                                                 let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
                                                 // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
-                                                let btn = <button onClick={() => addtoCartHandler(prod)} class="btn"><span class="text">Add to cart</span></button>;
+                                                let btn = <button onClick={() => addtoCartHandler(prod)} className="btn"><span className="text">Add to cart</span></button>;
                                                 if (prod.product_type === 'variable') {
                                                     productPrices = null;
                                                     productSalePrice = null;
                                                     // btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
-                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span class="text">Add to cart</span></button>;
+                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span className="text">Add to cart</span></button>;
                                                 }
 
                                                 return <>
@@ -586,8 +583,8 @@ const Menu = ({ productCategories }) => {
                                     </label>
                                 </div>
                                 <div className="d-flex align-items-center flex-wrap">
-                                    <button class="btn btn-grey mr-4"  onClick={() => Router.push('/cart')}><span class="text">View/Edit Cart</span></button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}><span class="text">Proceed to Checkout</span></button>
+                                    <button className="btn btn-grey mr-4"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
                                     {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
