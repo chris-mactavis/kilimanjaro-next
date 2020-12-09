@@ -85,7 +85,7 @@ const ChangePassword = () => {
                                             register={register({required: 'Password should be more than 8 characters',  minLength: 8})}
                                             error={errors.confirm_password && errors.confirm_password.message}
                                         />
-                                         {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Sends</span></button>}
+                                         {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Send</span></button>}
                                     </form>
                                 </div>
                             </div>

@@ -51,8 +51,8 @@ const Account = ({orders}) => {
                                     <p>Phone Number: <span>{user.phone}</span></p>
                                 </div>
                                 <div className="d-flex">
-                                    <Link href="/account/edit-account"><button className="btn mr-5">Edit</button></Link> 
-                                    <Link href="/account/change-password"><button className="btn">Change password</button></Link>
+                                    <Link href="/account/edit-account"><button className="btn mr-5"><span className="text">Edit</span></button></Link> 
+                                    <Link href="/account/change-password"><button className="btn"><span className="text">Change password</span></button></Link>
                                 </div>
                                 <h5 className="mt-5">My Orders</h5>
                                 {!orders.length > 0 && <p>You have not made any orders yet.</p>}
