@@ -977,8 +977,7 @@ section.products {
         section.products .cart .cart-product-list .product-list img {
           width: 100px;
           height: 100px;
-          object-fit: cover;
-          max-width: fit-content; }
+          object-fit: cover; }
         section.products .cart .cart-product-list .product-list input {
           width: 50px;
           padding: 3px;

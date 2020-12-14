@@ -578,15 +578,15 @@ const Menu = ({ productCategories }) => {
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
-                                <div className="d-flex">
+                                <div className="d-flex mb-xl-0 mb-3">
                                     <label className="contain">Save Basket
                                         <input type="checkbox" key={'save-basket'} />
                                         <span className="checkmark"></span>
                                     </label>
                                 </div>
                                 <div className="d-flex align-items-center flex-wrap">
-                                    <button className="btn mr-4"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
+                                    <button className="btn mr-4 mb-xl-0 mb-3"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
                                     {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
