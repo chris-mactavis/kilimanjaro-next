@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Cookies from 'js-cookie';
 
 import Layout from '../../components/Layout';
-import FormInput from '../../components/formInput/formInput';
+// import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import { storeAuth } from '../../store/actions/auth';
@@ -16,7 +16,8 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const ResetPassword = ({token, tokenIsValid, reason, code}) => {
-    console.log(tokenIsValid, reason, code);
+    const [passwordShown1, setPasswordShown1] = useState(false);
+    const [passwordShown2, setPasswordShown2] = useState(false);
 
     // const [ tokenIsValid, setTokenIsValid ] = useState(true);
     // const [ reason, setReason ] = useState('Token isValid');
@@ -51,6 +52,14 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
         reset({});
     };
 
+    const togglePasswordVisiblity1 = () => {
+        setPasswordShown1(passwordShown1 ? false : true);
+    };
+
+    const togglePasswordVisiblity2 = () => {
+        setPasswordShown2(passwordShown2 ? false : true);
+    };
+
     return (
         <>
             <Layout showSecFooter>
@@ -67,7 +76,7 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
                                     {tokenIsValid && <p className="mb-3"> Sorry! Now you can reset you password</p>} 
                                    { tokenIsValid
                                    ? <form onSubmit={handleSubmit(resetPasswordHandler)} className="signup-form">
-                                        <FormInput
+                                        {/* <FormInput
                                             type="password"
                                             name="password"
                                             placeholder="Password*"
@@ -82,7 +91,39 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
                                             label="Confirm Password"
                                             register={register({required: true})}
                                             error={errors.email && errors.email.message}
-                                        />
+                                        /> */}
+                                        <div>
+                                            <label htmlFor="Password">Password</label>
+                                            <div className="textbox">
+                                                <input
+                                                    type={passwordShown1 ? "text" : "password"}
+                                                        name="password"
+                                                        placeholder="Password*"
+                                                        label="Password"
+                                                    ref={register({ required: 'Password must be more than 8 characters ' })}
+                                                />
+                                                <i onClick={togglePasswordVisiblity1} className={passwordShown1 ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                                                <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                                            </div>
+                                            {errors.password && <p className="error">{errors.password.message}</p>}
+                                        </div>
+                                        {/* break */}
+                                        <div>
+                                            <label htmlFor="Password">Confirm Password</label>
+                                            <div className="textbox">
+                                                <input
+                                                    type={passwordShown2 ? "text" : "password"}
+                                                    name="confirm_password"
+                                                    placeholder="Confirm Password*"
+                                                    label="Confirm Password"
+                                                    ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
+                                                />
+                                                <i onClick={togglePasswordVisiblity2} className={passwordShown2 ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                                                <div className={`border ${errors.confirm_password ? "border-error" : null}`}></div>
+                                            </div>
+                                            {errors.confirm_password && <p className="error">{errors.confirm_password.message}</p>}
+                                        </div>
+                                        
                                         {loadingState ? <div className="text-center"><InlineLoading /></div> : <button className="btn w-100 btn-order mt-3"><span className="text">Reset Password</span></button>}
                                     </form>
                                     : <>

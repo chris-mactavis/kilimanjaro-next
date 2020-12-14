@@ -90,7 +90,7 @@ const ForgotPassword = () => {
                                     {
                                         showResetMessage && <p>
                                             <Link href="signup">
-                                                <button className="btn"> <span className="text"></span>Back to Login</button>
+                                                <button className="btn"> <span className="text">Back to Login</span></button>
                                             </Link>
                                         </p>
                                     }

@@ -17,6 +17,7 @@ import InlineLoading from '../../components/UI/inlineLoader';
 const Login = () => {
 
     const [ inlineLoader, setInlineLoader ] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
 
     // All store
     const loadingState = useSelector(state => state.loader.loading);
@@ -35,7 +36,7 @@ const Login = () => {
             user: {...data.profileObj, first_name: data.profileObj.familyName, last_name: data.profileObj.givenName}
         }
         dispatch(storeAuth(user));
-        NotificationManager.success('Account Registeration Successful', '', 3000);
+        NotificationManager.success('Logged in Successfully', '', 3000);
         let redirectTo = localStorage.getItem('checkoutToLogin');
         // checkoutCookies = String(checkoutCookies);
         console.log(redirectTo, 'true');
@@ -61,6 +62,10 @@ const Login = () => {
         reset({});
     };
 
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+
     return (
         <>
             <div className="col-md-5">
@@ -73,18 +78,22 @@ const Login = () => {
                         placeholder="Example@email.com*"
                         label="Email Address"
                         register={register ({ required : 'Please input a valid email address' })}
-                        error={errors.email &&errors.email.message } 
+                        error={errors.email && errors.email.message } 
                     />
                     <div>
-                    <FormInput
-                        type="password"
-                        name="password"
-                        placeholder="Password*"
-                        label="Password"
-                        register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
-                        error={errors.password && errors.password.message} 
-                    />
-                    {/* <p className="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i> Show password</p> */}
+                        <label htmlFor="Password">Password</label>
+                        <div className="textbox">
+                            <input
+                                 type={passwordShown ? "text" : "password"}
+                                 name="password"
+                                 placeholder="Password*"
+                                 label="Password"
+                                 ref={register ({required : 'Password must be more than 8 characters', minLength: 8})}
+                            />
+                            <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                            <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                        </div>
+                        {errors.password && <p className="error">{errors.password.message}</p>}
                     </div>
 
                     <div className="d-flex align-items-center justify-content-between flex-wrap remember-account">
