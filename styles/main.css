@@ -975,7 +975,10 @@ section.products {
             flex-direction: column;
             align-items: baseline; } }
         section.products .cart .cart-product-list .product-list img {
-          max-width: 80%; }
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          max-width: fit-content; }
         section.products .cart .cart-product-list .product-list input {
           width: 50px;
           padding: 3px;
@@ -1171,7 +1174,10 @@ section.shopping-cart {
         color: #383838;
         margin-right: 5px; }
     section.shopping-cart .order-review img {
-      max-width: 100px; }
+      max-width: 100%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover; }
     section.shopping-cart .order-review .product-name {
       text-transform: uppercase;
       font-weight: 600; }
