@@ -382,6 +382,12 @@ form {
     font-size: 15px; }
   form.signup-form .red-colored {
     color: #DC042A; }
+  form.signup-form i {
+    position: absolute;
+    right: 15px;
+    top: 25%;
+    z-index: 1;
+    color: #DC042A; }
   form .remember-account {
     margin-bottom: 15px;
     /* Hide the browser's default checkbox */
@@ -531,7 +537,8 @@ form {
   font-size: 15px;
   text-transform: uppercase;
   padding: 8px 16px;
-  background-color: #DC042A; }
+  background-color: #DC042A;
+  cursor: pointer; }
   .btn > .text {
     position: relative;
     color: #fff;
@@ -839,7 +846,9 @@ section.products {
     section.products .single-product p {
       margin-bottom: 0; }
     section.products .single-product img {
-      max-width: 70%; }
+      width: 150px;
+      object-fit: cover;
+      height: 150px; }
     section.products .single-product .sale {
       color: #DC042A; }
     section.products .single-product .product-name {

@@ -486,7 +486,9 @@ const Menu = ({ productCategories }) => {
                                                     <div key={prod.id} className="single-product">
                                                         <div className="row">
                                                             <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
-                                                                <img className="img-fluid" src={prod.image_url} alt="" />
+                                                                <div>
+                                                                    <img className="img-fluid" src={prod.image_url} alt="" />
+                                                                </div>
                                                             </div>
                                                             <div className="col-md-8 pl-sm-0">
                                                                 <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
@@ -583,7 +585,7 @@ const Menu = ({ productCategories }) => {
                                     </label>
                                 </div>
                                 <div className="d-flex align-items-center flex-wrap">
-                                    <button className="btn btn-grey mr-4"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
+                                    <button className="btn mr-4"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
                                     {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}

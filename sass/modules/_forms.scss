@@ -190,6 +190,15 @@ form {
         .red-colored {
             color: $primary;
         }
+
+
+        i {
+            position: absolute;
+            right: 15px;
+            top: 25%;
+            z-index: 1;
+            color: $primary;
+        }
     }
 
     .remember-account {

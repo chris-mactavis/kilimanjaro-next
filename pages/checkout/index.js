@@ -25,7 +25,12 @@ const Checkout = () => {
     //  All store
     const allCart = useSelector(state => state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
-    const loggedIn = useSelector(state => state.auth.loggedIn); 
+    const loggedIn = useSelector(state => state.auth.loggedIn);
+    const loadingState = useSelector(state => state.loader.loading);
+    const isLoggedIn = useSelector(state => state.auth.loggedIn);
+    let user = useSelector(state => state.auth.user) || {};
+    user = typeof user === 'object' ? user : JSON.parse(user);
+    console.log(user);
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -36,15 +41,11 @@ const Checkout = () => {
     const [ deliveryPrice, setDeliveryPrice ] = useState(0);
     const [ total, setTotal ] = useState(allTotalPrice)
     const [value, setValue] = useState(0);
+    const [passwordShown, setPasswordShown] = useState(false);
 
     const [localCart, setLocalCart] = useState([]);
 
     const dispatch = useDispatch();
-
-    const loadingState = useSelector(state => state.loader.loading);
-    const isLoggedIn = useSelector(state => state.auth.loggedIn);
-    let user = useSelector(state => state.auth.user) || {};
-    user = typeof user === 'object' ? user : JSON.parse(user);
     
     useEffect(() => {
         const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
@@ -325,6 +326,10 @@ const Checkout = () => {
         Router.push('/signup');
     }
 
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+
     return (
         <>
             <Layout>
@@ -432,14 +437,21 @@ const Checkout = () => {
                                                     })}
                                                     error={errors.email && errors.email.message}
                                                 />
-                                                <FormInput
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder="Password*"
-                                                    label="Password"
-                                                    register={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
-                                                    error={errors.password && errors.password.message}
-                                                />
+                                                <div>
+                                                    <label htmlFor="Password">Password</label>
+                                                    <div className="textbox">
+                                                        <input
+                                                            type={passwordShown ? "text" : "password"}
+                                                            name="password"
+                                                            placeholder="Password*"
+                                                            label="Password"
+                                                            ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
+                                                        />
+                                                        <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                                                        <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                                                    </div>
+                                                    {errors.password && <p className="error">{errors.password.message}</p>}
+                                                </div>
                                                 {paymentOption === 'pickup' && <FormInput
                                                     type="number"
                                                     name="phone"
@@ -455,9 +467,10 @@ const Checkout = () => {
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
-                                                label="Mobile Numbers"
+                                                label="Mobile Number"
                                                 register={register({ required: 'This field is required.' })}
                                                 error={errors.phone && errors.phone.message}
+                                                defaultValue={user && user.phone}
                                             />}
 
                                             {paymentOption === 'delivery' && <div>
@@ -477,7 +490,7 @@ const Checkout = () => {
                                                                     placeholder: 'Manually type your street/estate address',
                                                                     className: 'location-search-input',
                                                                 })}
-                                                                register={register({ required: 'This field is required.' })}
+                                                                register={register({ required: 'This field is required' })}
                                                                 error={errors.streetAddress && errors.streetAddress.message}
                                                             />
                                                             <div className="autocomplete-dropdown-container">
@@ -510,7 +523,7 @@ const Checkout = () => {
                                                     placeholder="House Number*"
                                                     label="House Number"
                                                     register={register({ required: true })}
-                                                    error={errors.houseNumber && 'This field is required.'}
+                                                    error={errors.houseNumber && 'This field is required'}
                                                 />
                                             </div>}
 
