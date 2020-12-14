@@ -624,7 +624,10 @@ section {
                     }
 
                     img { 
-                        max-width: 80%;
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                        max-width: fit-content;
                     }
 
                     input {
@@ -825,7 +828,10 @@ section {
             }
 
             img {
-                max-width: 100px;
+                max-width: 100%;
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
             }
 
             .product-name {
