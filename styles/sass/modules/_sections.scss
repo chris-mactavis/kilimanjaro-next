@@ -52,6 +52,102 @@ section {
             @media only screen and (max-width: $mobile_width) {
                 padding: 30px 0;
             }
+
+            .title {
+                width: 100%;
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 70px;
+          
+                .block {
+                  width: 0%;
+                  height: inherit;
+                  background: $primary;
+                  position: absolute;
+                  animation: mainBlock 2s cubic-bezier(.74, .06, .4, .92) forwards;
+                  display: flex;
+                }
+          
+                h1 {
+                  -webkit-animation: mainFadeIn 1s forwards;
+                  -o-animation: mainFadeIn 1s forwards;
+                  animation: mainFadeIn 1s forwards;
+                  animation-delay: 1.3s;
+                  opacity: 0;
+                  display: flex;
+                  align-items: baseline;
+                  position: relative;
+                  margin: 0;
+          
+                  span {
+                    width:0px;
+                    height: 0px;
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius: 50%;
+          
+                    background: $primary;
+                    -webkit-animation: load 0.6s cubic-bezier(.74, .06, .4, .92) forwards;
+                    animation: popIn 0.8s cubic-bezier(.74, .06, .4, .92) forwards;
+                    animation-delay: 2s;
+                    margin-left: 5px;
+                    margin-top: -10px;
+                    position: absolute;
+                    bottom: 13px;
+                    right: -12px;
+          
+                  }
+                }
+            }
+
+            .role {
+                width: 100%;
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 70px;
+                // margin-top: -10px;
+          
+                .block {
+                  width: 0%;
+                  height: inherit;
+                  background: $primary;
+                  position: absolute;
+                  animation: secBlock 1s cubic-bezier(.74, .06, .4, .92) forwards;
+                  animation-delay: 1.5s;
+                  display: flex;
+                }
+          
+                h1 {
+                  animation: secFadeIn 1s forwards;
+                  animation-delay: 2s;
+                  opacity: 0;
+                  display: flex;
+                  align-items: baseline;
+                  position: relative;
+                  margin: 0;
+
+                  span {
+                    width:0px;
+                    height: 0px;
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius: 50%;
+          
+                    background: $primary;
+                    -webkit-animation: load 0.6s cubic-bezier(.74, .06, .4, .92) forwards;
+                    animation: popIn 2s cubic-bezier(.74, .06, .4, .92) forwards;
+                    animation-delay: 2s;
+                    margin-left: 5px;
+                    margin-top: -10px;
+                    position: absolute;
+                    bottom: 13px;
+                    right: -12px;
+          
+                  }
+                }
+              }
         }
 
         .left-banner-image {
@@ -62,6 +158,8 @@ section {
             top: 0;
             bottom: 0;
             z-index: -1;
+            animation: moveInDown 2s ease-out;
+            
 
             @media only screen and (max-width: $wide_width) {
                 display: none;
@@ -76,6 +174,7 @@ section {
             top: 0;
             bottom: 0;
             z-index: -1;
+            animation: moveInDown 2s ease-out;
 
             @media only screen and (max-width: $wide_width) {
                 display: none;
@@ -213,10 +312,37 @@ section {
         }
 
         .app-img {
-            max-width: 450px;
             position: absolute;
+        }
+
+        .app-img-1 {
+            max-width: 269px;
             top: -100%;
-            right: 0;
+            left: 20px;
+        }
+
+        .animate-1 {
+            animation: moveInRight1 2s ease-out;
+            -moz-animation: moveInLeft 2s ease-out;
+            -o-animation: moveInLeft 2s ease-out;
+            -ms-animation: moveInLeft 2s ease-out;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .app-img-2 {
+            max-width: 269px;
+            top: -107%;
+            right: 0px;
+        }
+
+        .animate-2 {
+            animation: moveInRight2 2s ease-out;
+            -moz-animation: moveInLeft 2s ease-out;
+            -o-animation: moveInLeft 2s ease-out;
+            -ms-animation: moveInLeft 2s ease-out;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
     }
 

@@ -22,6 +22,15 @@ import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
 
 const Checkout = () => {
 
+    const { register, handleSubmit, errors, reset } = useForm();
+    const {
+        register: register2,
+        errors: errors2,
+        handleSubmit: handleSubmit2,
+        reset: reset2
+      } = useForm({});
+    
+
     //  All store
     const allCart = useSelector(state => state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
@@ -30,7 +39,7 @@ const Checkout = () => {
     const isLoggedIn = useSelector(state => state.auth.loggedIn);
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
-    console.log(user);
+    // console.log(user);
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -84,7 +93,6 @@ const Checkout = () => {
         } 
     }, []);
 
-    const { register, handleSubmit, errors, reset } = useForm();
 
     const billingInfoHandler = async data => {
        dispatch(loader());
@@ -330,6 +338,10 @@ const Checkout = () => {
         setPasswordShown(passwordShown ? false : true);
     };
 
+    const couponApplication = data => {
+        console.log(data);
+    };
+
     return (
         <>
             <Layout>
@@ -379,7 +391,7 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <form onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
+                                <form key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
                                     <div className="row">
                                         <div className="col-md-7">
                                             {/* Payment Method */}
@@ -568,6 +580,14 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </form>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <form key={2} onSubmit={handleSubmit2(couponApplication)} className="signup-form coupon-form">
+                                            <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
+                                            <button className="btn"><span className="text">Apply Coupon</span></button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>

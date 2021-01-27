@@ -19,7 +19,8 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const Menu = ({ productCategories }) => {
+const Menu = ({ productCategories, couponData }) => {
+    console.log(couponData);
 
     //  All Store
     const dispatch = useDispatch();
@@ -487,7 +488,7 @@ const Menu = ({ productCategories }) => {
                                                         <div className="row">
                                                             <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
                                                                 <div>
-                                                                    <img className="img-fluid" src={prod.image_url} alt="" />
+                                                                    <img className="img-fluid" src={prod.image_url} alt={prod.product} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-8 pl-sm-0">
@@ -643,11 +644,15 @@ Menu.getInitialProps = async ({ req, res }) => {
 
 
     let restaurantId = selRestaurant.id;
+    
 
     try {
         const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
+        const { data: { couponData } } = await axiosInstance.get(`product-coupons?restaurant_id=${restaurantId}`);
+        console.log(couponData);
         const productCategories = data.filter(cat => cat.category_products.length > 0);
-        return { productCategories};
+
+        return {productCategories, couponData};
     } catch (error) {
         console.log(error)
         return {productCategories: null} ;

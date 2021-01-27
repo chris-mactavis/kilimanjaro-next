@@ -160,8 +160,8 @@ const ShoppingCart = () => {
                                         <div className="col-md-8">
                                             <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
                                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                    <label className="review">Coupon</label>
-                                                    <input type="text" name="coupon" id="coupon" />
+                                                    {/* <label className="review">Coupon</label>
+                                                    <input type="text" name="coupon" id="coupon" /> */}
                                                 </div>
 
                                                 {/* <label>
