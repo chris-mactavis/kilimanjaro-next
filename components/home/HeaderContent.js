@@ -37,15 +37,15 @@ const HeaderContent = ({cities}) => {
         Cookies.remove('setCart');
         Cookies.remove('orderItem');
         localStorage.removeItem('checkoutToLogin');
-        Router.push('/menu');
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
+        Router.push('/menu');
         setTimeout(() => {
             dispatch(loader());
-        }, 1000)
+        }, 1500)
     }
-
+ 
 
     return (
       <>

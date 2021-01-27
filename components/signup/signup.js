@@ -18,6 +18,8 @@ import InlineLoading from '../../components/UI/inlineLoader';
 const Signup = () => {
 
     const [ inlineLoader, setInlineLoader ] = useState(false);
+    const [passwordShown, setPasswordShown] = useState(false);
+
 
     // All store
     const loadingState = useSelector(state => state.loader.loading);
@@ -37,7 +39,7 @@ const Signup = () => {
         }
         dispatch(storeAuth(user));
         NotificationManager.success('Account Registeration Successful', '', 3000);
-        Router.push('/');
+        Router.push('/account');
     }
 
     const signupHandler = async (data) =>  {
@@ -79,6 +81,10 @@ const Signup = () => {
 
         }
     }
+
+    const togglePasswordVisiblity = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
 
     return (
         <>
@@ -125,15 +131,30 @@ const Signup = () => {
                         })}
                         error={errors.email && errors.email.message} 
                     />
-                    <FormInput
+                    {/* <FormInput
                         type="password"
                         name="password"
                         placeholder="Password*"
                         label="Password"
                         register={register ({required : 'Password must be more than 8 characters', minLength: 8})}
                         error={errors.password && errors.password.message} 
-                    />
-                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3">Register</button>}
+                    /> */}
+                     <div>
+                        <label htmlFor="Password">Password</label>
+                        <div className="textbox">
+                            <input
+                                 type={passwordShown ? "text" : "password"}
+                                 name="password"
+                                 placeholder="Password*"
+                                 label="Password"
+                                 ref={register ({required : 'Password must be more than 8 characters', minLength: 8})}
+                            />
+                            <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                            <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                        </div>
+                        {errors.password && <p className="error">{errors.password.message}</p>}
+                    </div>
+                    {loadingState && inlineLoader ? <InlineLoading />  :<button className="btn btn-login mt-3"><span className="text">Register</span></button>}
                 </form>
                 <p className="mt-3">Or sign up with</p>
                 <div className="other-signin-option">

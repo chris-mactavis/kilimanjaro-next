@@ -34,7 +34,7 @@ const StoreLocation = ({storeLocations}) => {
                                        <div className="d-flex mt-5 align-items-center justify-content-between flex-wrap">
                                             <h5>{storeLocation.state}</h5>
                                             <button onClick={() => viewOuletHandler(storeLocation.id)} className="btn" data-toggle="modal" data-target="#myModal">
-                                                View Outlets
+                                               <span className="text">View Outlets</span>
                                             </button>
                                        </div>
                                    </div>

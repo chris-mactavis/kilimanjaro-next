@@ -2,7 +2,7 @@ nav.navbar {
   padding: 15px 70px;
   background: $primary;
   width: 100%;
-  z-index: 2;
+  z-index: 4;
 
   @media only screen and (max-width: $tablet_width) {
     padding: 15px 20px;
@@ -38,6 +38,26 @@ nav.navbar {
         // font-weight: $bold;
         text-transform: uppercase;
       }
+
+    }
+
+    li.nav-hover {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        border-bottom: 1px solid #fff;
+        transition: all 0.4s;
+      }
+
+      &:hover::before {
+        width: 100%;
+      }
+
     }
 
     .nav-bg-white {

@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import ScrollReveal from 'scrollreveal';
 
 
 import Layout from '../components/Layout';
@@ -10,13 +12,20 @@ import Orders from '../components/orders/orders';
 import axiosInstance from '../config/axios';
 
 
-const Home = ({cities}) => {
-  const hasToken = false;
+const Home = ({ cities }) => {
 
   useEffect(() => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));
-  }, []); 
-  
+  }, []);
+
+  useEffect(() => {
+    window.$ = $;
+    $(window).ready(function () {
+      const $el = $("html, body");
+      $el.css({ 'overflow-x': 'hidden' });
+    });
+  }, []);
+
   return (
     <>
       <Layout showSecFooter>
@@ -24,11 +33,8 @@ const Home = ({cities}) => {
           <title>Kilimanjaro</title>
         </Head>
         <HeaderContent cities={cities} />
-        {hasToken && <Orders  />}
-        {/* <Orders  /> */}
-        <section className="coupon-products">
-          {/* <CouponProduct /> */}
-        </section>
+        <Orders />
+        <br />
         <section className="how-it-works">
           <div className="container">
             <div className="row">
@@ -37,20 +43,20 @@ const Home = ({cities}) => {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-4 text-center">
-                <img className="w-75" src="/images/icon/location-icon.svg" alt=""/>
+              <div className="col-md-4 text-center bounce-hover">
+                <img className="w-75 headline bounce" src="/images/icon/location-icon.svg" alt="" />
                 <p className="text-red">Select nearest location</p>
                 <p>Select the state and restaurant closest to your pick-up/delivery location.</p>
               </div>
-              <div className="col-md-4 text-center">
-                <img className="w-75" src="/images/icon/menu-icon.svg" alt="" />
+              <div className="col-md-4 text-center bounce-hover">
+                <img className="w-75 bounce" src="/images/icon/menu-icon.svg" alt="" />
                 <p className="text-red">Choose your meal</p>
-                <p>Place your order by choosing from the numerous delicacies on our menu</p>
+                <p>Place your order by choosing from the numerous delicacies on our menu.</p>
               </div>
-              <div className="col-md-4 text-center">
-                <img className="w-75" src="/images/icon/delivery-pickup.svg" alt="" />
+              <div className="col-md-4 text-center bounce-hover">
+                <img className="w-75 bounce" src="/images/icon/delivery-pickup.svg" alt="" />
                 <p className="text-red">Enjoy your meal</p>
-                <p>Pick up your tasty meal in store or have it delivered to your doorstep</p>
+                <p>Pick up your tasty meal in store or have it delivered to your doorstep.</p>
               </div>
             </div>
           </div>
@@ -60,14 +66,14 @@ const Home = ({cities}) => {
   )
 }
 
-Home.getInitialProps = async() => {
+Home.getInitialProps = async () => {
   try {
-      const {data: {data}} = await axiosInstance.get('cities');
-      return {cities: data};
-    
+    const { data: { data } } = await axiosInstance.get('cities');
+    return { cities: data };
+
   } catch (error) {
-      console.log(error)
-      return {cities: {}};
+    console.log(error)
+    return { cities: {} };
   }
 }
 

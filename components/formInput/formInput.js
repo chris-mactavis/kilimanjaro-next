@@ -1,6 +1,6 @@
 
-
 const FormInput = ({label, error, register, ...inputProps}) => {
+
     return (
         <>
             <label htmlFor={label}>{label}</label>

@@ -15,6 +15,10 @@ import { auth } from '../../components/hoc/auth';
 
 const Account = ({orders}) => {
 
+    useEffect(() => {
+        Cookies.set('orders', JSON.stringify(orders));
+    }, []);
+
     const [value, setValue] = useState(0);
 
     useEffect(() => {setValue(value => ++value);}, []);
@@ -47,8 +51,8 @@ const Account = ({orders}) => {
                                     <p>Phone Number: <span>{user.phone}</span></p>
                                 </div>
                                 <div className="d-flex">
-                                    <Link href="/account/edit-account"><button className="btn mr-5">Edit</button></Link> 
-                                    <Link href="/account/change-password"><button className="btn">Change password</button></Link>
+                                    <Link href="/account/edit-account"><button className="btn mr-5"><span className="text">Edit</span></button></Link> 
+                                    <Link href="/account/change-password"><button className="btn"><span className="text">Change password</span></button></Link>
                                 </div>
                                 <h5 className="mt-5">My Orders</h5>
                                 {!orders.length > 0 && <p>You have not made any orders yet.</p>}
@@ -76,9 +80,9 @@ const Account = ({orders}) => {
                                                 return <Tr key={order.id}>
                                                     <Td>{order.order_number}</Td>
                                                     <Td>{`${day} ${month} ${year}`}</Td>
-                                                    <Td>Processing</Td>
+                                                    <Td>{order.status}</Td>
                                                     <Td>₦{order.total}</Td>
-                                                    <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3">View</button></Td>
+                                                    <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3"><span className="text">View</span></button></Td>
                                                 </Tr>
                                             })}
                                              {/* <Tr>

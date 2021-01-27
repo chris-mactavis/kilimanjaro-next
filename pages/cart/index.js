@@ -23,7 +23,6 @@ const ShoppingCart = () => {
         { url: '/images/fanta.svg', id: 2 },
         { url: '/images/coke.svg', id: 3 }
     ];
-    const [value, setValue] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -33,10 +32,10 @@ const ShoppingCart = () => {
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
     const varPrice = useSelector(state => state.shop.variablePrice);
     const loadingState = useSelector(state => state.loader.loading);
-    console.log(allTotalPrice);
-   
 
     const [localCart, setLocalCart] = useState([]);
+    const [value, setValue] = useState(0);
+    const [ activeUpdateCart, setActiveUpdateCart ] = useState(false);
     
     
     // Displaying the total price with variable products
@@ -71,11 +70,10 @@ const ShoppingCart = () => {
     }, []); 
     
     const updateQuantityChangeHandle = (e, cartIndex) => {
-        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price
-        console.log(localCart[cartIndex].salePrice);
+        setActiveUpdateCart(true);
+        const price = localCart[cartIndex].salePrice || localCart[cartIndex].price;
         localCart[cartIndex].quantity = +e.target.value;
         localCart[cartIndex].totalPrice = +e.target.value * price;
-
         setLocalCart(localCart);
     }
 
@@ -99,7 +97,7 @@ const ShoppingCart = () => {
         setTimeout(() => {
             NotificationManager.success('Cart updated successfully', '', 3000);
         }, 1500);
-        console.log('hello');
+        setActiveUpdateCart(false);
     }
 
     let cartDisplay = <p className="text-center">Your cart is currently empty</p>;
@@ -107,7 +105,6 @@ const ShoppingCart = () => {
         cartDisplay = <>
             {localCart.map((cart, index) => {
                 let price = cart.salePrice ? +cart.salePrice : +cart.price;
-                console.log(cart);
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
@@ -115,9 +112,9 @@ const ShoppingCart = () => {
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
                         {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}
-                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' />
+                        <input onChange={(e) => updateQuantityChangeHandle(e, index)} defaultValue={cart.quantity} type='number' min="1"/>
                     </div>
-                    <p>{'₦' + price}</p>
+                    <p>{'₦' + cart.totalPrice}</p>
                     {/* {cart.product.sale_price ? <p>{'₦' + cart.product.sale_price}</p> : <p>{'₦' + cart.product.price}</p>} */}
                 </div>
             })}
@@ -138,9 +135,9 @@ const ShoppingCart = () => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="empty-cart-container">
-                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p className=""><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty.</p>
-                                        <Link href="/"><button className="btn">Return to hompage</button></Link>
+                                        <Link href="/"><button class="btn"><span className="text">Return to homepage</span></button></Link>
                                     </div>
                                 </div>
                             </div>
@@ -156,8 +153,8 @@ const ShoppingCart = () => {
                                     {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
                                     <h4>Review Your Order</h4>
                                     {cartDisplay}
-                                    <div className="text-right mt-4 mb-3">
-                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={!localCart.length > 0 ? "btn disabled" : "btn"}>Update Cart</button>}
+                                    <div className="d-flex justify-content-end mt-4 mb-3">
+                                        {loadingState ? <InlineLoading /> : <button onClick={updateCartHander} className={activeUpdateCart ? "btn" : "btn disabled"}><span className="text">Update Cart</span></button>}
                                     </div>
                                     <div className="row">
                                         <div className="col-md-8">
@@ -194,7 +191,8 @@ const ShoppingCart = () => {
                                                     <p>{'₦' + newTotalPrice}</p>
                                                 </div>
                                             </div>
-                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button>
+                                            {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button> */}
+                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
                                         </div>
                                     </div>
                                 </div>

@@ -19,9 +19,15 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const Menu = ({ productCategories, show }) => {
+const Menu = ({ productCategories }) => {
 
-    console.log(show, 'no restaurant');
+    //  All Store
+    const dispatch = useDispatch();
+    const restaurant = useSelector(state => state.shop.selectedRestaurant);
+    const allRestaurants = useSelector(state => state.shop.allRestaurants);
+    const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
+    const allTotalPrice = useSelector(state => state.shop.totalPrice);
+    const loadingState = useSelector(state => state.loader.loading);
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -39,21 +45,10 @@ const Menu = ({ productCategories, show }) => {
     const [ quantitiesArray, setQuantitiesArray] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
     const [disableScrollEvent, setDisableScrollEvent] = useState(false);
-    // const [allProducts, setAllProducts] = useState([]);
+    const [ varId, setVarId ] = useState({});
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
-
-    // const { register, handleSubmit } = useForm();
-
   
-    //  All Store
-    const dispatch = useDispatch();
-    const restaurant = useSelector(state => state.shop.selectedRestaurant);
-    const allRestaurants = useSelector(state => state.shop.allRestaurants);
-    const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
-    const allTotalPrice = useSelector(state => state.shop.totalPrice);
-    const loadingState = useSelector(state => state.loader.loading);
-   
     useEffect(() => {
         const cities = localStorage.getItem('setAllCities') ? JSON.parse(localStorage.getItem('setAllCities')) : [];
         setAllCities(cities);
@@ -72,6 +67,28 @@ const Menu = ({ productCategories, show }) => {
                 })
             });
         }
+
+        (function($){
+         
+        var elements = $(".category-single");
+      
+        for (var i = 0, len = elements.length; i < len; i++) {
+           
+               elements[i].addEventListener("click", function() {
+       
+                var firstEl = $(this).find("a")[0];
+                firstEl.addEventListener("click", function(e) { e.preventDefault() });
+                $(this).find(".subcats").slideToggle();
+              
+              
+          });
+        }
+      
+          
+      
+        })(jQuery);
+      
+    
     }, [])
 
     useEffect(() => {
@@ -117,20 +134,30 @@ const Menu = ({ productCategories, show }) => {
     }, []);
 
     useEffect(() => {
+        window.$ = $;
+            $(window).ready(function () {
+                const $el = $("html, body");
+                $el.css({'overflow-x': 'unset'});
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            });
+    }, []);
 
+    useEffect(() => {
+    
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('#category-top');
-                const isPositionFixed = ($el.css('position') === 'fixed');
+                const isPositionFixed = ($el.css('position') === 'sticky');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
-                    $el.css({'position': 'fixed', 'top': '0px'});
+                    $el.css({'position': 'sticky', 'top': '79px'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
-                    $el.css({'position': 'static', 'top': '0px'});
+                    $el.css({'position': 'static', 'top': '0'});
                 }
             })
         }
-    })
+    }, []);
 
     const toggleActiveClass = () => {
         changeClass({
@@ -203,13 +230,17 @@ const Menu = ({ productCategories, show }) => {
             }
             setRestaurantCategories(productCategories);
             dispatch(loader());
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            setTimeout(() => setCategoryActiveName('Combo Deals'), 500);
         } catch (error) {
+            dispatch(loader());
             console.log(error);
         }
+        Cookies.set('selectedRestaurant', JSON.stringify(value));
         setValue(value => ++value);
     };
 
-    // let quantitySelected = 1;
     const handleQuantityChange = (e, prodId) => {
         // quantitySelected = e.target.value;
         const prevProdQtyIndex = quantitiesArray.findIndex(x => x.productId === prodId);
@@ -221,7 +252,6 @@ const Menu = ({ productCategories, show }) => {
             const newQuantityArray = {productId: prodId, quantity: +e.target.value};
             quantitiesArray.push(newQuantityArray);
         }
-        // console.log(quantitiesArray);
         
         setQuantitiesArray(quantitiesArray);
     };
@@ -239,7 +269,6 @@ const Menu = ({ productCategories, show }) => {
         if (prodInCartIndex >= 0) {
 
             const prodInCart = prevCart[prodInCartIndex];
-            console.log(prodInCart);
 
             if (productType === 'variable') {
                 const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
@@ -250,7 +279,6 @@ const Menu = ({ productCategories, show }) => {
                     salePrice: productVariation.salePrice || productVariation.price,
                     totalPrice: +prodInCart.totalPrice + ((productVariation.salePrice || productVariation.price) * parseInt(quantitySelected))
                 }
-                // return;
             } else {
                 const newTotalPrice = prod.sale_price ? +quantitySelected * parseInt(prod.sale_price) : +quantitySelected *  parseInt(prod.price);
                 prevCart[prodInCartIndex] = {
@@ -281,11 +309,9 @@ const Menu = ({ productCategories, show }) => {
             }
             
         }
-        
         setProductCart(prevCart);
         dispatch(addToCart(prevCart));
         dispatch(setTotalPrice());
-
         Cookies.set('setCart', JSON.stringify(prevCart));
         // dispatch(setTotalPrice()) ? Cookies.set('totalPrice', JSON.stringify(allTotalPrice)) : null;
         setTimeout(() => {
@@ -297,9 +323,12 @@ const Menu = ({ productCategories, show }) => {
         setTimeout(() => {
             NotificationManager.success('Added successfully', '', 3000);
         }, 1500);
+        setValue(value => ++value);
     };
 
-    const deleteProductCartHandler = (index) => {
+    const deleteProductCartHandler = (index, id) => {
+        var i = selectedVariableProducts.findIndex(selVar => selVar.productId === id);
+        selectedVariableProducts.splice(i, 1);
         allCart.splice(index, 1);
         setProductCart(allCart);
         dispatch(addToCart(allCart));
@@ -315,28 +344,51 @@ const Menu = ({ productCategories, show }) => {
         {allCart.map((cart, index) => {
             return <>
                 <div key={cart.product.id} className="product-list">
-                    <img className="img-fluid" src={cart.product.image_url} alt="" />
+                    {/* <img className="img-fluid" src={cart.product.image_url} alt="" />
                     <p>{cart.product.product}</p>
-                    {/* <input type='number' pattern='[0-9]{0,5}' /> */}
-                    <p>{cart.quantity}</p>
-                    {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>}
-                    <button onClick={() => deleteProductCartHandler(index)}>X</button>
+                    <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} /> */}
+                    {/* <p>{cart.quantity}</p> */}
+                    {/* {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>} */}
+                    {/* <p className="bold">{'₦'+cart.totalPrice}</p>
+                    <button onClick={() => deleteProductCartHandler(index)}>X</button> */}
+                    <div className="row text-md-left text-center">
+                        <div className="col-md-3">
+                            <img className="img-fluid" src={cart.product.image_url} alt="" />
+                        </div>
+                        <div className="col-md-6">
+                            <div className="align-items-center justify-content-around flex-wrap">
+                                <p>{cart.product.product}</p>
+                            </div>
+                            <p className="bold">{'₦'+cart.totalPrice}</p> 
+                            <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' value={cart.quantity} defaultValue={cart.quantity}   min={'1'} />
+                        </div>
+                        <div className="col-md-2">
+                            <button onClick={() => deleteProductCartHandler(index, cart.product.id)}>X</button>
+                        </div>
+                    </div>
                 </div>
             </>
         })} 
         </>
     };
 
-    let variationButton = ['btn', 'disabled'];
-
-    if (addVariationClass.active) {
-        variationButton.pop();
+    const updateQuantityChangeHandle = (e, cartIndex) => {
+        const price = allCart[cartIndex].salePrice || allCart[cartIndex].price;
+        allCart[cartIndex].quantity = +e.target.value;
+        allCart[cartIndex].totalPrice = +e.target.value * price;
+        setProductCart(allCart);
+        dispatch(addToCart(allCart));
+        dispatch(setTotalPrice());
+        Cookies.set('setCart', JSON.stringify(allCart));
+        setValue(value => ++value);
     }
 
     const handleVariationChange = (value, prod) =>  {
-        // if (prod.id === )
+        // remove if this gives problem
+        // selectedVariableProducts.pop();
+        // console.log(selectedVariableProducts, 'array');
         changeVariationClass({
-            active: !addClass.active
+            active: true
         });
         const tempCart = {
             productId: prod.id,
@@ -347,21 +399,18 @@ const Menu = ({ productCategories, show }) => {
             totalPrice: null,
             product_variation: value.name
         }
+        setVarId(tempCart);
         selectedVariableProducts.push(tempCart);
         setSelectedVariableProducts(selectedVariableProducts);
-        // return;
-
-        // dispatch(updateVariablePrice(null));
-        // const newValue = {...value, totalVariablePrice: parseInt(value.value) * quantitySelected}
-        // dispatch(updateVariablePrice(newValue));
-        // Cookies.set('variable', JSON.stringify(newValue));
-        // console.log(newValue);
     } 
+
 
     const gotoCartHandler = () => {
         Router.push('/cart');
     };
 
+    
+        
 
     return (
         <>
@@ -418,30 +467,35 @@ const Menu = ({ productCategories, show }) => {
                                                         variablePrice = v.sale_price || v.price;
                                                         return { ...v, value: variablePrice , label: v.name + " — " + "₦" + variablePrice }
                                                     });
-                                                }
+                                                };
+
+                                                const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
 
                                                 let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
                                                 let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
-                                                let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
-                                                if (prod.product_type === 'variable'){
+                                                // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
+                                                let btn = <button onClick={() => addtoCartHandler(prod)} className="btn"><span className="text">Add to cart</span></button>;
+                                                if (prod.product_type === 'variable') {
                                                     productPrices = null;
                                                     productSalePrice = null;
-                                                    // btn = <button onClick={() => addtoCartHandler(prod)} className={variationButton.join(' ')}>Add to cart</button>;
+                                                    // btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
+                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span className="text">Add to cart</span></button>;
                                                 }
-
 
                                                 return <>
                                                     <div key={prod.id} className="single-product">
                                                         <div className="row">
                                                             <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
-                                                                <img className="img-fluid" src={prod.image_url} alt="" />
+                                                                <div>
+                                                                    <img className="img-fluid" src={prod.image_url} alt="" />
+                                                                </div>
                                                             </div>
                                                             <div className="col-md-8 pl-sm-0">
                                                                 <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
                                                                     <p className="product-name">{prod.product}</p>
                                                                     <div className="d-flex">
                                                                         <p className="product-qty">Quantity</p>
-                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' />
+                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' min="1" />
                                                                     </div>
                                                                 </div>
                                                                 <p className="product-description">{prod.short_description}</p>
@@ -450,7 +504,7 @@ const Menu = ({ productCategories, show }) => {
                                                                     prod.product_type === 'variable' &&
                                                                     <>
                                                                         <form className="select-state mt-4">
-                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100 variation" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
                                                                         </form>
                                                                         <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
                                                                             {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
@@ -512,35 +566,37 @@ const Menu = ({ productCategories, show }) => {
                         </div>
                     </div>
                     <div className={cartClasses.join(' ')}>
-                        <div className="cart-container">
+                        <div onClick={toggleActiveClass} className="cart-container">
                             <div className="cart-icon-container">
-                                <button onClick={toggleActiveClass}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <button> <img src="/images/icon/cart-icon.svg" alt="" /></button>
                                 <p className="product-count">{allCart.length}</p>
                             </div>
                             <p className="cart-text">Cart</p>
                         </div>
                         <div className="cart-product-list">
-                            <div className={!allCart.length > 0 ? "cart-listing-container cart-listing-height" :  "cart-listing-container"}>
+                            <div className={allCart.length > 2 ? "cart-listing-container" :  "cart-listing-container cart-listing-height"}>
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
-                                <div className="d-flex">
+                                <div className="d-flex mb-xl-0 mb-3">
                                     <label className="contain">Save Basket
                                         <input type="checkbox" key={'save-basket'} />
                                         <span className="checkmark"></span>
                                     </label>
                                 </div>
-                                <div>
-                                    <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button>
+                                <div className="d-flex align-items-center flex-wrap">
+                                    <button className="btn mr-4 mb-xl-0 mb-3"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
+                                    {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
+                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className='cart cart-mobile-view'>
+                    <div  onClick={gotoCartHandler} className='cart cart-mobile-view'>
                         <div className="cart-container">
                             <div className="cart-icon-container">
-                                <button onClick={gotoCartHandler}> <img src="/images/icon/cart-icon.svg" alt="" /></button>
+                                <button> <img src="/images/icon/cart-icon.svg" alt="" /></button>
                                 <p className="product-count">{allCart.length}</p>
                             </div>
                             <p className="cart-text">Cart</p>
@@ -555,17 +611,19 @@ const Menu = ({ productCategories, show }) => {
 Menu.getInitialProps = async ({ req, res }) => {
     let selRestaurant = null;
     if (process.browser) {
-        selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
-        if (!selRestaurant) {
-            Router.push("/");
-        }
+         selRestaurant = JSON.parse(Cookies.get('selectedRestaurant'));
+        // if (!selRestaurant) {
+        //     Router.push("/");
+        //     return;
+        // }
     } else {
-        // selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
-        if (!selRestaurant) {
-            res.redirect('/');
-        } else {
-            selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
-        }
+        selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        // if (!selRestaurant) {
+        //     res.redirect('/');
+        //     return; 
+        // } else {
+        //     selRestaurant = JSON.parse(req.cookies.selectedRestaurant);
+        // }
     }
 
     // if (process.browser) {

@@ -1,6 +1,7 @@
 import Layout from '../../components/Layout';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
+import Router from 'next/router';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
@@ -36,10 +37,11 @@ const CompleteOrder = () => {
                             <div className="col-md-8 mx-auto">
                             <h2>Order number: {completeOrderItem.order_number}</h2>
                             </div>
-
+                    
                             <div className="col-md-10 mx-auto">
+                                <button onClick={() => Router.push('/')} className="btn mb-4"><span className="text">Return to homepage</span></button>
                                 <div className="orders-info-container">
-                                    <h4>Your meal will arrive shortly</h4>
+                                    <h4>You will be contacted soon, your order is been processed</h4>
                                     <div className="order-details details pb-sm-5 pb-2">
                                         <div className="row">
                                             <div className="col-md-8">

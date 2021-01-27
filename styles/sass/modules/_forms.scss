@@ -1,108 +1,112 @@
 form {
-  &.select-state {
-    .select-tool {
-        width: 80%;
-        margin-bottom: 20px;
-        color: $primary;
-        background-size: 13px;
-        font-size: 15px;
-        border-radius: 5px;
-        outline: none;
+    &.select-state {
+        .select-tool {
+            width: 80%;
+            margin-bottom: 20px;
+            color: $primary;
+            background-size: 13px;
+            font-size: 15px;
+            border-radius: 5px;
+            outline: none;
 
-        @media only screen and (max-width: $desktop_width) {
-            width: 100%;
+            @media only screen and (max-width: $desktop_width) {
+                width: 100%;
+            }
         }
-    }
 
-    .select-disabled {
-        pointer-events: none;
+        .select-disabled {
+            pointer-events: none;
 
-        .css-yk16xz-control {
-            border-color:  #A5A5A5 !important;
-            border: 1.2px solid #A5A5A5 !important;
-            background: #F5F5F5 !important;
-    
-            &:hover {
-                border-color:  #A5A5A5 !important;
+            .css-yk16xz-control {
+                border-color: #a5a5a5 !important;
+                border: 1.2px solid #a5a5a5 !important;
+                background: #f5f5f5 !important;
+
+                &:hover {
+                    border-color: #a5a5a5 !important;
+                }
+            }
+
+            .css-1wa3eu0-placeholder {
+                color: #a5a5a5 !important;
+                font-size: 15px;
+            }
+
+            .css-tlfecz-indicatorContainer {
+                svg {
+                    fill: #a5a5a5 !important;
+                }
+            }
+
+            .css-g1d714-ValueContainer {
+                padding: 0 8px;
             }
         }
 
         .css-1wa3eu0-placeholder {
-            color: #A5A5A5 !important;
-            font-size: 15px;
+            color: $primary;
+        }
+
+        .css-1okebmr-indicatorSeparator {
+            background-color: transparent;
         }
 
         .css-tlfecz-indicatorContainer {
             svg {
-                fill: #A5A5A5 !important;
+                fill: $primary !important;
             }
         }
 
-        .css-g1d714-ValueContainer {
-            padding: 0 8px;
+        .css-1pahdxg-control:hover {
+            border-color: $primary;
+            box-shadow: none;
+        }
+
+        .css-yk16xz-control {
+            border-color: $primary;
+            border: 1.2px solid $primary;
+
+            &:hover {
+                border-color: $primary;
+            }
+        }
+
+        .css-9gakcf-option {
+            background-color: transparent;
+            cursor: pointer;
+            color: $primary;
+
+            &:hover {
+                background-color: #deebff;
+            }
+        }
+
+        .css-1n7v3ny-option {
+            cursor: pointer;
+        }
+
+        .inline-loading-css {
+            text-align: center;
+            width: 80%;
+        }
+
+        .inline-loading-css-menu-page {
+            height: 55px;
+            text-align: center;
         }
     }
 
-    .css-1wa3eu0-placeholder {
-        color: $primary;
-    }
-
-    .css-1okebmr-indicatorSeparator {
-        background-color: transparent;
-    }
-
-    .css-tlfecz-indicatorContainer {
-        svg {
-            fill: $primary !important;
+    &.signup-form {
+        
+        .sticky {
+            position: sticky;
+            top: 10px;
         }
-    }
-
-    .css-1pahdxg-control:hover {
-        border-color: $primary;
-        box-shadow: none;
-    }
-
-    .css-yk16xz-control {
-        border-color:  $primary;
-        border: 1.2px solid $primary;
-
-        &:hover {
-            border-color:  $primary;
-        }
-    }
-
-    .css-9gakcf-option {
-        background-color: transparent;
-        cursor: pointer;
-        color: $primary;
-
-        &:hover {
-            background-color: #deebff;
-        }
-    }
-
-    .css-1n7v3ny-option {
-        cursor: pointer;
-    }
-
-    .inline-loading-css {
-        text-align: center;
-        width: 80%;
-    }
-
-    .inline-loading-css-menu-page {
-        height: 55px;
-        text-align: center;
-    }
-      
-  }
-
-  &.signup-form {
 
         label {
             display: block;
             margin-bottom: 10px;
-            font-weight: $semi-bold;
+            // font-weight: $semi-bold;
         }
         .textbox {
             padding: 1px;
@@ -142,13 +146,13 @@ form {
 
         .border {
             position: absolute;
-            content: '';
+            content: "";
             top: -4px;
             left: 0;
             width: 0%;
             height: 0%;
-            border: 1px solid transparent!important;
-            background: #18A91F;
+            border: 1px solid transparent !important;
+            background: #18a91f;
             z-index: -1;
             -webkit-transition: height 0.3s, width 0.3s 0.1s;
             transition: height 0.3s, width 0.3s 0.1s;
@@ -174,11 +178,11 @@ form {
         }
 
         textarea:focus-within {
-            border-color: #18A91F;
+            border-color: #18a91f;
         }
 
         .input-suggestion {
-            background-color: #F2F2F2 !important;
+            background-color: #f2f2f2 !important;
             padding: 2px 10px;
             font-size: 15px;
         }
@@ -186,11 +190,20 @@ form {
         .red-colored {
             color: $primary;
         }
+
+
+        i {
+            position: absolute;
+            right: 15px;
+            top: 25%;
+            z-index: 1;
+            color: $primary;
+        }
     }
 
     .remember-account {
         margin-bottom: 15px;
-        
+
         // Checkbox on signup page
         @include checkbox-btn;
         label {
@@ -210,19 +223,17 @@ form {
             color: $primary;
             font-size: 15px;
         }
-        
     }
 
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+        -webkit-appearance: none;
+        margin: 0;
     }
 
     /* Firefox */
-    input[type=number] {
-    -moz-appearance: textfield;
+    input[type="number"] {
+        -moz-appearance: textfield;
     }
-
 }

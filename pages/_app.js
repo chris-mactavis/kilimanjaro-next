@@ -4,7 +4,7 @@ import {applyMiddleware, combineReducers, createStore} from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { NotificationContainer } from 'react-notifications';
 
-import '../styles/main.css';
+import '../styles/sass/main.scss';
 import 'react-notifications/lib/notifications.css';
 
 import toggleLoading from '../store/reducers/loader';
