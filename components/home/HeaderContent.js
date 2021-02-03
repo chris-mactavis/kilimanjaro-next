@@ -55,13 +55,13 @@ const HeaderContent = ({cities}) => {
                     <div className="col-md-8 mx-auto">
                         <div className="headtext-container">
                             
-                            <div class="title">
-                                <span class="block"></span>
+                            <div className="title">
+                                <span className="block"></span>
                                 <h1>Enjoy tasty meals,</h1>
                             </div>
 
-                            <div class="role">
-                                <div class="block"></div>
+                            <div className="role">
+                                <div className="block"></div>
                                 <h1>from wherever you are<span></span></h1>
                             </div>
 

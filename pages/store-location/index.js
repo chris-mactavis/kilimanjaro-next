@@ -52,8 +52,8 @@ const StoreLocation = ({storeLocations}) => {
                                     <div className="modal-dialog">
                                         {/* <!-- Modal content--> */}
                                         <div className="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <div className="modal-header">
+                                                <button type="button" className="close" data-dismiss="modal">&times;</button>
                                             </div>
                                             <div className="modal-body">
                                                 {restaurants.map((res) => {

@@ -20,7 +20,6 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 const Menu = ({ productCategories, couponData }) => {
-    console.log(couponData);
 
     //  All Store
     const dispatch = useDispatch();
@@ -29,6 +28,7 @@ const Menu = ({ productCategories, couponData }) => {
     const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.totalPrice);
     const loadingState = useSelector(state => state.loader.loading);
+    console.log(allCart);
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
@@ -70,23 +70,17 @@ const Menu = ({ productCategories, couponData }) => {
         }
 
         (function($){
-         
-        var elements = $(".category-single");
-      
-        for (var i = 0, len = elements.length; i < len; i++) {
-           
-               elements[i].addEventListener("click", function() {
-       
-                var firstEl = $(this).find("a")[0];
-                firstEl.addEventListener("click", function(e) { e.preventDefault() });
-                $(this).find(".subcats").slideToggle();
-              
-              
-          });
-        }
-      
-          
-      
+            var elements = $(".category-single");
+        
+            for (var i = 0, len = elements.length; i < len; i++) {
+                elements[i].addEventListener("click", function () {
+
+                    var firstEl = $(this).find("a")[0];
+                    firstEl.addEventListener("click", function (e) { e.preventDefault() });
+                    $(this).find(".subcats").slideToggle();
+
+                });
+            }
         })(jQuery);
       
     
@@ -322,7 +316,7 @@ const Menu = ({ productCategories, couponData }) => {
             setInlineLoading(0);
         }, 1500);
         setTimeout(() => {
-            NotificationManager.success('Added successfully', '', 3000);
+            NotificationManager.success('Added to cart successfully', '', 3000);
         }, 1500);
         setValue(value => ++value);
     };
@@ -409,6 +403,50 @@ const Menu = ({ productCategories, couponData }) => {
     const gotoCartHandler = () => {
         Router.push('/cart');
     };
+
+    const addCouponToCart = async (value, resProduct) => {
+      
+        const prevCart = [...productCart];
+
+
+        let productCoupon = null;
+        resProduct.map((resProd) => {
+            return productCoupon = {...resProd, price: value}
+        });
+
+
+        const prodInCartIndex = prevCart.findIndex(cart => cart.product.id === productCoupon.id);
+        if (prodInCartIndex >= 0) {
+            const prodInCart = prevCart[prodInCartIndex];
+            const newTotalPrice = +prodInCart.quantity * +prodInCart.totalPrice;
+            const newQuantity = prodInCart.quantity;
+            prevCart[prodInCartIndex] = {
+                product: productCoupon,
+                quantity: newQuantity + 1,
+                price: value,
+                salePrice: null,
+                totalPrice: +prodInCart.totalPrice + newTotalPrice
+            }
+        } else {
+            prevCart.push({
+                product: productCoupon,
+                quantity: 1,
+                price: value,
+                salePrice: null,
+                totalPrice: parseInt(value)
+            });
+        }
+        
+        setProductCart(prevCart);
+        dispatch(addToCart(prevCart));
+        dispatch(setTotalPrice());
+        Cookies.set('setCart', JSON.stringify(prevCart));
+        setTimeout(() => {
+            NotificationManager.success('Added to cart successfully', '', 3000);
+        }, 500);
+
+        setValue(value => ++value);
+    }
 
     
         
@@ -550,18 +588,11 @@ const Menu = ({ productCategories, couponData }) => {
                                 </div>}
                             <div className="col-md-4">
                                 <div className="coupon-on-menu">
-                                    <a>
-                                        <img className="img-fluid" src="/images/kili-spicy.png" alt="" />
-                                    </a>
-                                    <a>
-                                        <img className="img-fluid" src="/images/kili-shawama-promo-2.png" alt="" />
-                                    </a>
-                                    <a>
-                                        <img className="img-fluid" src="/images/Kili-promo-2.png" alt="" />
-                                    </a>
-                                    <a>
-                                        <img className="img-fluid" src="/images/kili-easter-promo.png" alt="" />
-                                    </a>
+                                    { couponData.map(prodCoupon => {
+                                        return <a key={prodCoupon.id} onClick={() => addCouponToCart(prodCoupon.value, prodCoupon.restaurant_products)} key={prodCoupon.id}>
+                                            <img className="img-fluid" src={prodCoupon.image_url} alt="" />
+                                        </a>
+                                    }) }
                                 </div>
                             </div>
                         </div>
@@ -648,8 +679,7 @@ Menu.getInitialProps = async ({ req, res }) => {
 
     try {
         const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
-        const { data: { couponData } } = await axiosInstance.get(`product-coupons?restaurant_id=${restaurantId}`);
-        console.log(couponData);
+        const { data: { data: couponData } } = await axiosInstance.get(`product-coupons?restaurant_id=${restaurantId}`);
         const productCategories = data.filter(cat => cat.category_products.length > 0);
 
         return {productCategories, couponData};

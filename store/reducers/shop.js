@@ -1,16 +1,24 @@
-import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UPDATED_TOTAL_PRICE, UPDATED_VARIABLE_PRICE } from '../actions/shop';
+import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UPDATED_TOTAL_PRICE, UPDATED_VARIABLE_PRICE, SET_COUPON_AMOUNT, SET_TOTALPRICE_WITH_COUPON, SET_COUPON_CODE, SET_DELIVERY_PRICE } from '../actions/shop';
 import Cookies from 'js-cookie';
 
 const totalPrice = Cookies.get('totalPrice');
 const  cart = Cookies.get('setCart');
+const  couponAmt = +Cookies.get('couponAmt');
+const  totalPriceAmtWithCoupon = +Cookies.get('totalPriceAmtWithCoupon');
+const  couponNameUsed = Cookies.get('coupName');
+// const  delPrice = +Cookies.get('deliveryPrice');
 
 const initialState = {
     allRestaurants : [],
     selectedRestaurant: null,
     cart: cart || [],
     totalPrice: 0,
+    couponAmount: couponAmt || 0,
+    totalPriceWithCoupon: totalPriceAmtWithCoupon || 0,
     updatedPrice : totalPrice || 0,
-    variablePrice: null
+    variablePrice: null,
+    couponName: couponNameUsed || '',
+    deliveryPrice: 0
 };
 
 const shop = ( state = initialState, action) => {
@@ -49,6 +57,26 @@ const shop = ( state = initialState, action) => {
             return {
                 ...state,
                 variablePrice: action.variablePrice
+            }
+        case SET_COUPON_AMOUNT :
+            return {
+                ...state,
+                couponAmount: action.couponAmt
+            }
+        case SET_TOTALPRICE_WITH_COUPON :
+            return {
+                ...state,
+                couponAmount: action.couponAmtWithPrice
+            }
+        case SET_COUPON_CODE :
+            return {
+                ...state,
+                couponName: action.couponName
+            }
+        case SET_DELIVERY_PRICE :
+            return {
+                ...state,
+                deliveryPrice: action.theDeliveryPrice
             }
         default: 
             return state;

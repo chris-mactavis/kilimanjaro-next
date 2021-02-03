@@ -202,22 +202,33 @@ form {
     }
 
     &.coupon-form {
-        display: flex;
+        
+        .coupon-container {
+            display: flex;
+            height: 50px;
 
-        input {
-            border: 1px solid #ccc;
-            border-right: none;
-        }
-
-        button.btn {
-            margin-left: -2px;
-            z-index: 2;
-
-            .text {
-                width: max-content;
+            input {
+                border: 1px solid #ccc;
+                border-right: none;
             }
+    
+            button.btn {
+                margin-left: -2px;
+                z-index: 2;
+    
+                .text {
+                    width: max-content;
+                }
+            }   
         }
-     }
+
+        .error {
+            font-size: 15px;
+            margin-top: 9px;
+        }
+
+        
+    }
 
     .remember-account {
         margin-bottom: 15px;

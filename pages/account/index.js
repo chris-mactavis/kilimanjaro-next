@@ -26,6 +26,7 @@ const Account = ({orders}) => {
     // All store
     let user = useSelector(state => state.auth.user) || {};
     user =  typeof user === 'object' ? user : JSON.parse(user);
+    console.log(user);
 
     const ViewSingleOrderHandler = (id) => {
         Cookies.set('singleOrderId', id); 

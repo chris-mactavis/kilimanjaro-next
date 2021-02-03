@@ -20,6 +20,11 @@ const CompleteOrder = () => {
         const resSelected = JSON.parse(Cookies.get('selectedRestaurant'));
         setSelRestaurant(resSelected);
         setCompleteOrderItem(orderCompleteItem);
+
+
+        Cookies.remove('couponAmt');
+        Cookies.remove('totalPriceAmtWithCoupon');
+        Cookies.remove('coupName');
     }, []);
 
     return (

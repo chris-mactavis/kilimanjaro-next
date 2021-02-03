@@ -49,16 +49,15 @@ const Signup = () => {
             if (data) {
                 const { data : response} = await axiosInstance.post('register', {...data, signup_device: 'web'});
                 dispatch(storeAuth(response.data));
-                console.log(response.data);
                 dispatch(loader());
                 setInlineLoader(false); 
                 Router.push('/');
             }
-            NotificationManager.success('Account Registeration Successful', '', 3000);
+            NotificationManager.success('Account Registeration Successful', '', 5000);
         } catch (error) {
             dispatch(loader());
             setInlineLoader(false);
-            NotificationManager.error(error.response.data.message, '', 3000);
+            NotificationManager.error(error.response.data.message, '', 5000);
             console.log(error);
         }
         reset({});

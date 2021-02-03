@@ -14,9 +14,10 @@ import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
-import { addToCart, updateTotalPrice } from '../../store/actions/shop'
+import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
 import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
@@ -34,12 +35,14 @@ const Checkout = () => {
     //  All store
     const allCart = useSelector(state => state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
-    const loggedIn = useSelector(state => state.auth.loggedIn);
+    const couponStorePrice = useSelector(state => state.shop.couponAmount);
+    const deliveryPriceInStore = useSelector(state => state.shop.deliveryPrice);
+    // const loggedIn = useSelector(state => state.auth.loggedIn);
     const loadingState = useSelector(state => state.loader.loading);
     const isLoggedIn = useSelector(state => state.auth.loggedIn);
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
-    // console.log(user);
+    const couponCode = useSelector(state => state.shop.couponName);
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -47,28 +50,76 @@ const Checkout = () => {
     const [ paymentMethod, setPaymentmethod] = useState('payment on delivery');
     const [ isLoading, setIsLoading ] = useState(false);
     const [ selectedRestaurant, setSelectedRestaurant ] = useState(null);
-    const [ deliveryPrice, setDeliveryPrice ] = useState(0);
+    const [ deliveryPrice, setDeliveryPrice ] = useState(deliveryPriceInStore);
     const [ total, setTotal ] = useState(allTotalPrice)
     const [value, setValue] = useState(0);
     const [passwordShown, setPasswordShown] = useState(false);
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+    const [ couponLoader, setCouponLoader ] = useState(0);
+    const [ couponErrorMessage, setCouponErrorMessage ] = useState('');
+    const [ theCouponPrice, setTheCouponPrice ] = useState(couponStorePrice);
+    const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
+
+    const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
+    const [ stringHash, setStringHash ] = useState(null);
+    const [ theProId, setTheProId ] = useState(null);
+
+    console.log(paymentInfoInterswitch);
+    console.log(stringHash);
+    console.log(theProId);
+
 
     const [localCart, setLocalCart] = useState([]);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            async function fetchDeductedBalance() {
+                try {
+                    const token = Cookies.get('token');
+                    const  { data: balanceDeducted }  = await axiosInstance.patch("deduct-order-price-from-unused-balance", {
+                        order_price: total
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+    
+                    console.log(balanceDeducted);
+                } catch(error) {
+                   console.log(error);
+                }
+            }
+            fetchDeductedBalance();
+        }
+    }, []);
+  
     
     useEffect(() => {
         const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
         Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
-        const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
+        // const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
         const selectedRes =  Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
         setSelectedRestaurant(selectedRes);
 
-        dispatch(updateTotalPrice(tolPrice));
+        // dispatch(updateTotalPrice(tolPrice));
 
-        if (!localCart.length > 0) {
+        // if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
-        }
+        // }
+       
     }, []);
+    
+    useEffect(() => {
+        const newTotalPriceAfterCoupon = allTotalPrice - theCouponPrice + deliveryPrice;
+        setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+        if (newTotalPriceAfterCoupon) {
+            setTotal(newTotalPriceAfterCoupon);
+        }
+        Cookies.set('totalPriceAmtWithCoupon', newTotalPriceAfterCoupon);
+        setValue(value => ++value);
+    }, [theCouponPrice, deliveryPrice]);
 
     useEffect(() => {
         window.$ = $;
@@ -91,11 +142,20 @@ const Checkout = () => {
                 }
             });
         } 
-    }, []);
+
+        if (paymentOption === 'pickup') {
+            console.log('true');
+            setPaymentmethod('payment online')
+        } else {
+            console.log('false')
+            setPaymentmethod('payment on delivery');
+        }
+    }, [paymentOption, setPaymentmethod]);
 
 
     const billingInfoHandler = async data => {
        dispatch(loader());
+       setInlineLoader(true);
         const cartItems = localCart.map(cart => ({
             restaurant_product_id: cart.product.id,
             product_cost: cart.price,
@@ -106,6 +166,7 @@ const Checkout = () => {
 
         if (data) {
             let orderData = {};
+            console.log('orderData');
             if (isLoggedIn) {
                 // if logged in
                 if (paymentOption === 'delivery') {
@@ -149,6 +210,7 @@ const Checkout = () => {
             } else {
                 //  if not logged in
                 if (paymentOption === 'delivery') {
+                    console.log('hello');
                     // If delivery (both online and pay on delivery)
                     orderData = {
                         first_name: data.first_name,
@@ -192,49 +254,82 @@ const Checkout = () => {
                 }
             }
 
-            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup')) {
-                const trans = FlutterwaveCheckout({
-                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                    amount: total,
-                    currency: "NGN",
-                    country: "NG",
-                    payment_options: "card, mobilemoneyghana, ussd",
-                    meta: {
-                        consumer_id: 23,
-                        consumer_mac: "92a3-912ba-1192a",
-                    },
-                    customer: {
-                        email: isLoggedIn ? user.email : data.email,
-                        phone_number: isLoggedIn ? user.phone : data.phone,
-                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                    },
-                    callback: async (data) => {
-                        try {
-                            await submitOrder(orderData);
-                            trans.close();
-                        } catch (error) {
-                            console.log(error);
-                            dispatch(loader());
-                            NotificationManager.error(error.response.data.message, '', 3000);
-                        }
-                        console.log(data);
-                    },
-                    onclose: function() {
-                        dispatch(loader());
-                    },
-                    customizations: {
-                        title: "Killimanjaro",
-                        description: "Payment for items in cart",
-                        logo: "/images/logo.png",
-                    },
-                });
+            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
+                /** FLUTTERWAVE PAYMENT HANDLER */
+                // const trans = FlutterwaveCheckout({
+                //     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                //     tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                //     amount: total,
+                //     currency: "NGN",
+                //     country: "NG",
+                //     payment_options: "card, mobilemoneyghana, ussd",
+                //     meta: {
+                //         consumer_id: 23,
+                //         consumer_mac: "92a3-912ba-1192a",
+                //     },
+                //     customer: {
+                //         email: isLoggedIn ? user.email : data.email,
+                //         phone_number: isLoggedIn ? user.phone : data.phone,
+                //         name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                //     },
+                //     callback: async (data) => {
+                //         try {
+                //             await submitOrder(orderData);
+                //             trans.close();
+                //         } catch (error) {
+                //             console.log(error);
+                //             dispatch(loader());
+                //             setInlineLoader(false); 
+                //             NotificationManager.error(error.response.data.message, '', 3000);
+                //         }
+                //         console.log(data);
+                //     },
+                //     onclose: function() {
+                //         dispatch(loader());
+                //         setInlineLoader(false); 
+                //     },
+                //     customizations: {
+                //         title: "Killimanjaro",
+                //         description: "Payment for items in cart",
+                //         logo: "/images/logo.png",
+                //     },
+                // });
+
+                 /** INTERSWITCH PAYMENT HANDLER */
+                const productId = [];
+                let theProductId = null;
+                const sha512 = require('sha512');
+                let hash = '';
+                const info = {
+                    ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                    product_id: localCart.map((cart, id) =>  {
+                        productId.push(cart.product.id);
+                        const newId = productId.join('');
+                        theProductId = newId;
+                    }),
+                    payItemId: `${Math.floor(Math.random() * 999)}`,
+                    userInfoName: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                    theCusId: isLoggedIn && user.id,
+                    MacKey: "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F",
+
+                };
+
+                setPaymentInfoInterwitch(info);
+                setTheProId(theProductId);
+        
+                const hashString = `${info.ref}${theProductId}${total}`+`http://localhost:3000/complete-order`+`${info.MacKey}`;
+                setStringHash(sha512(hashString).toString('hex').toUpperCase());
+
+                dispatch(loader());
+                setInlineLoader(false);
+
             } else {
                 try {
                     await submitOrder(orderData);
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
+                    setInlineLoader(false);
                     NotificationManager.error(error.response.data.message, '', 3000);
                 }
             }
@@ -252,6 +347,7 @@ const Checkout = () => {
         const orderItem = data.data.data;
         Cookies.set('orderItem', JSON.stringify(orderItem));
         dispatch(loader());
+        setInlineLoader(false); 
         NotificationManager.success('Order added successfully', '', 3000);
         Router.push('/complete-order');
         dispatch(addToCart([]));
@@ -282,9 +378,8 @@ const Checkout = () => {
     };
 
     const handleSelect = streetAddress => {
-        // setTotal(0);
-        setDeliveryPrice(0);
-        setValue(value => ++value);
+        dispatch(loader());
+        setInlineLoader(true);
         geocodeByAddress(streetAddress)
             .then(async results => {
                 const latLng = await getLatLng(results[0]);
@@ -299,24 +394,27 @@ const Checkout = () => {
                     longitude: latLng ? latLng.lng : null,
                     latitude: latLng ? latLng.lat : null
                 }
-        
+
                 try {
-                    dispatch(loader());
                     const {data: {data}} = await axiosInstance.post('delivery-fee', deliveryDataForAmount);
-                    console.log(data);
-                    setDeliveryPrice(data.delivery_price);
-                    // let calculateTotal = total;
-                    const calculateTotal = +data.delivery_price + +allTotalPrice;
-                    setTotal(calculateTotal);
+                    const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
+                    if (getDeliveryCoupon) {
+                        setDeliveryPrice(0);
+                        setTheDeliveryPrice(0);
+                    } else {
+                        setDeliveryPrice(data.delivery_price);
+                        setTheDeliveryPrice(data.delivery_price);
+                    }
                     setValue(value => ++value);
                     setTimeout(() => {
                         dispatch(loader());
-                    }, 1000)
-                    // console.log(data);
+                        setInlineLoader(false);
+                    }, 1000);
                 } catch(error) {
                     console.log(error);
+                    dispatch(loader());
+                    setInlineLoader(false);
                 }
-                // console.log('Success', latLng)
             })
             .catch(error => console.error('Error', error));
     };
@@ -338,9 +436,136 @@ const Checkout = () => {
         setPasswordShown(passwordShown ? false : true);
     };
 
-    const couponApplication = data => {
-        console.log(data);
+    const couponErrorMessageHandler = (message) => {
+        setCouponErrorMessage(message)
+        NotificationManager.error(message, '', 6000);
+        setTimeout(() => {
+            setCouponErrorMessage('')
+        }, 6000);
+    }
+
+    const couponApplication = async data => {
+        const couponCode = data.coupon;
+        dispatch(loader());
+        setCouponLoader(1);
+        const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
+
+
+        try {
+            const token = Cookies.get('token');
+            const  { data: firstUserCode }  = await axiosInstance.get("is-ftu", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const  { data: {data: couponResult} }  = await axiosInstance.get(`coupons?code=${couponCode}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const theCouponApplication = () => {
+                // CHECKING FOR COUPON TYPE
+                if (couponResult.coupon_type == 'percentage') {
+                    Cookies.set('coupName',  couponCode);
+                    // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = (+couponResult.value / 100) * allTotalPrice;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setValue(value => ++value);
+                        setTheCouponPrice(newPrice);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+    
+                } else if (couponResult.coupon_type == 'price') {
+                    Cookies.set('coupName',  couponCode);
+                     // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = +couponResult.value;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setValue(value => ++value);
+                        setTheCouponPrice(newPrice);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+    
+                } else if (couponResult.coupon_type == 'delivery') {
+                    Cookies.set('coupName',  couponCode);
+                      // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = 0;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        Cookies.set('deliveryCoupon', 1);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setTheCouponPrice(newPrice);
+                        setDeliveryPrice(0);
+                        setTheDeliveryPrice(0);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+                }
+            }
+
+            if (theCouponPrice > 0 || getDeliveryCoupon == 1) {
+                couponErrorMessageHandler('Sorry, you can only apply this coupon once.');
+            } else {
+                //  This test if a coupon is for a city  
+                if (couponResult.cities == null || couponResult.cities.includes(+selectedRestaurant.city_id)) {
+                    // This test if the coupon is avialable
+                    if (couponResult.status) {
+                        // This test if the user is a first time user
+                        if ((firstUserCode == 1 && couponResult.ftu == 1)) {
+                            theCouponApplication();  
+                        } else if ((firstUserCode == 0 && couponResult.ftu == 0)) {
+                            theCouponApplication();
+                        } else if ((firstUserCode == 1 && couponResult.ftu == 0)) {
+                            theCouponApplication();
+                        } else {
+                            couponErrorMessageHandler("Sorry, this coupon is only for first time users.");
+                        }
+                    } else {
+                        couponErrorMessageHandler("Sorry, this coupon is not available at the moment.");
+                    }
+
+                } else {
+                    couponErrorMessageHandler("Sorry, this coupon is not available in your city.");
+                }
+            } 
+            
+            
+            dispatch(loader());
+            setCouponLoader(0)
+        } catch (error) {
+            dispatch(loader());
+            setCouponLoader(0)
+            NotificationManager.error(error.response.data.message, '', 5000);
+            console.log(error);
+        }
+        reset2({});
     };
+
+    const interswitchPaymentHandler = () => {
+       return <>
+        <input name="product_id" type="hidden" value={`${theProId}`} />
+        <input name="pay_item_id" type="hidden" value={`${paymentInfoInterswitch.payItemId}`} />
+        <input name="amount" type="hidden" value={`${total}`} />
+        <input name="currency" type="hidden" value="566" />
+        <input name="site_redirect_url" type="hidden" value="http://localhost:3000/complete-order"/>
+        <input name="txn_ref" type="hidden" value={`${paymentInfoInterswitch.ref}`} />
+        <input name="cust_id" type="hidden" value={`${paymentInfoInterswitch.theCusId}`} />
+        <input name="cust_name" type="hidden" value={`${paymentInfoInterswitch.userInfoName}`} />
+        <input name="hash" type="hidden" value={`${stringHash}`} />
+        </>
+    }
 
     return (
         <>
@@ -391,7 +616,13 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <form key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
+                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form" 
+                                    action={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'https://sandbox.interswitchng.com/webpay/pay' : ''} 
+                                    method={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'POST' : ''}>
+
+                                    {(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') 
+                                    ? interswitchPaymentHandler() : '' }
+    
                                     <div className="row">
                                         <div className="col-md-7">
                                             {/* Payment Method */}
@@ -401,17 +632,17 @@ const Checkout = () => {
                                                     ?
                                                     <>
                                                         <label className="payment">
-                                                            <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
-                                                </label>
+                                                            <input type="radio" value="pay on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
+                                                        </label>
                                                         <label className="payment">
                                                             <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
-                                                </label>
+                                                        </label>
                                                     </>
                                                     :
                                                     <>
                                                         <label className="payment">
                                                             <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
-                                                </label>
+                                                         </label>
                                                     </>
                                                 }
                                             </div>
@@ -419,8 +650,8 @@ const Checkout = () => {
                                             {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
 
                                             {/* Contact Details */}
-                                            {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
-                                            {!loggedIn && <div>
+                                            {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
+                                            {!isLoggedIn && <div>
                                                 <FormInput
                                                     type="text"
                                                     name="first_name"
@@ -564,6 +795,10 @@ const Checkout = () => {
                                                         <p>Subtotal</p>
                                                         <p>{'₦' + allTotalPrice}</p>
                                                     </div>
+                                                   { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Coupon: {theCouponCodeName}</p>    
+                                                        <p>- {'₦' + theCouponPrice}[Remove]</p>
+                                                    </div> }
                                                     {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                         <p>Delivery</p>
                                                         <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
@@ -573,18 +808,21 @@ const Checkout = () => {
                                                         <p>{'₦' + total}</p>
                                                     </div>
                                                     {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                    <div className="d-flex justify-content-center">{loadingState ? <InlineLoadingWhite /> : <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
+                                                    <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                     {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-                                <div class="row">
-                                    <div class="col-md-7">
+                                <div className="row">
+                                    <div className="col-md-7">
                                         <form key={2} onSubmit={handleSubmit2(couponApplication)} className="signup-form coupon-form">
-                                            <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
-                                            <button className="btn"><span className="text">Apply Coupon</span></button>
+                                            <div className="coupon-container">
+                                                <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
+                                                {loadingState && couponLoader === 1 ? <InlineLoading /> : <button className="btn"><span className="text">Apply Coupon</span></button> }
+                                            </div>
+                                            <p className="error">{couponErrorMessage}</p>
                                         </form>
                                     </div>
                                 </div>
