@@ -1,0 +1,137 @@
+@keyframes moveInRight1 {
+    0% {
+        opacity: 0;
+        transform: translateX(27rem);
+    }
+
+    80%{
+        transform: translateX(1rem)
+    }
+  
+    100%{
+        opacity: 1;
+        transform: translate(0)
+    }
+}
+
+@keyframes moveInRight2 {
+    0% {
+        opacity: 0;
+        transform: translateX(50rem);
+    }
+
+    80%{
+        transform: translateX(1rem)
+    }
+  
+    100%{
+        opacity: 1;
+        transform: translate(0)
+    }
+}
+
+@keyframes moveInDown {
+  0% {
+      opacity: 0;
+      transform: translateY(-50rem);
+  }
+
+  80%{
+      transform: translateY(1rem)
+  }
+
+  100%{
+      opacity: 1;
+      transform: translate(0)
+  }
+}
+
+// Header Animation
+@keyframes mainBlock {
+    0% {
+      width: 0%;
+      left: 0;
+  
+    }
+    50% {
+      width: 100%;
+      left: 0;
+  
+    }
+    100% {
+      width: 0;
+      left: 100%;
+    }
+  }
+  
+  @keyframes secBlock {
+    0% {
+      width: 0%;
+      left: 0;
+  
+    }
+    50% {
+      width: 100%;
+      left: 0;
+  
+    }
+    100% {
+      width: 0;
+      left: 100%;
+    }
+  }
+  
+  @keyframes mainFadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  
+  @keyframes popIn {
+    0% {
+      width: 0px;
+      height: 0px;
+      background: #383838;
+      border: 0px solid #ddd;
+      opacity: 0;
+    }
+    50% {
+      width: 10px;
+      height: 10px;
+      background: #383838;
+      opacity: 1;
+      bottom: 45px;
+    }
+     65% {
+        width: 7px;
+      height: 7px;
+        bottom: 0px;
+        width: 15px
+     }
+     80% {
+        width: 10px;
+        height: 10px;
+        bottom: 20px
+     }
+    100% {
+      width: 7px;
+      height: 7px;
+      background: #383838;
+      border: 0px solid #222;
+      bottom: 13px;
+  
+    }
+  }
+  
+  @keyframes secFadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }

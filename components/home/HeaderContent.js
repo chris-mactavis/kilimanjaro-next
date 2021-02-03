@@ -54,10 +54,23 @@ const HeaderContent = ({cities}) => {
                 <div className="row">
                     <div className="col-md-8 mx-auto">
                         <div className="headtext-container">
-                            <h1>
+                            
+                            <div className="title">
+                                <span className="block"></span>
+                                <h1>Enjoy tasty meals,</h1>
+                            </div>
+
+                            <div className="role">
+                                <div className="block"></div>
+                                <h1>from wherever you are<span></span></h1>
+                            </div>
+
+
+                            {/* <h1>
                                 Enjoy tasty meals, <br/>
                                 from wherever you are.
-                            </h1>
+                            </h1> */}
+
                             <p>Ordering from:</p>
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />

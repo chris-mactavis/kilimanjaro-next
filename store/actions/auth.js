@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
 
+
 import { loader } from './loader';
 import axiosInstance from '../../config/axios';
 
@@ -17,20 +18,19 @@ export const loginAsync = data => {
         dispatch(loader());
         try {
             const {data: response} = await axiosInstance.post('login', newData);
-            // console.log(response.data);
             dispatch(loader());
             dispatch(storeAuth(response.data));
-            NotificationManager.success(response.message, '', 3000);
+            NotificationManager.success(response.message, '', 5000);
             const checkoutCookies = localStorage.getItem('checkoutToLogin') ? localStorage.getItem('checkoutToLogin') : '';
             if (checkoutCookies === '/checkout') {
                 Router.push('/checkout');
             } else {
-                Router.push('/account');1
+                Router.push('/account');
             }
         } catch (error) {
             console.log(error);
             dispatch(loader());
-            NotificationManager.error(error.response.data.message, '', 3000);
+            NotificationManager.error(error.response.data.message, '', 5000);
         }
     }
 }
@@ -39,6 +39,7 @@ export const loginAsync = data => {
 export const storeAuth = data => {
     Cookies.set('token', data.token);
     Cookies.set('user', JSON.stringify(data.user));
+    
 
     return {
         type: LOGIN,

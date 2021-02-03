@@ -137,7 +137,7 @@ const ShoppingCart = () => {
                                     <div className="empty-cart-container">
                                         <p className=""><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty.</p>
-                                        <Link href="/"><button class="btn"><span className="text">Return to homepage</span></button></Link>
+                                        <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
                                     </div>
                                 </div>
                             </div>
@@ -160,8 +160,8 @@ const ShoppingCart = () => {
                                         <div className="col-md-8">
                                             <div className="coupon-delivery-sect d-flex align-items-center justify-content-between flex-wrap">
                                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                    <label className="review">Coupon</label>
-                                                    <input type="text" name="coupon" id="coupon" />
+                                                    {/* <label className="review">Coupon</label>
+                                                    <input type="text" name="coupon" id="coupon" /> */}
                                                 </div>
 
                                                 {/* <label>
@@ -192,7 +192,13 @@ const ShoppingCart = () => {
                                                 </div>
                                             </div>
                                             {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button> */}
-                                            <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
+                                            { !localCart.length > 0 || allTotalPrice < 1000 
+                                                ? 
+                                                <button className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
+                                                :
+                                                <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
+                                            }
+                                            {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button> */}
                                         </div>
                                     </div>
                                 </div>

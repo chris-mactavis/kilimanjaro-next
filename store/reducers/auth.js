@@ -4,10 +4,11 @@ import Cookies from 'js-cookie';
 
 const token = Cookies.get('token'), user = Cookies.get('user');
 
+
 const initialState = {
     loggedIn: !!token && !!user,
     user: user || null,
-    token: token || null
+    token: token || token
 };
 
 const auth = (state = initialState, action) => {

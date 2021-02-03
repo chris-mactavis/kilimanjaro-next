@@ -24,7 +24,23 @@ const Home = ({ cities }) => {
       const $el = $("html, body");
       $el.css({ 'overflow-x': 'hidden' });
     });
+
+    $(window).scroll(function() {    
+      var scroll = $(window).scrollTop();
+
+      console.log(scroll);
+  
+      if (scroll >= 900) {
+          $(".app-img-1").addClass("animate-1");
+          $(".app-img-2").addClass("animate-2");
+      } else {
+          $(".app-img-1").removeClass("animate-1");
+          $(".app-img-2").removeClass("animate-2");
+      }
+    });
   }, []);
+
+ 
 
   return (
     <>
