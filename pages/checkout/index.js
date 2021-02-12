@@ -14,7 +14,7 @@ import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
-import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice } from '../../store/actions/shop'
+import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice, setTheUnsusedBalance, setNewBalance } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
 import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
 import InlineLoading from '../../components/UI/inlineLoader';
@@ -43,6 +43,8 @@ const Checkout = () => {
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
     const couponCode = useSelector(state => state.shop.couponName);
+    const balanceUnsused = useSelector(state => state.shop.balance); 
+    const newUnusedBal = useSelector(state => state.shop.theNewBalance)
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -59,10 +61,12 @@ const Checkout = () => {
     const [ couponErrorMessage, setCouponErrorMessage ] = useState('');
     const [ theCouponPrice, setTheCouponPrice ] = useState(couponStorePrice);
     const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
+    const [ unusedBalance, setUnusedBalance ] = useState(balanceUnsused);
 
     const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
     const [ stringHash, setStringHash ] = useState(null);
     const [ theProId, setTheProId ] = useState(null);
+    const [ newBal, setNewBal ] = useState(newUnusedBal);
 
     // console.log(paymentInfoInterswitch);
     // console.log(stringHash);
@@ -78,15 +82,17 @@ const Checkout = () => {
             async function fetchDeductedBalance() {
                 try {
                     const token = Cookies.get('token');
-                    const  { data: balanceDeducted }  = await axiosInstance.patch("deduct-order-price-from-unused-balance", {
-                        order_price: total
-                    }, {
+                    const  { data: unusedBalance }  = await axiosInstance.get("get-unused-balance",
+                    {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     });
+
+                    Cookies.set('unusedBalance', unusedBalance);
+                    setUnusedBalance(unusedBalance);
     
-                    console.log(balanceDeducted);
+                    console.log(unusedBalance);
                 } catch(error) {
                    console.log(error);
                 }
@@ -112,14 +118,41 @@ const Checkout = () => {
     }, []);
     
     useEffect(() => {
-        const newTotalPriceAfterCoupon = allTotalPrice - theCouponPrice + deliveryPrice;
-        setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
-        if (newTotalPriceAfterCoupon) {
-            setTotal(newTotalPriceAfterCoupon);
+        let newTotalPriceAfterCoupon = 0;
+        let newUnusedBalance = 0;
+        if (unusedBalance > total) {
+            newUnusedBalance = unusedBalance - (allTotalPrice - theCouponPrice + deliveryPrice);
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
+            if (newUnusedBalance < 0) {
+                setTotalPriceWithCoupon(Math.abs(newUnusedBalance));
+                setTotal(Math.abs(newUnusedBalance));
+                Cookies.set('newUnusedBalance', newTotalPriceAfterCoupon);
+                setNewBalance(newTotalPriceAfterCoupon);
+                setNewBal(newTotalPriceAfterCoupon);
+            } else {
+                setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+                setTotal(newTotalPriceAfterCoupon);
+            }
+           
+        } else {
+             newTotalPriceAfterCoupon = (allTotalPrice - theCouponPrice + deliveryPrice) - unusedBalance;
+            setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+            if (newTotalPriceAfterCoupon) {
+                setTotal(newTotalPriceAfterCoupon);
+            }
+
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
         }
+       
         Cookies.set('totalPriceAmtWithCoupon', newTotalPriceAfterCoupon);
         setValue(value => ++value);
-    }, [theCouponPrice, deliveryPrice]);
+    }, [theCouponPrice, deliveryPrice, unusedBalance]);
 
     useEffect(() => {
         window.$ = $;
@@ -359,6 +392,7 @@ const Checkout = () => {
             } else {
                 try {
                     await submitOrder(orderData);
+                    await updateUnUsedBalance();
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
@@ -387,7 +421,20 @@ const Checkout = () => {
         dispatch(updateTotalPrice(0));
         Cookies.remove('setCart');
         Cookies.remove('totalPrice');
-    }
+    };
+
+    const updateUnUsedBalance = async () => {
+        const token = Cookies.get('token');
+        const data = await axiosInstance.patch("set-unused-balance", {
+            result: newBal
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+    };
 
     const verifyEmailHandler = async email => {
         try {
@@ -396,7 +443,7 @@ const Checkout = () => {
         } catch (error) {
 
         }
-    }
+    };
 
     const onchangePaymentOption = (e) => {
         setPaymentOption(e.target.value);
@@ -404,7 +451,7 @@ const Checkout = () => {
 
     const onchangePaymentMethod = (e) => {
         setPaymentmethod(e.target.value);
-    }
+    };
   
     const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
@@ -454,16 +501,12 @@ const Checkout = () => {
     
     const searchOptions = {
         componentRestrictions: {country: "ng"}
-    }
-
-    const makePayment = () => {
-        
     };
 
     const loginRedirect = () => {
         localStorage.setItem('checkoutToLogin', '/checkout');
         Router.push('/signup');
-    }
+    };
 
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
@@ -598,7 +641,7 @@ const Checkout = () => {
         <input name="cust_name" type="hidden" value={`${paymentInfoInterswitch.userInfoName}`} />
         <input name="hash" type="hidden" value={`${stringHash}`} />
         </>
-    }
+    };
 
     return (
         <>
@@ -831,8 +874,24 @@ const Checkout = () => {
                                                     </div>
                                                    { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                         <p>Coupon: {theCouponCodeName}</p>    
-                                                        <p>- {'₦' + theCouponPrice}[Remove]</p>
+                                                        <p>- {'₦' + theCouponPrice}[Removed]</p>
                                                     </div> }
+                                                    {(unusedBalance > total  && unusedBalance > 0) &&
+                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                            <p>Unused Balance </p>
+                                                            <p>{'₦' + newBal }</p>
+                                                        </div>
+                                                    }
+                                                    {(unusedBalance < total && unusedBalance > 0) && 
+                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                            <p>Unused Balance </p>
+                                                            <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                        </div>
+                                                    }
+                                                    {/* { unusedBalance > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>    
+                                                        <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                    </div> } */}
                                                     {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                         <p>Delivery</p>
                                                         <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>

@@ -9,6 +9,8 @@ export const SET_COUPON_AMOUNT = 'SET_COUPON_AMOUNT';
 export const SET_TOTALPRICE_WITH_COUPON = 'SET_TOTALPRICE_WITH_COUPON';
 export const SET_COUPON_CODE = 'SET_COUPON_CODE'
 export const SET_DELIVERY_PRICE = 'SET_DELIVERY_PRICE';
+export const SET_UNUSED_BALANCE = 'SET_UNUSED_BALANCE';
+export const SET_NEW_BALANCE = 'SET_NEW_BALANCE';
 
 export const saveRestaurants = (restaurants) => ({
     type: SAVE_RESTAURANTS,
@@ -58,4 +60,14 @@ export const setTheDeliveryPrice = (theDeliveryPrice) => ({
     type: SET_DELIVERY_PRICE,
     theDeliveryPrice
 });
+
+export const setTheUnsusedBalance = (theUnusedBalance) => ({
+    type: SET_UNUSED_BALANCE,
+    theUnusedBalance
+});
+
+export const setNewBalance = (theNewBalance) => ({
+    type: SET_NEW_BALANCE,
+    theNewBalance
+})
 

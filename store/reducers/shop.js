@@ -1,4 +1,4 @@
-import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UPDATED_TOTAL_PRICE, UPDATED_VARIABLE_PRICE, SET_COUPON_AMOUNT, SET_TOTALPRICE_WITH_COUPON, SET_COUPON_CODE, SET_DELIVERY_PRICE } from '../actions/shop';
+import { SAVE_RESTAURANTS, SELECTED_RESTAURANT, ADD_TO_CART, SET_TOTAL_PRICE, UPDATED_TOTAL_PRICE, UPDATED_VARIABLE_PRICE, SET_COUPON_AMOUNT, SET_TOTALPRICE_WITH_COUPON, SET_COUPON_CODE, SET_DELIVERY_PRICE, SET_UNUSED_BALANCE, SET_NEW_BALANCE } from '../actions/shop';
 import Cookies from 'js-cookie';
 
 const totalPrice = Cookies.get('totalPrice');
@@ -6,7 +6,8 @@ const  cart = Cookies.get('setCart');
 const  couponAmt = +Cookies.get('couponAmt');
 const  totalPriceAmtWithCoupon = +Cookies.get('totalPriceAmtWithCoupon');
 const  couponNameUsed = Cookies.get('coupName');
-// const  delPrice = +Cookies.get('deliveryPrice');
+const  theBalance = +Cookies.get('unusedBalance');
+const newUnusedBalance = +Cookies.get('newUnusedBalance');
 
 const initialState = {
     allRestaurants : [],
@@ -18,7 +19,9 @@ const initialState = {
     updatedPrice : totalPrice || 0,
     variablePrice: null,
     couponName: couponNameUsed || '',
-    deliveryPrice: 0
+    deliveryPrice: 0,
+    balance: theBalance || 0,
+    theNewBalance: newUnusedBalance || 0
 };
 
 const shop = ( state = initialState, action) => {
@@ -77,6 +80,16 @@ const shop = ( state = initialState, action) => {
             return {
                 ...state,
                 deliveryPrice: action.theDeliveryPrice
+            }
+        case SET_UNUSED_BALANCE:
+            return {
+                ...state,
+                balance: action.theUnusedBalance
+            }
+        case SET_NEW_BALANCE:
+            return {
+                ...state,
+                theNewBalance: action.theNewBalance
             }
         default: 
             return state;
