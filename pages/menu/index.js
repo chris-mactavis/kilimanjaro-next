@@ -94,7 +94,6 @@ const Menu = ({ productCategories, couponData }) => {
                 const productsArray = c.category_products;
                 
                 productsArray.forEach(x => {
-                    
                     products.push(x);
                 });
             });

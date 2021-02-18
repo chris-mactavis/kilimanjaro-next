@@ -14,7 +14,7 @@ import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
-import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice } from '../../store/actions/shop'
+import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice, setTheUnsusedBalance, setNewBalance } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
 import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
 import InlineLoading from '../../components/UI/inlineLoader';
@@ -43,6 +43,8 @@ const Checkout = () => {
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
     const couponCode = useSelector(state => state.shop.couponName);
+    const balanceUnsused = useSelector(state => state.shop.balance); 
+    const newUnusedBal = useSelector(state => state.shop.theNewBalance)
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -59,14 +61,16 @@ const Checkout = () => {
     const [ couponErrorMessage, setCouponErrorMessage ] = useState('');
     const [ theCouponPrice, setTheCouponPrice ] = useState(couponStorePrice);
     const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
+    const [ unusedBalance, setUnusedBalance ] = useState(balanceUnsused);
 
     const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
     const [ stringHash, setStringHash ] = useState(null);
     const [ theProId, setTheProId ] = useState(null);
+    const [ newBal, setNewBal ] = useState(newUnusedBal);
 
-    console.log(paymentInfoInterswitch);
-    console.log(stringHash);
-    console.log(theProId);
+    // console.log(paymentInfoInterswitch);
+    // console.log(stringHash);
+    // console.log(theProId);
 
 
     const [localCart, setLocalCart] = useState([]);
@@ -78,15 +82,17 @@ const Checkout = () => {
             async function fetchDeductedBalance() {
                 try {
                     const token = Cookies.get('token');
-                    const  { data: balanceDeducted }  = await axiosInstance.patch("deduct-order-price-from-unused-balance", {
-                        order_price: total
-                    }, {
+                    const  { data: unusedBalance }  = await axiosInstance.get("get-unused-balance",
+                    {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     });
+
+                    Cookies.set('unusedBalance', unusedBalance);
+                    setUnusedBalance(unusedBalance);
     
-                    console.log(balanceDeducted);
+                    console.log(unusedBalance);
                 } catch(error) {
                    console.log(error);
                 }
@@ -112,14 +118,41 @@ const Checkout = () => {
     }, []);
     
     useEffect(() => {
-        const newTotalPriceAfterCoupon = allTotalPrice - theCouponPrice + deliveryPrice;
-        setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
-        if (newTotalPriceAfterCoupon) {
-            setTotal(newTotalPriceAfterCoupon);
+        let newTotalPriceAfterCoupon = 0;
+        let newUnusedBalance = 0;
+        if (unusedBalance > total) {
+            newUnusedBalance = unusedBalance - (allTotalPrice - theCouponPrice + deliveryPrice);
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
+            if (newUnusedBalance < 0) {
+                setTotalPriceWithCoupon(Math.abs(newUnusedBalance));
+                setTotal(Math.abs(newUnusedBalance));
+                Cookies.set('newUnusedBalance', newTotalPriceAfterCoupon);
+                setNewBalance(newTotalPriceAfterCoupon);
+                setNewBal(newTotalPriceAfterCoupon);
+            } else {
+                setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+                setTotal(newTotalPriceAfterCoupon);
+            }
+           
+        } else {
+             newTotalPriceAfterCoupon = (allTotalPrice - theCouponPrice + deliveryPrice) - unusedBalance;
+            setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+            if (newTotalPriceAfterCoupon) {
+                setTotal(newTotalPriceAfterCoupon);
+            }
+
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
         }
+       
         Cookies.set('totalPriceAmtWithCoupon', newTotalPriceAfterCoupon);
         setValue(value => ++value);
-    }, [theCouponPrice, deliveryPrice]);
+    }, [theCouponPrice, deliveryPrice, unusedBalance]);
 
     useEffect(() => {
         window.$ = $;
@@ -166,7 +199,6 @@ const Checkout = () => {
 
         if (data) {
             let orderData = {};
-            console.log('orderData');
             if (isLoggedIn) {
                 // if logged in
                 if (paymentOption === 'delivery') {
@@ -210,7 +242,6 @@ const Checkout = () => {
             } else {
                 //  if not logged in
                 if (paymentOption === 'delivery') {
-                    console.log('hello');
                     // If delivery (both online and pay on delivery)
                     orderData = {
                         first_name: data.first_name,
@@ -256,69 +287,77 @@ const Checkout = () => {
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
                 /** FLUTTERWAVE PAYMENT HANDLER */
-                // const trans = FlutterwaveCheckout({
-                //     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                //     tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                //     amount: total,
-                //     currency: "NGN",
-                //     country: "NG",
-                //     payment_options: "card, mobilemoneyghana, ussd",
-                //     meta: {
-                //         consumer_id: 23,
-                //         consumer_mac: "92a3-912ba-1192a",
-                //     },
-                //     customer: {
-                //         email: isLoggedIn ? user.email : data.email,
-                //         phone_number: isLoggedIn ? user.phone : data.phone,
-                //         name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                //     },
-                //     callback: async (data) => {
-                //         try {
-                //             await submitOrder(orderData);
-                //             trans.close();
-                //         } catch (error) {
-                //             console.log(error);
-                //             dispatch(loader());
-                //             setInlineLoader(false); 
-                //             NotificationManager.error(error.response.data.message, '', 3000);
-                //         }
-                //         console.log(data);
-                //     },
-                //     onclose: function() {
-                //         dispatch(loader());
-                //         setInlineLoader(false); 
-                //     },
-                //     customizations: {
-                //         title: "Killimanjaro",
-                //         description: "Payment for items in cart",
-                //         logo: "/images/logo.png",
-                //     },
-                // });
+                const trans = FlutterwaveCheckout({
+                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                    amount: total,
+                    currency: "NGN",
+                    country: "NG",
+                    payment_options: "card, mobilemoneyghana, ussd",
+                    meta: {
+                        consumer_id: 23,
+                        consumer_mac: "92a3-912ba-1192a",
+                    },
+                    customer: {
+                        email: isLoggedIn ? user.email : data.email,
+                        phone_number: isLoggedIn ? user.phone : data.phone,
+                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                    },
+                    callback: async (data) => {
+                        try {
+                            await submitOrder(orderData);
+                            await updateUnUsedBalance();
+                            trans.close();
+                        } catch (error) {
+                            console.log(error);
+                            dispatch(loader());
+                            setInlineLoader(false); 
+                            NotificationManager.error(error.response.data.message, '', 3000);
+                        }
+                        console.log(data);
+                    },
+                    onclose: function() {
+                        dispatch(loader());
+                        setInlineLoader(false); 
+                    },
+                    customizations: {
+                        title: "Killimanjaro",
+                        description: "Payment for items in cart",
+                        logo: "/images/logo.png",
+                    },
+                });
 
                  /** INTERSWITCH PAYMENT HANDLER */
-                const productId = [];
-                let theProductId = null;
-                const sha512 = require('sha512');
-                let hash = '';
-                const info = {
-                    ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                    product_id: localCart.map((cart, id) =>  {
-                        productId.push(cart.product.id);
-                        const newId = productId.join('');
-                        theProductId = newId;
-                    }),
-                    payItemId: `${Math.floor(Math.random() * 999)}`,
-                    userInfoName: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                    theCusId: isLoggedIn && user.id,
-                    MacKey: "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F",
 
-                };
-
-                setPaymentInfoInterwitch(info);
-                setTheProId(theProductId);
+                //     let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
+                //     let itemId = "101";
+                //     let amount = total + 00;
+                //     let siteRedirectUrl = "http://localhost:8080/webpopupnew.html";
+                //     let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+                
+                //     let   productId = '1076';
+                //     let sha512 = require("sha512");
+                //     let hashString = transRef + productId +  itemId + amount + siteRedirectUrl + macKey;
+                //     let hash = sha512(hashString).toString('hex').toUpperCase();
         
-                const hashString = `${info.ref}${theProductId}${total}`+`http://localhost:3000/complete-order`+`${info.MacKey}`;
-                setStringHash(sha512(hashString).toString('hex').toUpperCase());
+            
+                // const obj = {
+                //     postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
+                //     amount,
+                //     productId,
+                //     transRef,
+                //     siteName: "Kilimanjaro",
+                //     itemId,
+                //     customerId: "84",
+                //     siteRedirectUrl,
+                //     currency: "NGN",
+                //     hash,
+                //     onComplete : function (paymentResponse){
+                //         console.log('i got here');
+                //     }
+                // };
+        
+                // new IswPay(obj);
 
                 dispatch(loader());
                 setInlineLoader(false);
@@ -326,6 +365,7 @@ const Checkout = () => {
             } else {
                 try {
                     await submitOrder(orderData);
+                    await updateUnUsedBalance();
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
@@ -354,7 +394,20 @@ const Checkout = () => {
         dispatch(updateTotalPrice(0));
         Cookies.remove('setCart');
         Cookies.remove('totalPrice');
-    }
+    };
+
+    const updateUnUsedBalance = async () => {
+        const token = Cookies.get('token');
+        const data = await axiosInstance.patch("set-unused-balance", {
+            result: newBal
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+    };
 
     const verifyEmailHandler = async email => {
         try {
@@ -363,7 +416,7 @@ const Checkout = () => {
         } catch (error) {
 
         }
-    }
+    };
 
     const onchangePaymentOption = (e) => {
         setPaymentOption(e.target.value);
@@ -371,7 +424,7 @@ const Checkout = () => {
 
     const onchangePaymentMethod = (e) => {
         setPaymentmethod(e.target.value);
-    }
+    };
   
     const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
@@ -421,16 +474,12 @@ const Checkout = () => {
     
     const searchOptions = {
         componentRestrictions: {country: "ng"}
-    }
-
-    const makePayment = () => {
-        
     };
 
     const loginRedirect = () => {
         localStorage.setItem('checkoutToLogin', '/checkout');
         Router.push('/signup');
-    }
+    };
 
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
@@ -449,7 +498,6 @@ const Checkout = () => {
         dispatch(loader());
         setCouponLoader(1);
         const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
-
 
         try {
             const token = Cookies.get('token');
@@ -553,19 +601,6 @@ const Checkout = () => {
         reset2({});
     };
 
-    const interswitchPaymentHandler = () => {
-       return <>
-        <input name="product_id" type="hidden" value={`${theProId}`} />
-        <input name="pay_item_id" type="hidden" value={`${paymentInfoInterswitch.payItemId}`} />
-        <input name="amount" type="hidden" value={`${total}`} />
-        <input name="currency" type="hidden" value="566" />
-        <input name="site_redirect_url" type="hidden" value="http://localhost:3000/complete-order"/>
-        <input name="txn_ref" type="hidden" value={`${paymentInfoInterswitch.ref}`} />
-        <input name="cust_id" type="hidden" value={`${paymentInfoInterswitch.theCusId}`} />
-        <input name="cust_name" type="hidden" value={`${paymentInfoInterswitch.userInfoName}`} />
-        <input name="hash" type="hidden" value={`${stringHash}`} />
-        </>
-    }
 
     return (
         <>
@@ -573,6 +608,7 @@ const Checkout = () => {
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
+                    <script type="text/javascript" src="http://sandbox.interswitchng.com/collections/public/webpay.js"></script>
                 </Head>
 
                 {
@@ -616,13 +652,7 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form" 
-                                    action={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'https://sandbox.interswitchng.com/webpay/pay' : ''} 
-                                    method={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'POST' : ''}>
-
-                                    {(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') 
-                                    ? interswitchPaymentHandler() : '' }
-    
+                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
                                     <div className="row">
                                         <div className="col-md-7">
                                             {/* Payment Method */}
@@ -797,8 +827,24 @@ const Checkout = () => {
                                                     </div>
                                                    { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                         <p>Coupon: {theCouponCodeName}</p>    
-                                                        <p>- {'₦' + theCouponPrice}[Remove]</p>
+                                                        <p>- {'₦' + theCouponPrice}[Removed]</p>
                                                     </div> }
+                                                    {(unusedBalance > total  && unusedBalance > 0) &&
+                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                            <p>Unused Balance </p>
+                                                            <p>{'₦' + newBal }</p>
+                                                        </div>
+                                                    }
+                                                    {(unusedBalance < total && unusedBalance > 0) && 
+                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                            <p>Unused Balance </p>
+                                                            <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                        </div>
+                                                    }
+                                                    {/* { unusedBalance > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>    
+                                                        <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                    </div> } */}
                                                     {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
                                                         <p>Delivery</p>
                                                         <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
