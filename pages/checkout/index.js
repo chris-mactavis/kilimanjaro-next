@@ -287,104 +287,77 @@ const Checkout = () => {
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
                 /** FLUTTERWAVE PAYMENT HANDLER */
-                // const trans = FlutterwaveCheckout({
-                //     public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                //     tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                //     amount: total,
-                //     currency: "NGN",
-                //     country: "NG",
-                //     payment_options: "card, mobilemoneyghana, ussd",
-                //     meta: {
-                //         consumer_id: 23,
-                //         consumer_mac: "92a3-912ba-1192a",
-                //     },
-                //     customer: {
-                //         email: isLoggedIn ? user.email : data.email,
-                //         phone_number: isLoggedIn ? user.phone : data.phone,
-                //         name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                //     },
-                //     callback: async (data) => {
-                //         try {
-                //             await submitOrder(orderData);
-                //             trans.close();
-                //         } catch (error) {
-                //             console.log(error);
-                //             dispatch(loader());
-                //             setInlineLoader(false); 
-                //             NotificationManager.error(error.response.data.message, '', 3000);
-                //         }
-                //         console.log(data);
-                //     },
-                //     onclose: function() {
-                //         dispatch(loader());
-                //         setInlineLoader(false); 
-                //     },
-                //     customizations: {
-                //         title: "Killimanjaro",
-                //         description: "Payment for items in cart",
-                //         logo: "/images/logo.png",
-                //     },
-                // });
-
-                 /** INTERSWITCH PAYMENT HANDLER */
-                // const productId = [];
-                // let theProductId = null;
-                // const sha512 = require('sha512');
-                // let hash = '';
-                // const info = {
-                //     ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                //     product_id: localCart.map((cart, id) =>  {
-                //         productId.push(cart.product.id);
-                //         const newId = productId.join('');
-                //         theProductId = newId;
-                //     }),
-                //     payItemId: `${Math.floor(Math.random() * 999)}`,
-                //     userInfoName: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                //     theCusId: isLoggedIn && user.id,
-                //     MacKey: "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F",
-
-                // };
-
-                let transRef = 'Kili-' + parseInt(Math.random() * 100000);
-                let itemId = "936";
-                let amount = total;
-                let siteRedirectUrl = "http://localhost:8080/webpopupnew.html";
-                let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
-
-                let theId = [];
-                const id = localCart.map((cart, id) =>  {
-                    theId.push(cart.product.id);
-                    const newId = theId.join('');
-                   
+                const trans = FlutterwaveCheckout({
+                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                    amount: total,
+                    currency: "NGN",
+                    country: "NG",
+                    payment_options: "card, mobilemoneyghana, ussd",
+                    meta: {
+                        consumer_id: 23,
+                        consumer_mac: "92a3-912ba-1192a",
+                    },
+                    customer: {
+                        email: isLoggedIn ? user.email : data.email,
+                        phone_number: isLoggedIn ? user.phone : data.phone,
+                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                    },
+                    callback: async (data) => {
+                        try {
+                            await submitOrder(orderData);
+                            await updateUnUsedBalance();
+                            trans.close();
+                        } catch (error) {
+                            console.log(error);
+                            dispatch(loader());
+                            setInlineLoader(false); 
+                            NotificationManager.error(error.response.data.message, '', 3000);
+                        }
+                        console.log(data);
+                    },
+                    onclose: function() {
+                        dispatch(loader());
+                        setInlineLoader(false); 
+                    },
+                    customizations: {
+                        title: "Killimanjaro",
+                        description: "Payment for items in cart",
+                        logo: "/images/logo.png",
+                    },
                 });
 
-                let productId = `${theId.join('')}`;
+                 /** INTERSWITCH PAYMENT HANDLER */
 
-                // setPaymentInfoInterwitch(info);
-                // setTheProId(theProductId);
-                const sha512 = require("sha512");
-                const hashString =  transRef + productId + itemId + amount + siteRedirectUrl + macKey;
-                let hash = sha512(hashString).toString('hex').toUpperCase();
-
-                console.log(hashString, hash);
+                //     let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
+                //     let itemId = "101";
+                //     let amount = total + 00;
+                //     let siteRedirectUrl = "http://localhost:8080/webpopupnew.html";
+                //     let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+                
+                //     let   productId = '1076';
+                //     let sha512 = require("sha512");
+                //     let hashString = transRef + productId +  itemId + amount + siteRedirectUrl + macKey;
+                //     let hash = sha512(hashString).toString('hex').toUpperCase();
+        
             
-                var obj = {
-                    postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
-                    amount,
-                    productId,
-                    transRef,
-                    siteName: "Kilimanjaro",
-                    itemId,
-                    customerId: "84",
-                    siteRedirectUrl,
-                    currency: "NGN",
-                    hash,
-                    onComplete: function (paymentResponse) {
-                        console.log(paymentResponse);
-                    }
-                };
-
-                new IswPay(obj);
+                // const obj = {
+                //     postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
+                //     amount,
+                //     productId,
+                //     transRef,
+                //     siteName: "Kilimanjaro",
+                //     itemId,
+                //     customerId: "84",
+                //     siteRedirectUrl,
+                //     currency: "NGN",
+                //     hash,
+                //     onComplete : function (paymentResponse){
+                //         console.log('i got here');
+                //     }
+                // };
+        
+                // new IswPay(obj);
 
                 dispatch(loader());
                 setInlineLoader(false);
@@ -526,7 +499,6 @@ const Checkout = () => {
         setCouponLoader(1);
         const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
 
-
         try {
             const token = Cookies.get('token');
             const  { data: firstUserCode }  = await axiosInstance.get("is-ftu", {
@@ -629,19 +601,6 @@ const Checkout = () => {
         reset2({});
     };
 
-    const interswitchPaymentHandler = () => {
-       return <>
-        <input name="product_id" type="hidden" value={`${theProId}`} />
-        <input name="pay_item_id" type="hidden" value={`${paymentInfoInterswitch.payItemId}`} />
-        <input name="amount" type="hidden" value={`${total}`} />
-        <input name="currency" type="hidden" value="566" />
-        <input name="site_redirect_url" type="hidden" value="http://localhost:3000/complete-order"/>
-        <input name="txn_ref" type="hidden" value={`${paymentInfoInterswitch.ref}`} />
-        <input name="cust_id" type="hidden" value={`${paymentInfoInterswitch.theCusId}`} />
-        <input name="cust_name" type="hidden" value={`${paymentInfoInterswitch.userInfoName}`} />
-        <input name="hash" type="hidden" value={`${stringHash}`} />
-        </>
-    };
 
     return (
         <>
@@ -693,13 +652,7 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form" 
-                                    action={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'https://sandbox.interswitchng.com/webpay/pay' : ''} 
-                                    method={(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') ? 'POST' : ''}>
-
-                                    {/* {(paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup') 
-                                    ? interswitchPaymentHandler() : '' } */}
-    
+                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
                                     <div className="row">
                                         <div className="col-md-7">
                                             {/* Payment Method */}
