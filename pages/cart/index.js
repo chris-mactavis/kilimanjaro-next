@@ -175,10 +175,6 @@ const ShoppingCart = () => {
                                         <div className="col md-4">
                                             <div className="price-review coupon-delivery-sect">
                                                 <div className="d-flex align-items-center justify-content-between flex-wrap">
-                                                    <p>Coupon</p>
-                                                    <p>{'₦' + 0}</p>
-                                                </div>
-                                                <div className="d-flex align-items-center justify-content-between flex-wrap">
                                                     <p>Subtotal</p>
                                                     <p>{'₦' + newTotalPrice}</p>
                                                 </div>

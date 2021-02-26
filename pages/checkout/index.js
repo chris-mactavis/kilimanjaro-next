@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Link from 'next/link';
-import $ from 'jquery';
+import $, { event } from 'jquery';
+import Select from 'react-select';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
@@ -67,6 +68,7 @@ const Checkout = () => {
     const [ stringHash, setStringHash ] = useState(null);
     const [ theProId, setTheProId ] = useState(null);
     const [ newBal, setNewBal ] = useState(newUnusedBal);
+    const [ paymmentType, setPaymentType ] = useState('flutterwave');
 
     // console.log(paymentInfoInterswitch);
     // console.log(stringHash);
@@ -76,6 +78,12 @@ const Checkout = () => {
     const [localCart, setLocalCart] = useState([]);
 
     const dispatch = useDispatch();
+
+
+    const paymentTypeList = [
+        { value: 'flutterwave', label: 'Flutterwave' },
+        { value: 'interswitch', label: 'Interswitch' },
+    ];
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -286,46 +294,52 @@ const Checkout = () => {
             }
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
-                /** FLUTTERWAVE PAYMENT HANDLER */
-                const trans = FlutterwaveCheckout({
-                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                    amount: total,
-                    currency: "NGN",
-                    country: "NG",
-                    payment_options: "card, mobilemoneyghana, ussd",
-                    meta: {
-                        consumer_id: 23,
-                        consumer_mac: "92a3-912ba-1192a",
-                    },
-                    customer: {
-                        email: isLoggedIn ? user.email : data.email,
-                        phone_number: isLoggedIn ? user.phone : data.phone,
-                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                    },
-                    callback: async (data) => {
-                        try {
-                            await submitOrder(orderData);
-                            await updateUnUsedBalance();
-                            trans.close();
-                        } catch (error) {
-                            console.log(error);
-                            dispatch(loader());
+               if (paymmentType === 'flutterwave') {
+                    /** FLUTTERWAVE PAYMENT HANDLER */
+                    const trans = FlutterwaveCheckout({
+                        public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                        tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                        amount: total,
+                        currency: "NGN",
+                        country: "NG",
+                        payment_options: "card, mobilemoneyghana, ussd",
+                        meta: {
+                            consumer_id: 23,
+                            consumer_mac: "92a3-912ba-1192a",
+                        },
+                        customer: {
+                            email: isLoggedIn ? user.email : data.email,
+                            phone_number: isLoggedIn ? user.phone : data.phone,
+                            name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                        },
+                        callback: async (data) => {
+                            try {
+                                await submitOrder(orderData);
+                                await updateUnUsedBalance();
+                                trans.close();
+                            } catch (error) {
+                                console.log(error);
+                                dispatch(loader());
+                                setInlineLoader(false); 
+                                NotificationManager.error(error.response.data.message, '', 3000);
+                            }
+                            console.log(data);
+                        },
+                        onclose: function() {
+                            dispatch(loader());  
                             setInlineLoader(false); 
-                            NotificationManager.error(error.response.data.message, '', 3000);
-                        }
-                        console.log(data);
-                    },
-                    onclose: function() {
-                        dispatch(loader());
-                        setInlineLoader(false); 
-                    },
-                    customizations: {
-                        title: "Killimanjaro",
-                        description: "Payment for items in cart",
-                        logo: "/images/logo.png",
-                    },
-                });
+                        },
+                        customizations: {
+                            title: "Killimanjaro",
+                            description: "Payment for items in cart",
+                            logo: "/images/logo.png",
+                        },
+                    });
+               }  else {
+                    NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
+                    setPaymentType('flutterwave');
+                
+               }
 
                  /** INTERSWITCH PAYMENT HANDLER */
 
@@ -424,6 +438,10 @@ const Checkout = () => {
 
     const onchangePaymentMethod = (e) => {
         setPaymentmethod(e.target.value);
+    };
+
+    const handlePaymentTypeChange = ({value: paymentType}) => {
+        console.log(paymentType);
     };
   
     const handleChange = (streetAddress) => {
@@ -601,6 +619,12 @@ const Checkout = () => {
         reset2({});
     };
 
+    const onchangePaymentType = (e) => {
+        console.log(e.target.value);
+        setPaymentType(e.target.value);
+
+    }
+
 
     return (
         <>
@@ -652,7 +676,7 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
+                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form select-state">
                                     <div className="row">
                                         <div className="col-md-7">
                                             {/* Payment Method */}
@@ -676,6 +700,18 @@ const Checkout = () => {
                                                     </>
                                                 }
                                             </div>
+                                               
+                                           { paymentMethod === 'payment online' && <>
+                                           <h4>Payment Type</h4>
+                                            <select onChange={onchangePaymentType} defaultValue={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                                <option value="flutterwave">Flutterwave</option>
+                                                <option value="interswitch">Interswitch</option>
+                                            </select>
+                                            {errors.ptype && <p className="error">{errors.ptype.message}</p>}
+                                            </>
+                                           }
+
+                                            
 
                                             {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
 

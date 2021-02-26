@@ -199,6 +199,25 @@ form {
             z-index: 1;
             color: $primary;
         }
+
+        .form-select {
+            display: block;
+            padding: 10px 30px 10px 20px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #383838;
+            background-color: #fff;
+            background-image: url('/images/arrowDown.png');
+            background-repeat: no-repeat;
+            background-position: right 1.1rem center;
+            background-size: 13px 16px;
+            border-radius: 3px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin-bottom: 15px;
+            border-color: #707070;
+        }
     }
 
     &.coupon-form {
