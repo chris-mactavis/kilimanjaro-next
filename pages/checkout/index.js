@@ -297,7 +297,7 @@ const Checkout = () => {
                if (paymmentType === 'flutterwave') {
                     /** FLUTTERWAVE PAYMENT HANDLER */
                     const trans = FlutterwaveCheckout({
-                        public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
+                        public_key: "FLWPUBK_TEST-8088fffdc0d59263e1f7a490f6fc76c8-X",
                         tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
                         amount: total,
                         currency: "NGN",
@@ -332,7 +332,7 @@ const Checkout = () => {
                         customizations: {
                             title: "Killimanjaro",
                             description: "Payment for items in cart",
-                            logo: "/images/logo.png",
+                            logo: "http://167.172.177.79/images/logo-2.png",
                         },
                     });
                }  else {
