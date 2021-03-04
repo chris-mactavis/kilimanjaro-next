@@ -78,7 +78,7 @@ const TestPay = () => {
             }
         };
 
-        console.log(obj);
+        // console.log(obj);
 
         new IswPay(obj);
     }
