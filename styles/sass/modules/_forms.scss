@@ -88,6 +88,10 @@ form {
         .inline-loading-css {
             text-align: center;
             width: 80%;
+
+            @media only screen and (max-width: $mobile_width) {
+                width: 100%;
+            }
         }
 
         .inline-loading-css-menu-page {
