@@ -59,6 +59,10 @@ section {
                 display: flex;
                 align-items: center;
                 height: 70px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    height: 40px;
+                }
           
                 .block {
                   width: 0%;
@@ -108,6 +112,10 @@ section {
                 align-items: center;
                 height: 70px;
                 // margin-top: -10px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    height: 40px;
+                }
           
                 .block {
                   width: 0%;
@@ -144,7 +152,10 @@ section {
                     position: absolute;
                     bottom: 13px;
                     right: -12px;
-          
+
+                    @media only screen and (max-width: $desktop_width) {
+                        position: unset;
+                    }
                   }
                 }
               }
@@ -361,6 +372,10 @@ section {
             background: #fff;
             margin-bottom: 20px;
 
+            @media only screen and (max-width: $mobile_width) {
+                padding: 20px;
+            }
+
             img {
                 margin-bottom: 0;
             }
@@ -368,6 +383,11 @@ section {
             .order-details-container {
                 padding-left: 15px;
                 padding-right: 15px;
+
+                @media only screen and (max-width: $mobile_width) {
+                    padding-left: 0;
+                    padding-right: 0
+                }
             }
 
             .date {
@@ -1709,6 +1729,12 @@ section {
 
         .col-black {
             color: $light-black;
+        }
+
+        .responsiveTable tbody tr {
+            @media only screen and (max-width: $mobile_width) {
+                margin-bottom: 10px;
+             }
         }
     }
 

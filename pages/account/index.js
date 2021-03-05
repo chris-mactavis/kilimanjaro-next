@@ -14,9 +14,11 @@ import { auth } from '../../components/hoc/auth';
 
 
 const Account = ({orders}) => {
+    console.log(orders);
 
     useEffect(() => {
         Cookies.set('orders', JSON.stringify(orders));
+        localStorage.setItem('orders', JSON.stringify(orders));
     }, []);
 
     const [value, setValue] = useState(0);
@@ -26,7 +28,6 @@ const Account = ({orders}) => {
     // All store
     let user = useSelector(state => state.auth.user) || {};
     user =  typeof user === 'object' ? user : JSON.parse(user);
-    console.log(user);
 
     const ViewSingleOrderHandler = (id) => {
         Cookies.set('singleOrderId', id); 
