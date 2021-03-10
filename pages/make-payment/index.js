@@ -30,7 +30,7 @@ const MakePayment = () => {
                                             </div> 
                                         </div>
                                         <div className="table-responsive">
-                                            <table class="table">
+                                            <table className="table">
                                                 <thead>
                                                     <tr>
                                                         <th>Item</th>

@@ -12,14 +12,23 @@ const CompleteOrder = () => {
 
     const [ completeOrderItem, setCompleteOrderItem ] = useState({});
     const [ selRestaurant, setSelRestaurant ] = useState({});
+    const [ lastCartItem, setLastCartItem ] = useState([]);
     console.log(completeOrderItem);
     console.log(selRestaurant);
 
     useEffect(() => {
         const orderCompleteItem = JSON.parse(Cookies.get('orderItem'));
         const resSelected = JSON.parse(Cookies.get('selectedRestaurant'));
+        const lastCart = JSON.parse(Cookies.get('lastCartOrder'));
         setSelRestaurant(resSelected);
         setCompleteOrderItem(orderCompleteItem);
+        setLastCartItem(lastCart);
+
+        Cookies.remove('couponAmt');
+        Cookies.remove('totalPriceAmtWithCoupon');
+        Cookies.remove('coupName');
+        Cookies.remove('unusedBalance');
+        Cookies.remove('newUnusedBalance');
     }, []);
 
     return (
@@ -46,7 +55,16 @@ const CompleteOrder = () => {
                                         <div className="row">
                                             <div className="col-md-8">
                                                 <h5 className="red">Order Details</h5>
-                                                <p>{completeOrderItem.delivery_note}</p>
+                                                {completeOrderItem.delivery_note && 
+                                                    <>
+                                                        <p className="mb-1"><strong>Delivery Note</strong></p> 
+                                                        <p>{completeOrderItem.delivery_note}</p>
+                                                    </>
+                                                }
+                                                <p className="mb-1"><strong>Order List</strong></p>
+                                                {lastCartItem.map((lastCart) => {
+                                                    return <p>{lastCart.quantity}x {lastCart.product.product} - {'₦' + lastCart.totalPrice}</p>
+                                                })}
                                             </div>
                                             <div className="col-md-4 text-center">
                                                 <h5 className="mb-0">Order Total</h5>

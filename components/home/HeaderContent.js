@@ -12,6 +12,7 @@ import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
 const HeaderContent = ({cities}) => {
     const [ restaurants, setRestaurants ] = useState([]);
     const [ restaurantName, setRestaurantName ] = useState(null);
+    const [ inlineLoading, setInlineLoading ] = useState(0);
    
     const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
 
@@ -20,8 +21,10 @@ const HeaderContent = ({cities}) => {
 
     const handleCityInputChange = ({value: restaurantId}) => {
         dispatch(loader());
+        setInlineLoading(1);
         setTimeout(() => {
             dispatch(loader());
+            setInlineLoading(0);
         }, 1000)
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
@@ -33,6 +36,7 @@ const HeaderContent = ({cities}) => {
 
     const handleRestaurantInputChange = (value) => {
         dispatch(loader());
+        setInlineLoading(1);
         Cookies.remove('totalPrice');
         Cookies.remove('setCart');
         Cookies.remove('orderItem');
@@ -43,6 +47,7 @@ const HeaderContent = ({cities}) => {
         Router.push('/menu');
         setTimeout(() => {
             dispatch(loader());
+            setInlineLoading(0);
         }, 1500)
     }
  
@@ -54,15 +59,28 @@ const HeaderContent = ({cities}) => {
                 <div className="row">
                     <div className="col-md-8 mx-auto">
                         <div className="headtext-container">
-                            <h1>
+                            
+                            <div className="title">
+                                <span className="block"></span>
+                                <h1>Enjoy tasty meals,</h1>
+                            </div>
+
+                            <div className="role">
+                                <div className="block"></div>
+                                <h1>from wherever you are<span></span></h1>
+                            </div>
+
+
+                            {/* <h1>
                                 Enjoy tasty meals, <br/>
                                 from wherever you are.
-                            </h1>
+                            </h1> */}
+
                             <p>Ordering from:</p>
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
                                 <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
-                                { loadingState && <div className="inline-loading-css"><InlineLoading /></div>  }
+                                { (loadingState && inlineLoading === 1 ) && <div className="inline-loading-css"><InlineLoading /></div>  }
                             </form>
                         </div>
                     </div>

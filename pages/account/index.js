@@ -14,9 +14,11 @@ import { auth } from '../../components/hoc/auth';
 
 
 const Account = ({orders}) => {
+    console.log(orders);
 
     useEffect(() => {
         Cookies.set('orders', JSON.stringify(orders));
+        localStorage.setItem('orders', JSON.stringify(orders));
     }, []);
 
     const [value, setValue] = useState(0);
@@ -49,6 +51,7 @@ const Account = ({orders}) => {
                                     <p className="name">Name: <span>{user.first_name} {user.last_name}</span></p>
                                     <p>Email: <span>{user.email}</span></p>
                                     <p>Phone Number: <span>{user.phone}</span></p>
+                                    <p>Unused Balance: <span>₦{user.unused_balance}</span></p>
                                 </div>
                                 <div className="d-flex">
                                     <Link href="/account/edit-account"><button className="btn mr-5"><span className="text">Edit</span></button></Link> 

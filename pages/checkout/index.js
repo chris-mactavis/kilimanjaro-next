@@ -8,29 +8,44 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Link from 'next/link';
-import $ from 'jquery';
+import $, { event } from 'jquery';
+import Select from 'react-select';
 
 import OrderingSteps from '../../components/orders/orderingSteps/orderingSteps';
 import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/orderingStepsMobile';
 import FormInput from '../../components/formInput/formInput';
 import axiosInstance from '../../config/axios';
-import { addToCart, updateTotalPrice } from '../../store/actions/shop'
+import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, setTheDeliveryPrice, setTheUnsusedBalance, setNewBalance } from '../../store/actions/shop'
 import { loader } from '../../store/actions/loader';
 import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
+import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
 const Checkout = () => {
 
+    const { register, handleSubmit, errors, reset } = useForm();
+    const {
+        register: register2,
+        errors: errors2,
+        handleSubmit: handleSubmit2,
+        reset: reset2
+      } = useForm({});
+    
+
     //  All store
     const allCart = useSelector(state => state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.updatedPrice);
-    const loggedIn = useSelector(state => state.auth.loggedIn);
+    const couponStorePrice = useSelector(state => state.shop.couponAmount);
+    const deliveryPriceInStore = useSelector(state => state.shop.deliveryPrice);
+    // const loggedIn = useSelector(state => state.auth.loggedIn);
     const loadingState = useSelector(state => state.loader.loading);
     const isLoggedIn = useSelector(state => state.auth.loggedIn);
     let user = useSelector(state => state.auth.user) || {};
     user = typeof user === 'object' ? user : JSON.parse(user);
-    console.log(user);
+    const couponCode = useSelector(state => state.shop.couponName);
+    const balanceUnsused = useSelector(state => state.shop.balance); 
+    const newUnusedBal = useSelector(state => state.shop.theNewBalance)
 
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
@@ -38,28 +53,106 @@ const Checkout = () => {
     const [ paymentMethod, setPaymentmethod] = useState('payment on delivery');
     const [ isLoading, setIsLoading ] = useState(false);
     const [ selectedRestaurant, setSelectedRestaurant ] = useState(null);
-    const [ deliveryPrice, setDeliveryPrice ] = useState(0);
+    const [ deliveryPrice, setDeliveryPrice ] = useState(deliveryPriceInStore);
     const [ total, setTotal ] = useState(allTotalPrice)
     const [value, setValue] = useState(0);
     const [passwordShown, setPasswordShown] = useState(false);
+    const [ inlineLoader, setInlineLoader ] = useState(false);
+    const [ couponLoader, setCouponLoader ] = useState(0);
+    const [ couponErrorMessage, setCouponErrorMessage ] = useState('');
+    const [ theCouponPrice, setTheCouponPrice ] = useState(couponStorePrice);
+    const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
+    const [ unusedBalance, setUnusedBalance ] = useState(balanceUnsused);
 
+    const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
+    const [ stringHash, setStringHash ] = useState(null);
+    const [ theProId, setTheProId ] = useState(null);
+    const [ newBal, setNewBal ] = useState(newUnusedBal);
+    const [ paymmentType, setPaymentType ] = useState('flutterwave');
     const [localCart, setLocalCart] = useState([]);
 
     const dispatch = useDispatch();
+
+
+    const paymentTypeList = [
+        { value: 'flutterwave', label: 'Flutterwave' },
+        { value: 'interswitch', label: 'Interswitch' },
+    ];
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            async function fetchDeductedBalance() {
+                try {
+                    const token = Cookies.get('token');
+                    const  { data: unusedBalance }  = await axiosInstance.get("get-unused-balance",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                    Cookies.set('unusedBalance', unusedBalance);
+                    setUnusedBalance(unusedBalance);
+                } catch(error) {
+                   console.log(error);
+                }
+            }
+            fetchDeductedBalance();
+        }
+    }, []);
+  
     
     useEffect(() => {
         const allProductCart = Cookies.get('setCart') ? JSON.parse(Cookies.get('setCart')) : [];
         Cookies.get('setCart') ? setLocalCart(JSON.parse(Cookies.get('setCart'))) :  setLocalCart([]);
-        const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
+        // const tolPrice = Cookies.get('totalPrice') ? JSON.parse(Cookies.get('totalPrice')) : null;
         const selectedRes =  Cookies.get('selectedRestaurant') ? JSON.parse(Cookies.get('selectedRestaurant')) : null;
         setSelectedRestaurant(selectedRes);
 
-        dispatch(updateTotalPrice(tolPrice));
+        // dispatch(updateTotalPrice(tolPrice));
 
-        if (!localCart.length > 0) {
+        // if (!localCart.length > 0) {
             dispatch(addToCart(allProductCart));
-        }
+        // }
+       
     }, []);
+    
+    useEffect(() => {
+        let newTotalPriceAfterCoupon = 0;
+        let newUnusedBalance = 0;
+        if (unusedBalance > total) {
+            newUnusedBalance = unusedBalance - (allTotalPrice - theCouponPrice + deliveryPrice);
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
+            if (newUnusedBalance < 0) {
+                setTotalPriceWithCoupon(Math.abs(newUnusedBalance));
+                setTotal(Math.abs(newUnusedBalance));
+                Cookies.set('newUnusedBalance', newTotalPriceAfterCoupon);
+                setNewBalance(newTotalPriceAfterCoupon);
+                setNewBal(newTotalPriceAfterCoupon);
+            } else {
+                setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+                setTotal(newTotalPriceAfterCoupon);
+            }
+           
+        } else {
+             newTotalPriceAfterCoupon = (allTotalPrice - theCouponPrice + deliveryPrice) - unusedBalance;
+            setTotalPriceWithCoupon(newTotalPriceAfterCoupon);
+            if (newTotalPriceAfterCoupon) {
+                setTotal(newTotalPriceAfterCoupon);
+            }
+
+            Cookies.set('newUnusedBalance', newUnusedBalance);
+            setNewBalance(newUnusedBalance);
+            setNewBal(newUnusedBalance);
+           
+        }
+       
+        Cookies.set('totalPriceAmtWithCoupon', newTotalPriceAfterCoupon);
+        setValue(value => ++value);
+    }, [theCouponPrice, deliveryPrice, unusedBalance]);
 
     useEffect(() => {
         window.$ = $;
@@ -82,12 +175,18 @@ const Checkout = () => {
                 }
             });
         } 
-    }, []);
 
-    const { register, handleSubmit, errors, reset } = useForm();
+        if (paymentOption === 'pickup') {
+            setPaymentmethod('payment online')
+        } else {
+            setPaymentmethod('payment on delivery');
+        }
+    }, [paymentOption, setPaymentmethod]);
+
 
     const billingInfoHandler = async data => {
        dispatch(loader());
+       setInlineLoader(true);
         const cartItems = localCart.map(cart => ({
             restaurant_product_id: cart.product.id,
             product_cost: cart.price,
@@ -184,49 +283,108 @@ const Checkout = () => {
                 }
             }
 
-            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup')) {
-                const trans = FlutterwaveCheckout({
-                    public_key: "FLWPUBK_TEST-fe28dc780f5dd8699e9ac432c33c036e-X",
-                    tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
-                    amount: total,
-                    currency: "NGN",
-                    country: "NG",
-                    payment_options: "card, mobilemoneyghana, ussd",
-                    meta: {
-                        consumer_id: 23,
-                        consumer_mac: "92a3-912ba-1192a",
-                    },
-                    customer: {
-                        email: isLoggedIn ? user.email : data.email,
-                        phone_number: isLoggedIn ? user.phone : data.phone,
-                        name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
-                    },
-                    callback: async (data) => {
-                        try {
-                            await submitOrder(orderData);
-                            trans.close();
-                        } catch (error) {
-                            console.log(error);
-                            dispatch(loader());
-                            NotificationManager.error(error.response.data.message, '', 3000);
+            if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
+               if (paymmentType === 'flutterwave') {
+                    /** FLUTTERWAVE PAYMENT HANDLER */
+                    setPaymentType('flutterwave');
+                    const trans = FlutterwaveCheckout({
+                        public_key: "FLWPUBK_TEST-8088fffdc0d59263e1f7a490f6fc76c8-X",
+                        tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
+                        amount: total,
+                        currency: "NGN",
+                        country: "NG",
+                        payment_options: "card, mobilemoneyghana, ussd",
+                        meta: {
+                            consumer_id: 23,
+                            consumer_mac: "92a3-912ba-1192a",
+                        },
+                        customer: {
+                            email: isLoggedIn ? user.email : data.email,
+                            phone_number: isLoggedIn ? user.phone : data.phone,
+                            name: isLoggedIn ? (user.first_name + ' ' + user.last_name) : (data.first_name + ' ' + data.last_name),
+                        },
+                        callback: async (data) => {
+                            try {
+                                await submitOrder(orderData);
+                                await updateUnUsedBalance();
+                                trans.close();
+                            } catch (error) {
+                                console.log(error);
+                                dispatch(loader());
+                                setInlineLoader(false); 
+                                NotificationManager.error(error.response.data.message, '', 3000);
+                            }
+                            console.log(data);
+                        },
+                        onclose: function() {
+                            dispatch(loader());  
+                            setInlineLoader(false); 
+                        },
+                        customizations: {
+                            title: "Killimanjaro",
+                            description: "Payment for items in cart",
+                            logo: "http://167.172.177.79/images/logo-2.png",
+                        },
+                    });
+               }  else {
+                    // NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
+                    // setPaymentType('flutterwave');
+                    /** INTERSWITCH PAYMENT HANDLER */
+                        setPaymentType('interswitch');
+                        let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
+                        let itemId = "101";
+                        let amount = parseInt(total + '00');
+                        let siteRedirectUrl = "http://167.172.177.79";
+                        let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+                    
+                        let productId = '1076';
+                        let sha512 = require("sha512");
+                        let hashString = transRef + productId +  itemId + +amount + siteRedirectUrl + macKey;
+                        let hash = sha512(hashString).toString('hex').toUpperCase();
+            
+                
+                    const obj = {
+                        postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
+                        amount,
+                        productId,
+                        transRef,
+                        siteName: "Kilimanjaro",
+                        itemId,
+                        customerId: "84",
+                        siteRedirectUrl,
+                        currency: "NGN",
+                        hash,
+                        onComplete : async (paymentResponse) => {
+                            if (paymentResponse.resp == 'Z6') {
+                               return;
+                            } else {
+                                try {
+                                    await submitOrder(orderData);
+                                    await updateUnUsedBalance();
+                                } catch (error) {
+                                    console.log(error);
+                                    dispatch(loader());
+                                    setInlineLoader(false); 
+                                    NotificationManager.error(error.response.data.message, '', 3000);
+                                }  
+                            }
+                            // console.log(paymentResponse);
                         }
-                        console.log(data);
-                    },
-                    onclose: function() {
-                        dispatch(loader());
-                    },
-                    customizations: {
-                        title: "Killimanjaro",
-                        description: "Payment for items in cart",
-                        logo: "/images/logo.png",
-                    },
-                });
+                    };
+                    new IswPay(obj);
+               }
+
+                dispatch(loader());
+                setInlineLoader(false);
+
             } else {
                 try {
                     await submitOrder(orderData);
+                    await updateUnUsedBalance();
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());
+                    setInlineLoader(false);
                     NotificationManager.error(error.response.data.message, '', 3000);
                 }
             }
@@ -244,13 +402,28 @@ const Checkout = () => {
         const orderItem = data.data.data;
         Cookies.set('orderItem', JSON.stringify(orderItem));
         dispatch(loader());
+        setInlineLoader(false); 
         NotificationManager.success('Order added successfully', '', 3000);
+        Cookies.set('lastCartOrder', localCart);
         Router.push('/complete-order');
         dispatch(addToCart([]));
         dispatch(updateTotalPrice(0));
         Cookies.remove('setCart');
         Cookies.remove('totalPrice');
-    }
+    };
+
+    const updateUnUsedBalance = async () => {
+        const token = Cookies.get('token');
+        const data = await axiosInstance.patch("set-unused-balance", {
+            result: newBal
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+    };
 
     const verifyEmailHandler = async email => {
         try {
@@ -259,7 +432,7 @@ const Checkout = () => {
         } catch (error) {
 
         }
-    }
+    };
 
     const onchangePaymentOption = (e) => {
         setPaymentOption(e.target.value);
@@ -267,16 +440,19 @@ const Checkout = () => {
 
     const onchangePaymentMethod = (e) => {
         setPaymentmethod(e.target.value);
-    }
+    };
+
+    // const handlePaymentTypeChange = ({value: paymentType}) => {
+    //     console.log(paymentType);
+    // };
   
     const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
     };
 
     const handleSelect = streetAddress => {
-        // setTotal(0);
-        setDeliveryPrice(0);
-        setValue(value => ++value);
+        dispatch(loader());
+        setInlineLoader(true);
         geocodeByAddress(streetAddress)
             .then(async results => {
                 const latLng = await getLatLng(results[0]);
@@ -291,44 +467,163 @@ const Checkout = () => {
                     longitude: latLng ? latLng.lng : null,
                     latitude: latLng ? latLng.lat : null
                 }
-        
+
                 try {
-                    dispatch(loader());
                     const {data: {data}} = await axiosInstance.post('delivery-fee', deliveryDataForAmount);
-                    console.log(data);
-                    setDeliveryPrice(data.delivery_price);
-                    // let calculateTotal = total;
-                    const calculateTotal = +data.delivery_price + +allTotalPrice;
-                    setTotal(calculateTotal);
+                    const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
+                    if (getDeliveryCoupon) {
+                        setDeliveryPrice(0);
+                        setTheDeliveryPrice(0);
+                    } else {
+                        setDeliveryPrice(data.delivery_price);
+                        setTheDeliveryPrice(data.delivery_price);
+                    }
                     setValue(value => ++value);
                     setTimeout(() => {
                         dispatch(loader());
-                    }, 1000)
-                    // console.log(data);
+                        setInlineLoader(false);
+                    }, 1000);
                 } catch(error) {
                     console.log(error);
+                    dispatch(loader());
+                    setInlineLoader(false);
                 }
-                // console.log('Success', latLng)
             })
             .catch(error => console.error('Error', error));
     };
     
     const searchOptions = {
         componentRestrictions: {country: "ng"}
-    }
-
-    const makePayment = () => {
-        
     };
 
     const loginRedirect = () => {
         localStorage.setItem('checkoutToLogin', '/checkout');
         Router.push('/signup');
-    }
+    };
 
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
     };
+
+    const couponErrorMessageHandler = (message) => {
+        setCouponErrorMessage(message)
+        NotificationManager.error(message, '', 6000);
+        setTimeout(() => {
+            setCouponErrorMessage('')
+        }, 6000);
+    }
+
+    const couponApplication = async data => {
+        const couponCode = data.coupon;
+        dispatch(loader());
+        setCouponLoader(1);
+        const getDeliveryCoupon = Cookies.get('deliveryCoupon') ? Cookies.get('deliveryCoupon') : null;
+
+        try {
+            const token = Cookies.get('token');
+            const  { data: firstUserCode }  = await axiosInstance.get("is-ftu", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const  { data: {data: couponResult} }  = await axiosInstance.get(`coupons?code=${couponCode}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const theCouponApplication = () => {
+                // CHECKING FOR COUPON TYPE
+                if (couponResult.coupon_type == 'percentage') {
+                    Cookies.set('coupName',  couponCode);
+                    // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = (+couponResult.value / 100) * allTotalPrice;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setValue(value => ++value);
+                        setTheCouponPrice(newPrice);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+    
+                } else if (couponResult.coupon_type == 'price') {
+                    Cookies.set('coupName',  couponCode);
+                     // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = +couponResult.value;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setValue(value => ++value);
+                        setTheCouponPrice(newPrice);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+    
+                } else if (couponResult.coupon_type == 'delivery') {
+                    Cookies.set('coupName',  couponCode);
+                      // CHECKING FOR MINIMUN ORDER BEFORE APPLYING THE COUPON
+                    if (allTotalPrice >= +couponResult.min_order) {
+                        const newPrice = 0;
+                        setCouponAmount(newPrice);
+                        Cookies.set('couponAmt', newPrice);
+                        Cookies.set('deliveryCoupon', 1);
+                        NotificationManager.success('Coupon code applied successfully', '', 3000);
+                        setTheCouponPrice(newPrice);
+                        setDeliveryPrice(0);
+                        setTheDeliveryPrice(0);
+                        setTheCouponCodeName(couponCode);
+                    } else {
+                        couponErrorMessageHandler(`Sorry, this coupon requires a minimum order of ₦${couponResult.min_order} in order to be applied.`);
+                    }
+                }
+            }
+
+            if (theCouponPrice > 0 || getDeliveryCoupon == 1) {
+                couponErrorMessageHandler('Sorry, you can only apply this coupon once.');
+            } else {
+                //  This test if a coupon is for a city  
+                if (couponResult.cities == null || couponResult.cities.includes(+selectedRestaurant.city_id)) {
+                    // This test if the coupon is avialable
+                    if (couponResult.status) {
+                        // This test if the user is a first time user
+                        if ((firstUserCode == 1 && couponResult.ftu == 1)) {
+                            theCouponApplication();  
+                        } else if ((firstUserCode == 0 && couponResult.ftu == 0)) {
+                            theCouponApplication();
+                        } else if ((firstUserCode == 1 && couponResult.ftu == 0)) {
+                            theCouponApplication();
+                        } else {
+                            couponErrorMessageHandler("Sorry, this coupon is only for first time users.");
+                        }
+                    } else {
+                        couponErrorMessageHandler("Sorry, this coupon is not available at the moment.");
+                    }
+
+                } else {
+                    couponErrorMessageHandler("Sorry, this coupon is not available in your city.");
+                }
+            } 
+            
+            dispatch(loader());
+            setCouponLoader(0)
+        } catch (error) {
+            dispatch(loader());
+            setCouponLoader(0)
+            NotificationManager.error(error.response.data.message, '', 5000);
+            console.log(error);
+        }
+        reset2({});
+    };
+
+    const onchangePaymentType = (e) => {
+        setPaymentType(e.target.value);
+    };
+
 
     return (
         <>
@@ -336,241 +631,284 @@ const Checkout = () => {
                 <Head>
                     <title>Checkout | Kilimanjaro</title>
                     <script src="https://checkout.flutterwave.com/v3.js"></script>
+                    <script type="text/javascript" src="http://sandbox.interswitchng.com/collections/public/webpay.js"></script>
                 </Head>
 
-                {
-                    !localCart.length > 0 || allTotalPrice < 1000 
-                    ? 
-                    <section className="shopping-cart empty-cart">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className="empty-cart-container">
-                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
-                                        {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
-                                        {localCart.length > 0
-                                            ?
-                                            <Link href="/cart"><button className="btn"><span className="text">Return to cart</span></button></Link>
-                                            :
-                                            <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
-                                        }
-                                    </div>
+                {(!localCart.length > 0 || allTotalPrice < 1000) &&
+                <section className="shopping-cart empty-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="empty-cart-container">
+                                    <p className="d-flex align-items-center justify-content-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
+                                    {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
+                                    {localCart.length > 0
+                                        ?
+                                        <Link href="/cart"><button className="btn"><span className="text">Return to cart</span></button></Link>
+                                        :
+                                        <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
+                                    }
                                 </div>
                             </div>
                         </div>
-                    </section>
-                    :
-                    <section className="shopping-cart">
-                        <div className="container">
-                            <OrderingSteps activeTabs={[1, 2]} />
-                            <OrderingStepsMobile activeTabs={[2]} />
-                            {/* Checkout */}
-                            <div className="checkout-section">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <h4>Payment Option</h4>
-                                        <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                            <label className="payment">
-                                                <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
-                                            </label>
-                                            <label className="payment">
-                                                <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
-                                            </label>
-                                        </div>
+                    </div>
+                </section>
+                }
+                {(localCart.length > 0 || allTotalPrice > 1000)  &&
+                <section className="shopping-cart">
+                    <div className="container">
+                        <OrderingSteps activeTabs={[1, 2]} />
+                        <OrderingStepsMobile activeTabs={[2]} />
+                        {/* Checkout */}
+                        <div className="checkout-section">
+                            <div className="row">
+                                <div className="col-md-7">
+                                    <h4>Payment Option</h4>
+                                    <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                        <label className="payment">
+                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
+                                        </label>
+                                        <label className="payment">
+                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
+                                        </label>
                                     </div>
                                 </div>
-                                <form onSubmit={handleSubmit(billingInfoHandler)} className="signup-form">
-                                    <div className="row">
-                                        <div className="col-md-7">
-                                            {/* Payment Method */}
-                                            <h4 className="mt-4">Payment Method</h4>
-                                            <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                                {paymentOption === 'delivery'
-                                                    ?
-                                                    <>
-                                                        <label className="payment">
-                                                            <input type="radio" value="payment on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
-                                                </label>
-                                                        <label className="payment">
-                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
-                                                </label>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <label className="payment">
-                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
-                                                </label>
-                                                    </>
-                                                }
-                                            </div>
-
-                                            {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
-
-                                            {/* Contact Details */}
-                                            {paymentOption === 'pickup' && loggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
-                                            {!loggedIn && <div>
-                                                <FormInput
-                                                    type="text"
-                                                    name="first_name"
-                                                    placeholder="First Name*"
-                                                    label="First Name"
-                                                    register={register({ required: 'First name is required' })}
-                                                    error={errors.first_name && errors.first_name.message}
-                                                />
-                                                <FormInput
-                                                    type="text"
-                                                    name="last_name"
-                                                    placeholder="Last Name*"
-                                                    label="Last Name"
-                                                    register={register({ required: 'Last name is required' })}
-                                                    error={errors.last_name && errors.last_name.message}
-                                                />
-                                                <FormInput
-                                                    type="email"
-                                                    name="email"
-                                                    placeholder="Email*"
-                                                    label="Email"
-                                                    register={register({
-                                                        required: 'Please input a valid email address',
-                                                        pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                                                        validate: async value => verifyEmailHandler(value)
-                                                    })}
-                                                    error={errors.email && errors.email.message}
-                                                />
-                                                <div>
-                                                    <label htmlFor="Password">Password</label>
-                                                    <div className="textbox">
-                                                        <input
-                                                            type={passwordShown ? "text" : "password"}
-                                                            name="password"
-                                                            placeholder="Password*"
-                                                            label="Password"
-                                                            ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
-                                                        />
-                                                        <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
-                                                        <div className={`border ${errors.password ? "border-error" : null}`}></div>
-                                                    </div>
-                                                    {errors.password && <p className="error">{errors.password.message}</p>}
-                                                </div>
-                                                {paymentOption === 'pickup' && <FormInput
-                                                    type="number"
-                                                    name="phone"
-                                                    placeholder="+234 80 1234 5678*"
-                                                    label="Mobile Number"
-                                                    register={register({ required: 'This field is required.' })}
-                                                    error={errors.phone && errors.phone.message}
-                                                />}
-                                            </div>
+                            </div>
+                            <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form select-state">
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        {/* Payment Method */}
+                                        <h4 className="mt-4">Payment Method</h4>
+                                        <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                            {paymentOption === 'delivery'
+                                                ?
+                                                <>
+                                                    <label className="payment">
+                                                        <input type="radio" value="pay on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
+                                                    </label>
+                                                    <label className="payment">
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
+                                                    </label>
+                                                </>
+                                                :
+                                                <>
+                                                    <label className="payment">
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
+                                                        </label>
+                                                </>
                                             }
+                                        </div>
+                                            
+                                        { paymentMethod === 'payment online' && <>
+                                        <h4>Payment Type</h4>
+                                        <select onChange={onchangePaymentType} value={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                            <option value="flutterwave">Flutterwave</option>
+                                            <option value="interswitch">Interswitch</option>
+                                        </select>
+                                        {errors.ptype && <p className="error">{errors.ptype.message}</p>}
+                                        </>
+                                        }
 
-                                            {isLoggedIn && <FormInput
+                                        
+
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+
+                                        {/* Contact Details */}
+                                        {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
+                                        {!isLoggedIn && <div>
+                                            <FormInput
+                                                type="text"
+                                                name="first_name"
+                                                placeholder="First Name*"
+                                                label="First Name"
+                                                register={register({ required: 'First name is required' })}
+                                                error={errors.first_name && errors.first_name.message}
+                                            />
+                                            <FormInput
+                                                type="text"
+                                                name="last_name"
+                                                placeholder="Last Name*"
+                                                label="Last Name"
+                                                register={register({ required: 'Last name is required' })}
+                                                error={errors.last_name && errors.last_name.message}
+                                            />
+                                            <FormInput
+                                                type="email"
+                                                name="email"
+                                                placeholder="Email*"
+                                                label="Email"
+                                                register={register({
+                                                    required: 'Please input a valid email address',
+                                                    pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                                                    validate: async value => verifyEmailHandler(value)
+                                                })}
+                                                error={errors.email && errors.email.message}
+                                            />
+                                            <div>
+                                                <label htmlFor="Password">Password</label>
+                                                <div className="textbox">
+                                                    <input
+                                                        type={passwordShown ? "text" : "password"}
+                                                        name="password"
+                                                        placeholder="Password*"
+                                                        label="Password"
+                                                        ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
+                                                    />
+                                                    <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                                                    <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                                                </div>
+                                                {errors.password && <p className="error">{errors.password.message}</p>}
+                                            </div>
+                                            {paymentOption === 'pickup' && <FormInput
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
                                                 label="Mobile Number"
                                                 register={register({ required: 'This field is required.' })}
                                                 error={errors.phone && errors.phone.message}
-                                                defaultValue={user && user.phone}
                                             />}
-
-                                            {paymentOption === 'delivery' && <div>
-                                                <PlacesAutocomplete
-                                                    value={streetAddress}
-                                                    onChange={handleChange}
-                                                    onSelect={handleSelect}
-                                                    searchOptions={searchOptions}
-                                                >
-                                                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                                        <div>
-                                                            <FormInput
-                                                                type="text"
-                                                                name='streetAddress'
-                                                                label="Street/Estate Address"
-                                                                {...getInputProps({
-                                                                    placeholder: 'Manually type your street/estate address',
-                                                                    className: 'location-search-input',
-                                                                })}
-                                                                register={register({ required: 'This field is required' })}
-                                                                error={errors.streetAddress && errors.streetAddress.message}
-                                                            />
-                                                            <div className="autocomplete-dropdown-container">
-                                                                {loading && <div>Loading...</div>}
-                                                                {suggestions.map((suggestion) => {
-                                                                    const className = suggestion.active
-                                                                        ? 'suggestion-item--active'
-                                                                        : 'suggestion-item';
-                                                                    // inline style for demonstration purpose
-                                                                    const style = suggestion.active
-                                                                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                                                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                                                    return (
-                                                                        <div className="input-suggestion" key={suggestion.placeId}
-                                                                            {...getSuggestionItemProps(suggestion, {
-                                                                                style,
-                                                                            })}
-                                                                        >
-                                                                            <span>{suggestion.description}</span>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </PlacesAutocomplete>
-                                                <FormInput
-                                                    type="text"
-                                                    name="houseNumber"
-                                                    placeholder="House Number*"
-                                                    label="House Number"
-                                                    register={register({ required: true })}
-                                                    error={errors.houseNumber && 'This field is required'}
-                                                />
-                                            </div>}
-
-                                            <h4 className="mt-5">Additional Informations</h4>
-                                            <textarea
-                                                // className={errors.message ? 'textarea-error' : null}
-                                                name="message"
-                                                placeholder='Order/delivery note'
-                                                ref={register}
-                                            />
                                         </div>
+                                        }
 
-                                        <div className="col-md-5">
-                                            <div className="order-details text-center">
-                                                <h4>Order Details</h4>
-                                                <div className="order-details-list">
-                                                    <div className="order-prod mb-5">
-                                                        {localCart.map((cart, id) => {
-                                                            return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
-                                                                <p>{cart.quantity}x <span>{cart.product.product}</span></p>
-                                                                <p key={cart}>{'₦' + cart.totalPrice}</p>
-                                                            </div>
-                                                        })}
+                                        {isLoggedIn && <FormInput
+                                            type="number"
+                                            name="phone"
+                                            placeholder="+234 80 1234 5678*"
+                                            label="Mobile Number"
+                                            register={register({ required: 'This field is required.' })}
+                                            error={errors.phone && errors.phone.message}
+                                            defaultValue={user && user.phone}
+                                        />}
+
+                                        {paymentOption === 'delivery' && <div>
+                                            <PlacesAutocomplete
+                                                value={streetAddress}
+                                                onChange={handleChange}
+                                                onSelect={handleSelect}
+                                                searchOptions={searchOptions}
+                                            >
+                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                    <div>
+                                                        <FormInput
+                                                            type="text"
+                                                            name='streetAddress'
+                                                            label="Street/Estate Address"
+                                                            {...getInputProps({
+                                                                placeholder: 'Manually type your street/estate address',
+                                                                className: 'location-search-input',
+                                                            })}
+                                                            register={register({ required: 'This field is required' })}
+                                                            error={errors.streetAddress && errors.streetAddress.message}
+                                                        />
+                                                        <div className="autocomplete-dropdown-container">
+                                                            {loading && <div>Loading...</div>}
+                                                            {suggestions.map((suggestion) => {
+                                                                const className = suggestion.active
+                                                                    ? 'suggestion-item--active'
+                                                                    : 'suggestion-item';
+                                                                // inline style for demonstration purpose
+                                                                const style = suggestion.active
+                                                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                                                return (
+                                                                    <div className="input-suggestion" key={suggestion.placeId}
+                                                                        {...getSuggestionItemProps(suggestion, {
+                                                                            style,
+                                                                        })}
+                                                                    >
+                                                                        <span>{suggestion.description}</span>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
-                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Subtotal</p>
-                                                        <p>{'₦' + allTotalPrice}</p>
-                                                    </div>
-                                                    {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Delivery</p>
-                                                        <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
-                                                    </div>}
-                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Order Total </p>
-                                                        <p>{'₦' + total}</p>
-                                                    </div>
-                                                    {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                    <div className="d-flex justify-content-center">{loadingState ? <InlineLoadingWhite /> : <button className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
-                                                    {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
+                                                )}
+                                            </PlacesAutocomplete>
+                                            <FormInput
+                                                type="text"
+                                                name="houseNumber"
+                                                placeholder="House Number*"
+                                                label="House Number"
+                                                register={register({ required: true })}
+                                                error={errors.houseNumber && 'This field is required'}
+                                            />
+                                        </div>}
+
+                                        <h4 className="mt-5">Additional Informations</h4>
+                                        <textarea
+                                            // className={errors.message ? 'textarea-error' : null}
+                                            name="message"
+                                            placeholder='Order/delivery note'
+                                            ref={register}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-5">
+                                        <div className="order-details text-center">
+                                            <h4>Order Details</h4>
+                                            <div className="order-details-list">
+                                                <div className="order-prod mb-5">
+                                                    {localCart.map((cart, id) => {
+                                                        return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
+                                                            <p>{cart.quantity}x <span>{cart.product.product}</span></p>
+                                                            <p key={cart}>{'₦' + cart.totalPrice}</p>
+                                                        </div>
+                                                    })}
                                                 </div>
+                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Subtotal</p>
+                                                    <p>{'₦' + allTotalPrice}</p>
+                                                </div>
+                                                { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Coupon: {theCouponCodeName}</p>    
+                                                    <p>- {'₦' + theCouponPrice}[Removed]</p>
+                                                </div> }
+                                                {(unusedBalance > total  && unusedBalance > 0) &&
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>
+                                                        <p>{'₦' + newBal }</p>
+                                                    </div>
+                                                }
+                                                {(unusedBalance < total && unusedBalance > 0) && 
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>
+                                                        <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                    </div>
+                                                }
+                                                {/* { unusedBalance > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Unused Balance </p>    
+                                                    <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                </div> } */}
+                                                {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Delivery</p>
+                                                    <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
+                                                </div>}
+                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Order Total </p>
+                                                    <p>{'₦' + total}</p>
+                                                </div>
+                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
+                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
+                                                {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
+                            </form>
+                            <div className="row">
+                                <div className="col-md-7">
+                                    <form key={2} onSubmit={handleSubmit2(couponApplication)} className="signup-form coupon-form">
+                                        <div className="coupon-container">
+                                            <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
+                                            {loadingState && couponLoader === 1 ? <InlineLoading /> : <button className="btn"><span className="text">Apply Coupon</span></button> }
+                                        </div>
+                                        <p className="error">{couponErrorMessage}</p>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
                 }
             </Layout>
         </>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
 import Router from 'next/router';
@@ -14,12 +14,17 @@ import { addToCart, setTotalPrice } from '../../store/actions/shop';
 const Orders = () => {
 
     const [ inlineLoading, setInlineLoading ] = useState(0);
+    const [ orders, setOrders ] = useState([]);
 
     const dispatch = useDispatch();
     const loadingState = useSelector(state => state.loader.loading);
     const loggedIn = useSelector(state => state.auth.loggedIn);
 
-    const recentOrders =  Cookies.get('orders') ? JSON.parse(Cookies.get('orders')) : [];
+    // const recentOrders =  Cookies.get('orders') ? JSON.parse(Cookies.get('orders')) : [];
+    useEffect(() => {
+        const recentOrders = localStorage.getItem('orders') ? JSON.parse(localStorage.getItem('orders')) : [];
+        setOrders(recentOrders);
+    }, []);
 
     const reOrderBtnHandler = async (id, resName, resId) => {
         setInlineLoading(id);
@@ -50,18 +55,18 @@ const Orders = () => {
 
     return (
         <>
-            {loggedIn && recentOrders.length > 0 ? <section className="orders">
+            {loggedIn && orders.length > 0 ? <section className="orders">
                 <div className="container">
                     <div className="row">
                         <div className="col-12 text-center">
                             <h2>Recent Orders</h2>
                         </div>
-                        { recentOrders.length === 0
+                        { orders.length === 0
                          ? 
                          <p className="text-center w-100 mt-0 mb-0">You have no recent orders yet.</p>  
                          :
                         <>
-                            {recentOrders.slice(0, 2).map((recentOrder) => {
+                            {orders.slice(0, 2).map((recentOrder) => {
                                 const orderItems = recentOrder.order_items;
                                 return <div key={recentOrder.id} className="col-md-8 mx-auto">
                                     <div className="orders-container">
@@ -88,7 +93,7 @@ const Orders = () => {
                                                         <p className="prices-details bold-text">Total(Including vat)</p>
                                                         <p className="prices-details bold-text">₦{recentOrder.total}</p>
                                                     </div>
-                                                    <div className="text-right">{loadingState && inlineLoading === recentOrder.id ? <InlineLoading /> : <button onClick={() => reOrderBtnHandler(recentOrder.id, recentOrder.restaurant, recentOrder.restaurant_id)} className="btn"><span className="text">Re-order</span></button>}</div>
+                                                    <div>{loadingState && inlineLoading === recentOrder.id ? <InlineLoading /> : <button onClick={() => reOrderBtnHandler(recentOrder.id, recentOrder.restaurant, recentOrder.restaurant_id)} className="btn"><span className="text">Re-order</span></button>}</div>
                                                 </div>
                                             </div>
                                         </div>

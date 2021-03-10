@@ -24,7 +24,9 @@ const Footer = ({showSecFooter}) => {
                                 </div>
                             </div>
                             <div className="col-md-5 d-lg-block d-none">
-                                <img className="app-img" src="/images/app-image.png" alt="" />
+                                {/* <img className="app-img" src="/images/app-image.png" alt="" /> */}
+                                <img className="app-img app-img-1" src="/images/app-1.png" alt="" />
+                                <img className="app-img app-img-2" src="/images/app-2.png" alt="" />
                             </div>
                         </div>
                     </div>
