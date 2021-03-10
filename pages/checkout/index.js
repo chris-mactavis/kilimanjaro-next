@@ -69,12 +69,6 @@ const Checkout = () => {
     const [ theProId, setTheProId ] = useState(null);
     const [ newBal, setNewBal ] = useState(newUnusedBal);
     const [ paymmentType, setPaymentType ] = useState('flutterwave');
-
-    // console.log(paymentInfoInterswitch);
-    // console.log(stringHash);
-    // console.log(theProId);
-
-
     const [localCart, setLocalCart] = useState([]);
 
     const dispatch = useDispatch();
@@ -99,8 +93,6 @@ const Checkout = () => {
 
                     Cookies.set('unusedBalance', unusedBalance);
                     setUnusedBalance(unusedBalance);
-    
-                    console.log(unusedBalance);
                 } catch(error) {
                    console.log(error);
                 }
@@ -185,10 +177,8 @@ const Checkout = () => {
         } 
 
         if (paymentOption === 'pickup') {
-            console.log('true');
             setPaymentmethod('payment online')
         } else {
-            console.log('false')
             setPaymentmethod('payment on delivery');
         }
     }, [paymentOption, setPaymentmethod]);
@@ -296,6 +286,7 @@ const Checkout = () => {
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
                if (paymmentType === 'flutterwave') {
                     /** FLUTTERWAVE PAYMENT HANDLER */
+                    setPaymentType('flutterwave');
                     const trans = FlutterwaveCheckout({
                         public_key: "FLWPUBK_TEST-8088fffdc0d59263e1f7a490f6fc76c8-X",
                         tx_ref: `kilimanjaro-ref-${Math.random() * 99}`,
@@ -336,42 +327,52 @@ const Checkout = () => {
                         },
                     });
                }  else {
-                    NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
-                    setPaymentType('flutterwave');
-                
-               }
-
-                 /** INTERSWITCH PAYMENT HANDLER */
-
-                //     let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
-                //     let itemId = "101";
-                //     let amount = total + 00;
-                //     let siteRedirectUrl = "http://localhost:8080/webpopupnew.html";
-                //     let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
-                
-                //     let   productId = '1076';
-                //     let sha512 = require("sha512");
-                //     let hashString = transRef + productId +  itemId + amount + siteRedirectUrl + macKey;
-                //     let hash = sha512(hashString).toString('hex').toUpperCase();
-        
+                    // NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
+                    // setPaymentType('flutterwave');
+                    /** INTERSWITCH PAYMENT HANDLER */
+                        setPaymentType('interswitch');
+                        let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
+                        let itemId = "101";
+                        let amount = parseInt(total + '00');
+                        let siteRedirectUrl = "http://167.172.177.79";
+                        let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+                    
+                        let productId = '1076';
+                        let sha512 = require("sha512");
+                        let hashString = transRef + productId +  itemId + +amount + siteRedirectUrl + macKey;
+                        let hash = sha512(hashString).toString('hex').toUpperCase();
             
-                // const obj = {
-                //     postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
-                //     amount,
-                //     productId,
-                //     transRef,
-                //     siteName: "Kilimanjaro",
-                //     itemId,
-                //     customerId: "84",
-                //     siteRedirectUrl,
-                //     currency: "NGN",
-                //     hash,
-                //     onComplete : function (paymentResponse){
-                //         console.log('i got here');
-                //     }
-                // };
-        
-                // new IswPay(obj);
+                
+                    const obj = {
+                        postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
+                        amount,
+                        productId,
+                        transRef,
+                        siteName: "Kilimanjaro",
+                        itemId,
+                        customerId: "84",
+                        siteRedirectUrl,
+                        currency: "NGN",
+                        hash,
+                        onComplete : async (paymentResponse) => {
+                            if (paymentResponse.resp == 'Z6') {
+                               return;
+                            } else {
+                                try {
+                                    await submitOrder(orderData);
+                                    await updateUnUsedBalance();
+                                } catch (error) {
+                                    console.log(error);
+                                    dispatch(loader());
+                                    setInlineLoader(false); 
+                                    NotificationManager.error(error.response.data.message, '', 3000);
+                                }  
+                            }
+                            // console.log(paymentResponse);
+                        }
+                    };
+                    new IswPay(obj);
+               }
 
                 dispatch(loader());
                 setInlineLoader(false);
@@ -403,6 +404,7 @@ const Checkout = () => {
         dispatch(loader());
         setInlineLoader(false); 
         NotificationManager.success('Order added successfully', '', 3000);
+        Cookies.set('lastCartOrder', localCart);
         Router.push('/complete-order');
         dispatch(addToCart([]));
         dispatch(updateTotalPrice(0));
@@ -440,9 +442,9 @@ const Checkout = () => {
         setPaymentmethod(e.target.value);
     };
 
-    const handlePaymentTypeChange = ({value: paymentType}) => {
-        console.log(paymentType);
-    };
+    // const handlePaymentTypeChange = ({value: paymentType}) => {
+    //     console.log(paymentType);
+    // };
   
     const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
@@ -607,7 +609,6 @@ const Checkout = () => {
                 }
             } 
             
-            
             dispatch(loader());
             setCouponLoader(0)
         } catch (error) {
@@ -620,10 +621,8 @@ const Checkout = () => {
     };
 
     const onchangePaymentType = (e) => {
-        console.log(e.target.value);
         setPaymentType(e.target.value);
-
-    }
+    };
 
 
     return (
@@ -635,282 +634,281 @@ const Checkout = () => {
                     <script type="text/javascript" src="http://sandbox.interswitchng.com/collections/public/webpay.js"></script>
                 </Head>
 
-                {
-                    !localCart.length > 0 || allTotalPrice < 1000 
-                    ? 
-                    <section className="shopping-cart empty-cart">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className="empty-cart-container">
-                                        <p className="d-flex align-items-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
-                                        {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
-                                        {localCart.length > 0
-                                            ?
-                                            <Link href="/cart"><button className="btn"><span className="text">Return to cart</span></button></Link>
-                                            :
-                                            <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
-                                        }
-                                    </div>
+                {(!localCart.length > 0 || allTotalPrice < 1000) &&
+                <section className="shopping-cart empty-cart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="empty-cart-container">
+                                    <p className="d-flex align-items-center justify-content-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
+                                    {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
+                                    {localCart.length > 0
+                                        ?
+                                        <Link href="/cart"><button className="btn"><span className="text">Return to cart</span></button></Link>
+                                        :
+                                        <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
+                                    }
                                 </div>
                             </div>
                         </div>
-                    </section>
-                    :
-                    <section className="shopping-cart">
-                        <div className="container">
-                            <OrderingSteps activeTabs={[1, 2]} />
-                            <OrderingStepsMobile activeTabs={[2]} />
-                            {/* Checkout */}
-                            <div className="checkout-section">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <h4>Payment Option</h4>
-                                        <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                            <label className="payment">
-                                                <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
-                                            </label>
-                                            <label className="payment">
-                                                <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
-                                            </label>
-                                        </div>
+                    </div>
+                </section>
+                }
+                {(localCart.length > 0 || allTotalPrice > 1000)  &&
+                <section className="shopping-cart">
+                    <div className="container">
+                        <OrderingSteps activeTabs={[1, 2]} />
+                        <OrderingStepsMobile activeTabs={[2]} />
+                        {/* Checkout */}
+                        <div className="checkout-section">
+                            <div className="row">
+                                <div className="col-md-7">
+                                    <h4>Payment Option</h4>
+                                    <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                        <label className="payment">
+                                            <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
+                                        </label>
+                                        <label className="payment">
+                                            <input type="radio" value="pickup" name="radio" onChange={onchangePaymentOption} key={'Pickup'} />Pickup
+                                        </label>
                                     </div>
                                 </div>
-                                <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form select-state">
-                                    <div className="row">
-                                        <div className="col-md-7">
-                                            {/* Payment Method */}
-                                            <h4 className="mt-4">Payment Method</h4>
-                                            <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
-                                                {paymentOption === 'delivery'
-                                                    ?
-                                                    <>
-                                                        <label className="payment">
-                                                            <input type="radio" value="pay on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
+                            </div>
+                            <form id="checkoutForm" key={1} onSubmit={handleSubmit(billingInfoHandler)} className="signup-form select-state">
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        {/* Payment Method */}
+                                        <h4 className="mt-4">Payment Method</h4>
+                                        <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                            {paymentOption === 'delivery'
+                                                ?
+                                                <>
+                                                    <label className="payment">
+                                                        <input type="radio" value="pay on delivery" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnDelivery'} />Pay On Delivery
+                                                    </label>
+                                                    <label className="payment">
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
+                                                    </label>
+                                                </>
+                                                :
+                                                <>
+                                                    <label className="payment">
+                                                        <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
                                                         </label>
-                                                        <label className="payment">
-                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" key={'PayOnline'} />Pay Online
-                                                        </label>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <label className="payment">
-                                                            <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
-                                                         </label>
-                                                    </>
-                                                }
-                                            </div>
-                                               
-                                           { paymentMethod === 'payment online' && <>
-                                           <h4>Payment Type</h4>
-                                            <select onChange={onchangePaymentType} defaultValue={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
-                                                <option value="flutterwave">Flutterwave</option>
-                                                <option value="interswitch">Interswitch</option>
-                                            </select>
-                                            {errors.ptype && <p className="error">{errors.ptype.message}</p>}
-                                            </>
-                                           }
-
-                                            
-
-                                            {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
-
-                                            {/* Contact Details */}
-                                            {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
-                                            {!isLoggedIn && <div>
-                                                <FormInput
-                                                    type="text"
-                                                    name="first_name"
-                                                    placeholder="First Name*"
-                                                    label="First Name"
-                                                    register={register({ required: 'First name is required' })}
-                                                    error={errors.first_name && errors.first_name.message}
-                                                />
-                                                <FormInput
-                                                    type="text"
-                                                    name="last_name"
-                                                    placeholder="Last Name*"
-                                                    label="Last Name"
-                                                    register={register({ required: 'Last name is required' })}
-                                                    error={errors.last_name && errors.last_name.message}
-                                                />
-                                                <FormInput
-                                                    type="email"
-                                                    name="email"
-                                                    placeholder="Email*"
-                                                    label="Email"
-                                                    register={register({
-                                                        required: 'Please input a valid email address',
-                                                        pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                                                        validate: async value => verifyEmailHandler(value)
-                                                    })}
-                                                    error={errors.email && errors.email.message}
-                                                />
-                                                <div>
-                                                    <label htmlFor="Password">Password</label>
-                                                    <div className="textbox">
-                                                        <input
-                                                            type={passwordShown ? "text" : "password"}
-                                                            name="password"
-                                                            placeholder="Password*"
-                                                            label="Password"
-                                                            ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
-                                                        />
-                                                        <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
-                                                        <div className={`border ${errors.password ? "border-error" : null}`}></div>
-                                                    </div>
-                                                    {errors.password && <p className="error">{errors.password.message}</p>}
-                                                </div>
-                                                {paymentOption === 'pickup' && <FormInput
-                                                    type="number"
-                                                    name="phone"
-                                                    placeholder="+234 80 1234 5678*"
-                                                    label="Mobile Number"
-                                                    register={register({ required: 'This field is required.' })}
-                                                    error={errors.phone && errors.phone.message}
-                                                />}
-                                            </div>
+                                                </>
                                             }
+                                        </div>
+                                            
+                                        { paymentMethod === 'payment online' && <>
+                                        <h4>Payment Type</h4>
+                                        <select onChange={onchangePaymentType} value={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                            <option value="flutterwave">Flutterwave</option>
+                                            <option value="interswitch">Interswitch</option>
+                                        </select>
+                                        {errors.ptype && <p className="error">{errors.ptype.message}</p>}
+                                        </>
+                                        }
 
-                                            {isLoggedIn && <FormInput
+                                        
+
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+
+                                        {/* Contact Details */}
+                                        {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
+                                        {!isLoggedIn && <div>
+                                            <FormInput
+                                                type="text"
+                                                name="first_name"
+                                                placeholder="First Name*"
+                                                label="First Name"
+                                                register={register({ required: 'First name is required' })}
+                                                error={errors.first_name && errors.first_name.message}
+                                            />
+                                            <FormInput
+                                                type="text"
+                                                name="last_name"
+                                                placeholder="Last Name*"
+                                                label="Last Name"
+                                                register={register({ required: 'Last name is required' })}
+                                                error={errors.last_name && errors.last_name.message}
+                                            />
+                                            <FormInput
+                                                type="email"
+                                                name="email"
+                                                placeholder="Email*"
+                                                label="Email"
+                                                register={register({
+                                                    required: 'Please input a valid email address',
+                                                    pattern: /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                                                    validate: async value => verifyEmailHandler(value)
+                                                })}
+                                                error={errors.email && errors.email.message}
+                                            />
+                                            <div>
+                                                <label htmlFor="Password">Password</label>
+                                                <div className="textbox">
+                                                    <input
+                                                        type={passwordShown ? "text" : "password"}
+                                                        name="password"
+                                                        placeholder="Password*"
+                                                        label="Password"
+                                                        ref={register({ required: 'Password must be more than 8 characters', minLength: 8 })}
+                                                    />
+                                                    <i onClick={togglePasswordVisiblity} className={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i>
+                                                    <div className={`border ${errors.password ? "border-error" : null}`}></div>
+                                                </div>
+                                                {errors.password && <p className="error">{errors.password.message}</p>}
+                                            </div>
+                                            {paymentOption === 'pickup' && <FormInput
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
                                                 label="Mobile Number"
                                                 register={register({ required: 'This field is required.' })}
                                                 error={errors.phone && errors.phone.message}
-                                                defaultValue={user && user.phone}
                                             />}
+                                        </div>
+                                        }
 
-                                            {paymentOption === 'delivery' && <div>
-                                                <PlacesAutocomplete
-                                                    value={streetAddress}
-                                                    onChange={handleChange}
-                                                    onSelect={handleSelect}
-                                                    searchOptions={searchOptions}
-                                                >
-                                                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                                        <div>
-                                                            <FormInput
-                                                                type="text"
-                                                                name='streetAddress'
-                                                                label="Street/Estate Address"
-                                                                {...getInputProps({
-                                                                    placeholder: 'Manually type your street/estate address',
-                                                                    className: 'location-search-input',
-                                                                })}
-                                                                register={register({ required: 'This field is required' })}
-                                                                error={errors.streetAddress && errors.streetAddress.message}
-                                                            />
-                                                            <div className="autocomplete-dropdown-container">
-                                                                {loading && <div>Loading...</div>}
-                                                                {suggestions.map((suggestion) => {
-                                                                    const className = suggestion.active
-                                                                        ? 'suggestion-item--active'
-                                                                        : 'suggestion-item';
-                                                                    // inline style for demonstration purpose
-                                                                    const style = suggestion.active
-                                                                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                                                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                                                    return (
-                                                                        <div className="input-suggestion" key={suggestion.placeId}
-                                                                            {...getSuggestionItemProps(suggestion, {
-                                                                                style,
-                                                                            })}
-                                                                        >
-                                                                            <span>{suggestion.description}</span>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
+                                        {isLoggedIn && <FormInput
+                                            type="number"
+                                            name="phone"
+                                            placeholder="+234 80 1234 5678*"
+                                            label="Mobile Number"
+                                            register={register({ required: 'This field is required.' })}
+                                            error={errors.phone && errors.phone.message}
+                                            defaultValue={user && user.phone}
+                                        />}
+
+                                        {paymentOption === 'delivery' && <div>
+                                            <PlacesAutocomplete
+                                                value={streetAddress}
+                                                onChange={handleChange}
+                                                onSelect={handleSelect}
+                                                searchOptions={searchOptions}
+                                            >
+                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                    <div>
+                                                        <FormInput
+                                                            type="text"
+                                                            name='streetAddress'
+                                                            label="Street/Estate Address"
+                                                            {...getInputProps({
+                                                                placeholder: 'Manually type your street/estate address',
+                                                                className: 'location-search-input',
+                                                            })}
+                                                            register={register({ required: 'This field is required' })}
+                                                            error={errors.streetAddress && errors.streetAddress.message}
+                                                        />
+                                                        <div className="autocomplete-dropdown-container">
+                                                            {loading && <div>Loading...</div>}
+                                                            {suggestions.map((suggestion) => {
+                                                                const className = suggestion.active
+                                                                    ? 'suggestion-item--active'
+                                                                    : 'suggestion-item';
+                                                                // inline style for demonstration purpose
+                                                                const style = suggestion.active
+                                                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                                                return (
+                                                                    <div className="input-suggestion" key={suggestion.placeId}
+                                                                        {...getSuggestionItemProps(suggestion, {
+                                                                            style,
+                                                                        })}
+                                                                    >
+                                                                        <span>{suggestion.description}</span>
+                                                                    </div>
+                                                                );
+                                                            })}
                                                         </div>
-                                                    )}
-                                                </PlacesAutocomplete>
-                                                <FormInput
-                                                    type="text"
-                                                    name="houseNumber"
-                                                    placeholder="House Number*"
-                                                    label="House Number"
-                                                    register={register({ required: true })}
-                                                    error={errors.houseNumber && 'This field is required'}
-                                                />
-                                            </div>}
-
-                                            <h4 className="mt-5">Additional Informations</h4>
-                                            <textarea
-                                                // className={errors.message ? 'textarea-error' : null}
-                                                name="message"
-                                                placeholder='Order/delivery note'
-                                                ref={register}
+                                                    </div>
+                                                )}
+                                            </PlacesAutocomplete>
+                                            <FormInput
+                                                type="text"
+                                                name="houseNumber"
+                                                placeholder="House Number*"
+                                                label="House Number"
+                                                register={register({ required: true })}
+                                                error={errors.houseNumber && 'This field is required'}
                                             />
-                                        </div>
+                                        </div>}
 
-                                        <div className="col-md-5">
-                                            <div className="order-details text-center">
-                                                <h4>Order Details</h4>
-                                                <div className="order-details-list">
-                                                    <div className="order-prod mb-5">
-                                                        {localCart.map((cart, id) => {
-                                                            return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
-                                                                <p>{cart.quantity}x <span>{cart.product.product}</span></p>
-                                                                <p key={cart}>{'₦' + cart.totalPrice}</p>
-                                                            </div>
-                                                        })}
-                                                    </div>
-                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Subtotal</p>
-                                                        <p>{'₦' + allTotalPrice}</p>
-                                                    </div>
-                                                   { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Coupon: {theCouponCodeName}</p>    
-                                                        <p>- {'₦' + theCouponPrice}[Removed]</p>
-                                                    </div> }
-                                                    {(unusedBalance > total  && unusedBalance > 0) &&
-                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                            <p>Unused Balance </p>
-                                                            <p>{'₦' + newBal }</p>
+                                        <h4 className="mt-5">Additional Informations</h4>
+                                        <textarea
+                                            // className={errors.message ? 'textarea-error' : null}
+                                            name="message"
+                                            placeholder='Order/delivery note'
+                                            ref={register}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-5">
+                                        <div className="order-details text-center">
+                                            <h4>Order Details</h4>
+                                            <div className="order-details-list">
+                                                <div className="order-prod mb-5">
+                                                    {localCart.map((cart, id) => {
+                                                        return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
+                                                            <p>{cart.quantity}x <span>{cart.product.product}</span></p>
+                                                            <p key={cart}>{'₦' + cart.totalPrice}</p>
                                                         </div>
-                                                    }
-                                                    {(unusedBalance < total && unusedBalance > 0) && 
-                                                        <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                            <p>Unused Balance </p>
-                                                            <p>- {'₦' + unusedBalance}[Removed]</p>
-                                                        </div>
-                                                    }
-                                                    {/* { unusedBalance > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Unused Balance </p>    
-                                                        <p>- {'₦' + unusedBalance}[Removed]</p>
-                                                    </div> } */}
-                                                    {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Delivery</p>
-                                                        <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
-                                                    </div>}
-                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Order Total </p>
-                                                        <p>{'₦' + total}</p>
-                                                    </div>
-                                                    {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                    <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
-                                                    {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
+                                                    })}
                                                 </div>
+                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Subtotal</p>
+                                                    <p>{'₦' + allTotalPrice}</p>
+                                                </div>
+                                                { theCouponPrice > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Coupon: {theCouponCodeName}</p>    
+                                                    <p>- {'₦' + theCouponPrice}[Removed]</p>
+                                                </div> }
+                                                {(unusedBalance > total  && unusedBalance > 0) &&
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>
+                                                        <p>{'₦' + newBal }</p>
+                                                    </div>
+                                                }
+                                                {(unusedBalance < total && unusedBalance > 0) && 
+                                                    <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                        <p>Unused Balance </p>
+                                                        <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                    </div>
+                                                }
+                                                {/* { unusedBalance > 0 && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Unused Balance </p>    
+                                                    <p>- {'₦' + unusedBalance}[Removed]</p>
+                                                </div> } */}
+                                                {paymentOption === 'delivery' && <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Delivery</p>
+                                                    <p>{`${deliveryPrice === null ? '₦0' : '₦' + deliveryPrice}`}</p>
+                                                </div>}
+                                                <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
+                                                    <p>Order Total </p>
+                                                    <p>{'₦' + total}</p>
+                                                </div>
+                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
+                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
+                                                {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <form key={2} onSubmit={handleSubmit2(couponApplication)} className="signup-form coupon-form">
-                                            <div className="coupon-container">
-                                                <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
-                                                {loadingState && couponLoader === 1 ? <InlineLoading /> : <button className="btn"><span className="text">Apply Coupon</span></button> }
-                                            </div>
-                                            <p className="error">{couponErrorMessage}</p>
-                                        </form>
-                                    </div>
+                                </div>
+                            </form>
+                            <div className="row">
+                                <div className="col-md-7">
+                                    <form key={2} onSubmit={handleSubmit2(couponApplication)} className="signup-form coupon-form">
+                                        <div className="coupon-container">
+                                            <input className="coupon-input" ref={register2()} type="text" name="coupon" placeholder="Paste Coupon Code" />
+                                            {loadingState && couponLoader === 1 ? <InlineLoading /> : <button className="btn"><span className="text">Apply Coupon</span></button> }
+                                        </div>
+                                        <p className="error">{couponErrorMessage}</p>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
                 }
             </Layout>
         </>

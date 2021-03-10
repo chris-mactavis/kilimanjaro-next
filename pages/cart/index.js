@@ -135,8 +135,8 @@ const ShoppingCart = () => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="empty-cart-container">
-                                        <p className=""><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
-                                        <p>Your cart is currently empty.</p>
+                                        <p className="text-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p>Your cart is currently empty</p>
                                         <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
                                     </div>
                                 </div>

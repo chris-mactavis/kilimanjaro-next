@@ -1,5 +1,6 @@
 import Layout from '../components/Layout';
 import Head from 'next/head';
+import Router from 'next/router';
 
 
 import { useEffect, useState } from 'react';
@@ -53,7 +54,7 @@ const TestPay = () => {
         let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
             let itemId = "101";
             let amount = 800000;
-            let siteRedirectUrl = "http://localhost:8080/webpopupnew.html";
+            let siteRedirectUrl = "http://localhost:3000";
             let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
         
             let   productId = '1076';
@@ -74,13 +75,18 @@ const TestPay = () => {
             currency: "NGN",
             hash,
             onComplete : function (paymentResponse){
-                console.log('i got here');
+                submitOrder();
+                console.log('i got here', paymentResponse);
             }
         };
 
         // console.log(obj);
 
         new IswPay(obj);
+
+        const submitOrder = () => {
+            Router.push('/complete-order');
+        }
     }
 
 
