@@ -556,7 +556,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         <>
             <Layout>
                 <Head>
-                    <title>Menu | Kilimanjaro</title>
+                    <title>Menu | Kilimanjaro Restaurant</title>
                 </Head>
                 {(loadingState && inlineLoading === 1) && <section className="topLoader">
                     <div className="topLoader-container">
