@@ -49,7 +49,7 @@ const HeaderContent = ({cities}) => {
             dispatch(loader());
             setInlineLoading(0);
         }, 1500)
-    }
+    };
  
 
     return (

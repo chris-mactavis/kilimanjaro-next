@@ -15,14 +15,47 @@ import OrderingStepsMobile from '../../components/orders/orderingStepsMobile/ord
 import { selectedRestaurant, addToCart, setTotalPrice, updateTotalPrice, updateVariablePrice } from '../../store/actions/shop';
 import { loader } from '../../store/actions/loader';
 import InlineLoading from '../../components/UI/inlineLoader';
+import axiosInstance from '../../config/axios';
 
-const ShoppingCart = () => {
-    const drinks = [
-        { url: '/images/coke.svg', id: 0 },
-        { url: '/images/5alive.svg', id: 1 },
-        { url: '/images/fanta.svg', id: 2 },
-        { url: '/images/coke.svg', id: 3 }
-    ];
+const ShoppingCart = ({data}) => {
+    const time = data;
+    // const drinks = [
+    //     { url: '/images/coke.svg', id: 0 },
+    //     { url: '/images/5alive.svg', id: 1 },
+    //     { url: '/images/fanta.svg', id: 2 },
+    //     { url: '/images/coke.svg', id: 3 }
+    // ];
+
+    const [ closedHour, setClosedHour ] = useState('');
+    const [ minOrderAmount, setMinOrderAmount ] = useState(null);
+
+    useEffect(() => {
+        const fetchMinPrice = async () => {
+            try {
+                const {data: {data : res}} = await axiosInstance.get('settings/get-min-order-amount');
+                setMinOrderAmount(+res.min_order_amount);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchMinPrice();
+    }, []);
+
+    useEffect(() => {
+        const currentTime = new Date().getHours();
+        const openingHour = +time.opening_time;
+        const closingHour = +time.closing_time;
+    
+        if (currentTime >= openingHour && currentTime < closingHour) {
+            Cookies.set('closed', false);
+        } else {
+          Cookies.set('closed', true);
+        }
+
+        const closedTime = Cookies.get('closed'); 
+        setClosedHour(closedTime); 
+    
+      }, [time, setClosedHour]); 
 
     const dispatch = useDispatch();
 
@@ -119,6 +152,14 @@ const ShoppingCart = () => {
                 </div>
             })}
         </>
+    };
+
+    const gotoCheckoutHandler = () => {
+        if (closedHour == 'true') {
+            NotificationManager.error('Sorry, You can only order between 8AM and 5PM', '', 6000);  
+        } else if (closedHour == 'false') {
+            Router.push('/checkout');
+        }
     }
 
     return (
@@ -135,7 +176,7 @@ const ShoppingCart = () => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="empty-cart-container">
-                                        <p className="text-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p className="text-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty</p>
                                         <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
                                     </div>
@@ -150,7 +191,7 @@ const ShoppingCart = () => {
                             <OrderingStepsMobile activeTabs={[1]}/>
                             <div className="row">
                                 <div className="col-md-8 mx-auto">
-                                    {allTotalPrice >= 1000 ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
+                                    {allTotalPrice >= minOrderAmount ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
                                     <h4>Review Your Order</h4>
                                     {cartDisplay}
                                     <div className="d-flex justify-content-end mt-4 mb-3">
@@ -187,14 +228,13 @@ const ShoppingCart = () => {
                                                     <p>{'₦' + newTotalPrice}</p>
                                                 </div>
                                             </div>
-                                            {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}>Checkout</button> */}
-                                            { !localCart.length > 0 || allTotalPrice < 1000 
+                                            
+                                            { !localCart.length > 0 || allTotalPrice < minOrderAmount 
                                                 ? 
-                                                <button className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
+                                                <button className={!localCart.length > 0 || allTotalPrice < minOrderAmount ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
                                                 :
-                                                <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
+                                                <button onClick={gotoCheckoutHandler} className={!localCart.length > 0 || allTotalPrice < minOrderAmount ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button>
                                             }
-                                            {/* <button onClick={() => Router.push('/checkout')} className={!localCart.length > 0 || allTotalPrice < 1000 ? "btn disabled btn-order w-100" : "btn btn-order w-100"}><span className="text">Checkout</span></button> */}
                                         </div>
                                     </div>
                                 </div>
@@ -220,5 +260,16 @@ const ShoppingCart = () => {
         </>
     );
 };
+
+ShoppingCart.getInitialProps = async ({ req, res }) => {    
+
+    try {
+        const { data : {data} } = await axiosInstance.get(`settings/get-order-times`);
+        return {data};
+    } catch (error) {
+        console.log(error)
+        return {time: null} ;
+    }
+}
 
 export default ShoppingCart;

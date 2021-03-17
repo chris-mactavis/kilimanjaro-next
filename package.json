@@ -20,6 +20,7 @@
     "next-cookies": "^2.0.3",
     "nookies": "^2.4.1",
     "nprogress": "^0.2.0",
+    "pusher-js": "^7.0.3",
     "react": "16.13.1",
     "react-collapsible": "^2.8.1",
     "react-collapsible-react16": "^16.0.1",

@@ -35,6 +35,7 @@ const EditAccount = () => {
             try {
                 if (data) {
                     const { data: response } = await axiosInstance.post('user', data, {headers: {'Authorization': `Bearer ${userToken}`}});
+                    dispatch(storeAuth(response.data));
                     setValue(value => ++value);
                     dispatch(loader());
                     NotificationManager.success(response.message, '', 3000);

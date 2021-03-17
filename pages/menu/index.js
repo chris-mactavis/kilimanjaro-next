@@ -12,6 +12,7 @@ import nookies from 'nookies';
 
 import Layout from '../../components/Layout';
 import { selectedRestaurant, saveRestaurants, addToCart, setTotalPrice, updateVariablePrice  } from '../../store/actions/shop';
+import { couponUpdated, productUpdated } from '../../store/actions/liveEvents';
 import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import InlineLoading from '../../components/UI/inlineLoader';
@@ -19,8 +20,9 @@ import InlineLoading from '../../components/UI/inlineLoader';
 
 
 
-const Menu = ({ productCategories, couponData }) => {
+const Menu = ({ productCategories, couponData, time, restaurantId }) => {
 
+    
     //  All Store
     const dispatch = useDispatch();
     const restaurant = useSelector(state => state.shop.selectedRestaurant);
@@ -28,27 +30,121 @@ const Menu = ({ productCategories, couponData }) => {
     const allCart = useSelector(state => typeof state.shop.cart === 'string' ? JSON.parse(state.shop.cart) : state.shop.cart);
     const allTotalPrice = useSelector(state => state.shop.totalPrice);
     const loadingState = useSelector(state => state.loader.loading);
-    console.log(allCart);
+    const productIsUpdated = useSelector(state => state.liveEvent.productUpdated);
+    const couponIsUpdated = useSelector(state => state.liveEvent.couponUpdated);
 
     const [ allCities, setAllCities ] = useState([]);
     const [ newRestaurants, setNewRestaurants ] = useState([]);
-    const [restaurantCategories, setRestaurantCategories] = useState(productCategories);
-    const [allProductCat, setAllProductCategory] = useState(null);
-    const [products, setProducts] = useState([]);
-    const [addClass, changeClass] = useState({ active: false });
-    const [addVariationClass, changeVariationClass] = useState({ active: false });
-    const [activeCategory, setActiveCategory] = useState([]);
-    const [productCart, setProductCart] = useState([]);
-    const [value, setValue] = useState(0);
+    const [ restaurantCategories, setRestaurantCategories ] = useState(productCategories);
+    const [ allProductCat, setAllProductCategory ] = useState(null);
+    const [ products, setProducts ] = useState([]);
+    const [addClass, changeClass ] = useState({ active: false });
+    const [addVariationClass, changeVariationClass ] = useState({ active: false });
+    const [ activeCategory, setActiveCategory ] = useState([]);
+    const [productCart, setProductCart ] = useState([]);
+    const [ value, setValue ] = useState(0);
     const [ inlineLoading, setInlineLoading ] = useState(0);
     const [ restaurantName, setRestaurantName ] = useState(null);
-    const [ selectedVariableProducts, setSelectedVariableProducts] = useState([]);
-    const [ quantitiesArray, setQuantitiesArray] = useState([]);
+    const [ selectedVariableProducts, setSelectedVariableProducts ] = useState([]);
+    const [ quantitiesArray, setQuantitiesArray ] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
-    const [disableScrollEvent, setDisableScrollEvent] = useState(false);
+    const [ disableScrollEvent, setDisableScrollEvent ] = useState(false);
     const [ varId, setVarId ] = useState({});
+    const [ closedHour, setClosedHour ] = useState('');
+    const [ minOrderAmount, setMinOrderAmount ] = useState(null);
+    const [ resId, setResId ] = useState(restaurantId);
+    const [ couponListData, setCouponListData ] = useState(couponData);
+
+    console.log(couponIsUpdated, 'live');
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
+
+    useEffect(() => {
+        const fetchProductCategories = async () => {
+            try {
+                dispatch(loader());
+                setInlineLoading(1);
+                const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${resId}`);
+                setRestaurantCategories(data);
+                dispatch(loader());
+                setInlineLoading(0);
+                dispatch(productUpdated(false));
+                setProductCart([]);
+                dispatch(addToCart([]));
+                dispatch(setTotalPrice());
+                if (Cookies.set('setCart')) {
+                    Cookies.remove('setCart');
+                }
+            } catch (error) {
+                dispatch(loader());
+                setInlineLoading(0);
+                console.log(error.response.data.message);
+            }
+        } 
+
+        if (productIsUpdated) {
+            fetchProductCategories();
+        }
+
+    }, [productIsUpdated]);
+
+    useEffect(() => {
+        const fetchCoupon = async () => {
+            try {
+                dispatch(loader());
+                setInlineLoading(1);
+                const { data: { data } } = await axiosInstance.get(`product-coupons?restaurant_id=${resId}`);
+                setCouponListData(data); 
+                dispatch(loader());
+                setInlineLoading(0);
+                console.log(data, 'couponData');
+                dispatch(couponUpdated(false));
+                setProductCart([]);
+                dispatch(addToCart([]));
+                dispatch(setTotalPrice());
+                if (Cookies.set('setCart')) {
+                    Cookies.remove('setCart');
+                }
+            } catch(error) {
+                dispatch(loader());
+                setInlineLoading(0);
+                console.log(error.response.data.message);
+            }
+        };
+
+        if (couponIsUpdated) {
+            fetchCoupon();
+        }
+
+    }, [couponIsUpdated]);
+
+    useEffect(() => {
+        const fetchMinPrice = async () => {
+            try {
+                const {data: {data : res}} = await axiosInstance.get('settings/get-min-order-amount');
+                setMinOrderAmount(+res.min_order_amount);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchMinPrice();
+    }, []);
+
+    useEffect(() => {
+        const currentTime = new Date().getHours();
+        const openingHour = +time.opening_time;
+        const closingHour = +time.closing_time;
+    
+        if (currentTime >= openingHour && currentTime < closingHour) { 
+            Cookies.set('closed', false);
+        } else {
+          Cookies.set('closed', true);
+        }
+
+        const closedTime = Cookies.get('closed'); 
+        setClosedHour(closedTime); 
+    
+      }, [time, setClosedHour]); 
   
     useEffect(() => {
         const cities = localStorage.getItem('setAllCities') ? JSON.parse(localStorage.getItem('setAllCities')) : [];
@@ -227,6 +323,7 @@ const Menu = ({ productCategories, couponData }) => {
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             setTimeout(() => setCategoryActiveName('Combo Deals'), 500);
+            setResId(value.id);
         } catch (error) {
             dispatch(loader());
             console.log(error);
@@ -407,7 +504,6 @@ const Menu = ({ productCategories, couponData }) => {
       
         const prevCart = [...productCart];
 
-
         let productCoupon = null;
         resProduct.map((resProd) => {
             return productCoupon = {...resProd, price: value}
@@ -445,9 +541,15 @@ const Menu = ({ productCategories, couponData }) => {
         }, 500);
 
         setValue(value => ++value);
-    }
+    };
 
-    
+    const gotoCheckoutHandler = () => {
+        if (closedHour == 'true') {
+            NotificationManager.error('Sorry, You can only order between 8AM and 5PM', '', 6000);  
+        } else if (closedHour == 'false') {
+            Router.push('/checkout');
+        }
+    }
         
 
     return (
@@ -456,6 +558,11 @@ const Menu = ({ productCategories, couponData }) => {
                 <Head>
                     <title>Menu | Kilimanjaro</title>
                 </Head>
+                {(loadingState && inlineLoading === 1) && <section className="topLoader">
+                    <div className="topLoader-container">
+                        {(loadingState && inlineLoading === 1) && <InlineLoading /> }
+                    </div>
+                </section>}
                 <section id="category-top" className={`select-restaurant ${!restaurantCategories.length > 0 ? 'active-select-restaurant' : null}`}>
                     <div className="container">
                         <div className="row">
@@ -492,58 +599,83 @@ const Menu = ({ productCategories, couponData }) => {
                                 <div className="col-md-8">
                                     {restaurantCategories.map((restaurantCategory) => {
                                         return <>
-                                            <h4 id={restaurantCategory.category} className="category-header">{restaurantCategory.category}</h4>
-                                            {restaurantCategory.category_products.map((prod) => {
-                                                let variations = [];
-                                                let variationName = null;
-                                                let variablePrice = null;
-                                                if (prod.product_type === 'variable' && prod.product_variations.length > 0) {
-                                                    variations = prod.product_variations[0].variations;
-                                                    variationName = prod.product_variations[0].variable_name;
-                                                    variations = variations ? JSON.parse(variations) : [];
-                                                    variations = variations.map(v => {
-                                                        variablePrice = v.sale_price || v.price;
-                                                        return { ...v, value: variablePrice , label: v.name + " — " + "₦" + variablePrice }
-                                                    });
-                                                };
+                                            <div key={restaurantCategory.id}>
+                                                <h4 id={restaurantCategory.category} className="category-header">{restaurantCategory.category}</h4>
+                                                {restaurantCategory.category_products.map((prod) => {
+                                                    let variations = [];
+                                                    let variationName = null;
+                                                    let variablePrice = null;
+                                                    if (prod.product_type === 'variable' && prod.product_variations.length > 0) {
+                                                        variations = prod.product_variations[0].variations;
+                                                        variationName = prod.product_variations[0].variable_name;
+                                                        variations = variations ? JSON.parse(variations) : [];
+                                                        variations = variations.map(v => {
+                                                            variablePrice = v.sale_price || v.price;
+                                                            return { ...v, value: variablePrice , label: v.name + " — " + "₦" + variablePrice }
+                                                        });
+                                                    };
 
-                                                const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
+                                                    const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
 
-                                                let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
-                                                let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
-                                                // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
-                                                let btn = <button onClick={() => addtoCartHandler(prod)} className="btn"><span className="text">Add to cart</span></button>;
-                                                if (prod.product_type === 'variable') {
-                                                    productPrices = null;
-                                                    productSalePrice = null;
-                                                    // btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
-                                                    btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span className="text">Add to cart</span></button>;
-                                                }
+                                                    let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
+                                                    let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
+                                                    // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
+                                                    let btn = <button onClick={() => addtoCartHandler(prod)} className="btn"><span className="text">Add to cart</span></button>;
+                                                    if (prod.product_type === 'variable') {
+                                                        productPrices = null;
+                                                        productSalePrice = null;
+                                                        // btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}>Add to cart</button>;
+                                                        btn = <button onClick={() => addtoCartHandler(prod, variations)} className={newVarBtn}><span className="text">Add to cart</span></button>;
+                                                    }
 
-                                                return <>
-                                                    <div key={prod.id} className="single-product">
-                                                        <div className="row">
-                                                            <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
-                                                                <div>
-                                                                    <img className="img-fluid" src={prod.image_url} alt={prod.product} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-8 pl-sm-0">
-                                                                <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
-                                                                    <p className="product-name">{prod.product}</p>
-                                                                    <div className="d-flex">
-                                                                        <p className="product-qty">Quantity</p>
-                                                                        <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' min="1" />
+                                                    return <>
+                                                        <div key={prod.id} className="single-product">
+                                                            <div className="row">
+                                                                <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
+                                                                    <div>
+                                                                        <img className="img-fluid" src={prod.image_url} alt={prod.product} />
                                                                     </div>
                                                                 </div>
-                                                                <p className="product-description">{prod.short_description}</p>
-                                                                
-                                                                {
-                                                                    prod.product_type === 'variable' &&
-                                                                    <>
-                                                                        <form className="select-state mt-4">
-                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100 variation" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                <div className="col-md-8 pl-sm-0">
+                                                                    <div className="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                                                        <p className="product-name">{prod.product}</p>
+                                                                        <div className="d-flex">
+                                                                            <p className="product-qty">Quantity</p>
+                                                                            <input defaultValue={1} onChange={(e) => handleQuantityChange(e, prod.id)} type='number' min="1" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className="product-description">{prod.short_description}</p>
+                                                                    
+                                                                    {
+                                                                        prod.product_type === 'variable' &&
+                                                                        <>
+                                                                            <form className="select-state mt-4">
+                                                                                <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100 variation" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                            </form>
+                                                                            <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                                                                {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
+                                                                                <div>
+                                                                                    {productPrices}
+                                                                                    {productSalePrice}
+                                                                                </div>
+                                                                            </div>
+                                                                        </>
+                                                                    }
+                                                                    {/* {
+                                                                        prod.product_type === 'variable' &&
+                                                                        <form onSubmit={handleSubmit(sub)} className="select-state mt-4">
+                                                                            <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
+                                                                            <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                                                                {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
+                                                                                <div>
+                                                                                    {productPrices}
+                                                                                    {productSalePrice}
+                                                                                </div>
+                                                                            </div>
                                                                         </form>
+                                                                    } */}
+                                                                    {
+                                                                        prod.product_type === 'simple' &&
                                                                         <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
                                                                             {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
                                                                             <div>
@@ -551,43 +683,20 @@ const Menu = ({ productCategories, couponData }) => {
                                                                                 {productSalePrice}
                                                                             </div>
                                                                         </div>
-                                                                    </>
-                                                                }
-                                                                {/* {
-                                                                    prod.product_type === 'variable' &&
-                                                                    <form onSubmit={handleSubmit(sub)} className="select-state mt-4">
-                                                                        <Select onChange={(e) => handleVariationChange(e, prod)} className="select-tool w-100" options={variations} placeholder={`Choose a ${variationName}`} instanceId={`productVariations-${prod.id}`} />
-                                                                        <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
-                                                                            {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
-                                                                            <div>
-                                                                                {productPrices}
-                                                                                {productSalePrice}
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                } */}
-                                                                {
-                                                                    prod.product_type === 'simple' &&
-                                                                    <div className="d-flex align-items-center justify-content-between flex-wrap mt-4">
-                                                                        {loadingState && inlineLoading === prod.id ? <InlineLoading /> : btn}
-                                                                        <div>
-                                                                            {productPrices}
-                                                                            {productSalePrice}
-                                                                        </div>
-                                                                    </div>
-                                                                }
+                                                                    }
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </>
-                                            })}
+                                                    </>
+                                                })}
+                                            </div>
                                         </>
                                     })}
 
                                 </div>}
                             <div className="col-md-4">
                                 <div className="coupon-on-menu">
-                                    { couponData.map(prodCoupon => {
+                                    { couponListData.map(prodCoupon => {
                                         return <a key={prodCoupon.id} onClick={() => addCouponToCart(prodCoupon.value, prodCoupon.restaurant_products)} key={prodCoupon.id}>
                                             <img className="img-fluid" src={prodCoupon.image_url} alt="" />
                                         </a>
@@ -617,7 +726,7 @@ const Menu = ({ productCategories, couponData }) => {
                                 </div>
                                 <div className="d-flex align-items-center flex-wrap">
                                     <button className="btn mr-4 mb-xl-0 mb-3"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={() => Router.push('/checkout')}><span className="text">Proceed to Checkout</span></button>
+                                    <button className={allTotalPrice >= minOrderAmount ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={gotoCheckoutHandler}><span className="text">Proceed to Checkout</span></button>
                                     {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
                                     <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
@@ -679,9 +788,10 @@ Menu.getInitialProps = async ({ req, res }) => {
     try {
         const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${restaurantId}`);
         const { data: { data: couponData } } = await axiosInstance.get(`product-coupons?restaurant_id=${restaurantId}`);
+        const { data: { data: time } } = await axiosInstance.get(`settings/get-order-times`);
         const productCategories = data.filter(cat => cat.category_products.length > 0);
 
-        return {productCategories, couponData};
+        return {productCategories, couponData, time, restaurantId};
     } catch (error) {
         console.log(error)
         return {productCategories: null} ;

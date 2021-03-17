@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../components/Layout';
 import HeaderContent from '../components/home/HeaderContent';
-import CouponProduct from '../components/couponProduct/CouponProduct';
 import Orders from '../components/orders/orders';
 import axiosInstance from '../config/axios';
 
@@ -16,6 +15,13 @@ const Home = ({ cities }) => {
 
   useEffect(() => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));
+    if ( Cookies.set('couponAmt') || Cookies.set('coupName') || Cookies.set('totalPriceAmtWithCoupon') || Cookies.set('unusedBalance') || Cookies.set('newUnusedBalance') ) {
+      Cookies.remove('unusedBalance');
+      Cookies.remove('couponAmt');
+      Cookies.remove('totalPriceAmtWithCoupon');
+      Cookies.remove('coupName');
+      Cookies.remove('newUnusedBalance');
+    };
   }, []);
 
   useEffect(() => {

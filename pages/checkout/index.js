@@ -47,6 +47,7 @@ const Checkout = () => {
     const balanceUnsused = useSelector(state => state.shop.balance); 
     const newUnusedBal = useSelector(state => state.shop.theNewBalance)
 
+    // All state
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
     const [paymentOption, setPaymentOption] = useState('delivery');
@@ -64,20 +65,30 @@ const Checkout = () => {
     const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
     const [ unusedBalance, setUnusedBalance ] = useState(balanceUnsused);
 
-    const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
-    const [ stringHash, setStringHash ] = useState(null);
-    const [ theProId, setTheProId ] = useState(null);
     const [ newBal, setNewBal ] = useState(newUnusedBal);
-    const [ paymmentType, setPaymentType ] = useState('flutterwave');
+    const [ paymentType, setPaymentType ] = useState('flutterwave');
     const [localCart, setLocalCart] = useState([]);
+    const [ minOrderAmount, setMinOrderAmount ] = useState(null);
+    const [ minOrderActive, setMinOrderActive ] = useState(false);
+
+    console.log(minOrderAmount, 'theMinOrder');
 
     const dispatch = useDispatch();
 
 
-    const paymentTypeList = [
-        { value: 'flutterwave', label: 'Flutterwave' },
-        { value: 'interswitch', label: 'Interswitch' },
-    ];
+    useEffect(() => {
+        const fetchMinPrice = async () => {
+            try {
+                const {data: {data : res}} = await axiosInstance.get('settings/get-min-order-amount');
+                setMinOrderAmount(+res.min_order_amount);
+                setMinOrderActive(true);  
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchMinPrice();
+    }, []);
+ 
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -211,6 +222,7 @@ const Checkout = () => {
                         longitude: latLng.lng,
                         latitude: latLng.lat,
                         payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         delivery: deliveryPrice,
@@ -228,6 +240,7 @@ const Checkout = () => {
                         signup_device: 'web',
                         restaurant_id : selectedRestaurant.id,
                         payment_method: 'webPay',
+                        payment_gateway: paymentType,
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         total: total,
@@ -253,6 +266,7 @@ const Checkout = () => {
                         longitude: latLng.lng,
                         latitude: latLng.lat,
                         payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                        payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         delivery: deliveryPrice,
@@ -272,6 +286,7 @@ const Checkout = () => {
                         signup_device: 'web',
                         restaurant_id: selectedRestaurant.id,
                         payment_method: 'webPay',
+                        payment_gateway: paymentType,
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         total: total,
@@ -284,7 +299,7 @@ const Checkout = () => {
             }
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
-               if (paymmentType === 'flutterwave') {
+               if (paymentType === 'flutterwave') {
                     /** FLUTTERWAVE PAYMENT HANDLER */
                     setPaymentType('flutterwave');
                     const trans = FlutterwaveCheckout({
@@ -327,8 +342,6 @@ const Checkout = () => {
                         },
                     });
                }  else {
-                    // NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
-                    // setPaymentType('flutterwave');
                     /** INTERSWITCH PAYMENT HANDLER */
                         setPaymentType('interswitch');
                         let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
@@ -342,7 +355,6 @@ const Checkout = () => {
                         let hashString = transRef + productId +  itemId + +amount + siteRedirectUrl + macKey;
                         let hash = sha512(hashString).toString('hex').toUpperCase();
             
-                
                     const obj = {
                         postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
                         amount,
@@ -357,6 +369,8 @@ const Checkout = () => {
                         onComplete : async (paymentResponse) => {
                             if (paymentResponse.resp == 'Z6') {
                                return;
+                            } else if (paymentResponse.resp == 'S0') {
+                                return;
                             } else {
                                 try {
                                     await submitOrder(orderData);
@@ -701,7 +715,7 @@ const Checkout = () => {
                                             
                                         { paymentMethod === 'payment online' && <>
                                         <h4>Payment Type</h4>
-                                        <select onChange={onchangePaymentType} value={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                        <select onChange={onchangePaymentType} value={paymentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
                                             <option value="flutterwave">Flutterwave</option>
                                             <option value="interswitch">Interswitch</option>
                                         </select>
@@ -888,7 +902,7 @@ const Checkout = () => {
                                                     <p>{'₦' + total}</p>
                                                 </div>
                                                 {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
+                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={(deliveryPrice === null || minOrderActive === false) ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
@@ -915,5 +929,33 @@ const Checkout = () => {
     );
 
 };
+
+Checkout.getInitialProps = async ({ req, res }) => {   
+    const isClient = typeof document !== 'undefined';
+    
+    try {
+        const { data : {data} } = await axiosInstance.get(`settings/get-order-times`);
+
+        const currentTime = new Date().getHours();
+        const openingHour = +data.opening_time;
+        const closingHour = +data.closing_time;
+        
+        if (currentTime >= openingHour && currentTime < closingHour) {
+            return {data}; 
+        } else {
+            if (isClient) {
+                window.location.href = '/menu';
+                return {data: null};
+            } else {
+                // const isClosed = req.cookies.closed;
+                res.redirect("/menu");
+            }
+        }
+        
+    } catch (error) {
+        console.log(error)
+        return {data: null} ;
+    }
+}
 
 export default Checkout;

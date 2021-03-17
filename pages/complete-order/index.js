@@ -23,12 +23,13 @@ const CompleteOrder = () => {
         setSelRestaurant(resSelected);
         setCompleteOrderItem(orderCompleteItem);
         setLastCartItem(lastCart);
-
-        Cookies.remove('couponAmt');
-        Cookies.remove('totalPriceAmtWithCoupon');
-        Cookies.remove('coupName');
-        Cookies.remove('unusedBalance');
-        Cookies.remove('newUnusedBalance');
+        if ( Cookies.set('couponAmt') || Cookies.set('coupName') || Cookies.set('totalPriceAmtWithCoupon') || Cookies.set('unusedBalance') || Cookies.set('newUnusedBalance') ) {
+            Cookies.remove('unusedBalance');
+            Cookies.remove('couponAmt');
+            Cookies.remove('totalPriceAmtWithCoupon');
+            Cookies.remove('coupName');
+            Cookies.remove('newUnusedBalance');
+        };
     }, []);
 
     return (
