@@ -71,8 +71,6 @@ const Checkout = () => {
     const [ minOrderAmount, setMinOrderAmount ] = useState(null);
     const [ minOrderActive, setMinOrderActive ] = useState(false);
 
-    console.log(minOrderAmount, 'theMinOrder');
-
     const dispatch = useDispatch();
 
 
@@ -347,7 +345,7 @@ const Checkout = () => {
                         let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
                         let itemId = "101";
                         let amount = parseInt(total + '00');
-                        let siteRedirectUrl = "http://167.172.177.79";
+                        let siteRedirectUrl = "http://localhost:3001";
                         let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
                     
                         let productId = '1076';
@@ -367,11 +365,7 @@ const Checkout = () => {
                         currency: "NGN",
                         hash,
                         onComplete : async (paymentResponse) => {
-                            if (paymentResponse.resp == 'Z6') {
-                               return;
-                            } else if (paymentResponse.resp == 'S0') {
-                                return;
-                            } else {
+                             if (paymentResponse.resp == '00') {
                                 try {
                                     await submitOrder(orderData);
                                     await updateUnUsedBalance();
@@ -380,9 +374,11 @@ const Checkout = () => {
                                     dispatch(loader());
                                     setInlineLoader(false); 
                                     NotificationManager.error(error.response.data.message, '', 3000);
-                                }  
+                                } 
+                            } else {
+                                return;
                             }
-                            // console.log(paymentResponse);
+                            console.log(paymentResponse, 'response');
                         }
                     };
                     new IswPay(obj);
