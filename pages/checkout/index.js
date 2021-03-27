@@ -345,7 +345,7 @@ const Checkout = () => {
                         let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
                         let itemId = "101";
                         let amount = parseInt(total + '00');
-                        let siteRedirectUrl = "http://localhost:3001";
+                        let siteRedirectUrl = "http://167.172.177.79";
                         let macKey = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
                     
                         let productId = '1076';
