@@ -210,26 +210,33 @@ const Checkout = () => {
                 // if logged in
                 if (paymentOption === 'delivery') {
                     // delivery (online and on delivery)
-                    orderData = {
-                        email: user.email,
-                        phone: data.phone,
-                        signup_device: 'web',
-                        restaurant_id : selectedRestaurant.id,
-                        street_address: streetAddress,
-                        house_number: data.houseNumber,
-                        longitude: latLng.lng,
-                        latitude: latLng.lat,
-                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
-                        payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
-                        quantity: localCart.length,
-                        subtotal: allTotalPrice,
-                        delivery: deliveryPrice,
-                        total: total,
-                        order_type: paymentOption,
-                        ordered_from: 'web',
-                        delivery_note: data.message,
-                        order_items: cartItems
+                    if (latLng) {
+                        orderData = {
+                            email: user.email,
+                            phone: data.phone,
+                            signup_device: 'web',
+                            restaurant_id : selectedRestaurant.id,
+                            street_address: streetAddress,
+                            house_number: data.houseNumber,
+                            longitude: latLng.lng,
+                            latitude: latLng.lat,
+                            payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                            payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
+                            quantity: localCart.length,
+                            subtotal: allTotalPrice,
+                            delivery: deliveryPrice,
+                            total: total,
+                            order_type: paymentOption,
+                            ordered_from: 'web',
+                            delivery_note: data.message,
+                            order_items: cartItems
+                        }
+                    } else {
+                        NotificationManager.error('Please a street/estate address', '', 6000);
+                        dispatch(loader());
+                        return;
                     }
+                    
                 } else if (paymentOption === 'pickup') {
                     // if pickup
                     orderData = {
@@ -252,28 +259,35 @@ const Checkout = () => {
                 //  if not logged in
                 if (paymentOption === 'delivery') {
                     // If delivery (both online and pay on delivery)
-                    orderData = {
-                        first_name: data.first_name,
-                        last_name: data.last_name,
-                        email: data.email,
-                        phone: data.phone,
-                        signup_device: 'web',
-                        restaurant_id: selectedRestaurant.id,
-                        street_address: streetAddress,
-                        house_number: data.houseNumber,
-                        longitude: latLng.lng,
-                        latitude: latLng.lat,
-                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
-                        payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
-                        quantity: localCart.length,
-                        subtotal: allTotalPrice,
-                        delivery: deliveryPrice,
-                        total: total,
-                        order_type: paymentOption,
-                        ordered_from: 'web',
-                        delivery_note: data.message,
-                        order_items: cartItems
+                    if (latLng) {
+                        orderData = {
+                            first_name: data.first_name,
+                            last_name: data.last_name,
+                            email: data.email,
+                            phone: data.phone,
+                            signup_device: 'web',
+                            restaurant_id: selectedRestaurant.id,
+                            street_address: streetAddress,
+                            house_number: data.houseNumber,
+                            longitude: latLng.lng,
+                            latitude: latLng.lat,
+                            payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                            payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
+                            quantity: localCart.length,
+                            subtotal: allTotalPrice,
+                            delivery: deliveryPrice,
+                            total: total,
+                            order_type: paymentOption,
+                            ordered_from: 'web',
+                            delivery_note: data.message,
+                            order_items: cartItems
+                        }
+                    } else {
+                        NotificationManager.error('Please a street/estate address', '', 6000);
+                        dispatch(loader());
+                        return;
                     }
+                    
                 } else if (paymentOption === 'pickup') {
                     // if pickup
                     orderData = {
