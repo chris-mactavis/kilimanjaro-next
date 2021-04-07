@@ -853,8 +853,8 @@ const Checkout = () => {
                                                 name="houseNumber"
                                                 placeholder="House Number*"
                                                 label="House Number"
-                                                register={register({ required: true })}
-                                                error={errors.houseNumber && 'This field is required'}
+                                                register={register}
+                                                // error={errors.houseNumber && 'This field is required'}
                                             />
                                         </div>}
 
@@ -889,13 +889,13 @@ const Checkout = () => {
                                                 </div> }
                                                 {(unusedBalance > total  && unusedBalance > 0) &&
                                                     <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Unused Balance </p>
+                                                        <p>Balance </p>
                                                         <p>{'₦' + newBal }</p>
                                                     </div>
                                                 }
                                                 {(unusedBalance < total && unusedBalance > 0) && 
                                                     <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Unused Balance </p>
+                                                        <p>Balance </p>
                                                         <p>- {'₦' + unusedBalance}[Removed]</p>
                                                     </div>
                                                 }

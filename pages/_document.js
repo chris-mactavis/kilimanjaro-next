@@ -33,11 +33,16 @@ class document extends Document  {
                     <script type="text/javascript" src="/slick/slick.min.js" />
                     <script src="/js/bootstrap.min.js" />
                     <script src="/js/main.js" />
+
+                    
+                    
                 </Head>
     
                 <body>
                     <Main />
                     <NextScript />
+
+                    
                 </body>
             </Html>
         );

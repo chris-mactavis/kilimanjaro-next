@@ -568,7 +568,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                         <div className="row">
                             <div className="col">
                                 <div className="d-flex flex-wrap align-items-center">
-                                    <p>Ordering from</p>
+                                    <p>Change Location</p>
                                     <form className="select-state mb-md-0 mb-2">
                                         <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
                                     </form>
