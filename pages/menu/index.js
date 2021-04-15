@@ -718,12 +718,12 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
-                                <div className="d-flex mb-xl-0 mb-3">
+                                {/* <div className="d-flex mb-xl-0 mb-3">
                                     <label className="contain">Save Basket
                                         <input type="checkbox" key={'save-basket'} />
                                         <span className="checkmark"></span>
                                     </label>
-                                </div>
+                                </div> */}
                                 <div className="d-flex align-items-center flex-wrap">
                                     <button className="btn mr-4 mb-xl-0 mb-3"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
                                     <button className={allTotalPrice >= minOrderAmount ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={gotoCheckoutHandler}><span className="text">Proceed to Checkout</span></button>

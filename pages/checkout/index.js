@@ -648,6 +648,15 @@ const Checkout = () => {
         setPaymentType(e.target.value);
     };
 
+    const verifyPhoneHandler = async phone => {
+        try {
+            const { data: {data: {phone_exists}} } = await axiosInstance.post('verify-phone', {phone});
+            return !phone_exists || 'Phone number already exists. Kindly use another number'
+        } catch (error) {
+
+        }
+    }
+
 
     return (
         <>
@@ -735,7 +744,7 @@ const Checkout = () => {
 
                                         
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login,</a> or fill the form below to Sign up.</p>}
 
                                         {/* Contact Details */}
                                         {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
@@ -783,26 +792,33 @@ const Checkout = () => {
                                                 </div>
                                                 {errors.password && <p className="error">{errors.password.message}</p>}
                                             </div>
-                                            {paymentOption === 'pickup' && <FormInput
+
+                                            <FormInput
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
                                                 label="Mobile Number"
-                                                register={register({ required: 'This field is required.' })}
+                                                register={register({ 
+                                                    required: 'This field is required.',
+                                                    validate: async value => verifyPhoneHandler(value)
+                                                })}
                                                 error={errors.phone && errors.phone.message}
-                                            />}
+                                                defaultValue={user && user.phone}
+                                            />
+                                            
                                         </div>
                                         }
 
-                                        {isLoggedIn && <FormInput
+                                        {(paymentOption === 'pickup' && isLoggedIn) && <FormInput
                                             type="number"
                                             name="phone"
                                             placeholder="+234 80 1234 5678*"
                                             label="Mobile Number"
                                             register={register({ required: 'This field is required.' })}
                                             error={errors.phone && errors.phone.message}
-                                            defaultValue={user && user.phone}
                                         />}
+
+                                        {/* {!isLoggedIn && } */}
 
                                         {paymentOption === 'delivery' && <div>
                                             <PlacesAutocomplete
