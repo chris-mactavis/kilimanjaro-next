@@ -1,6 +1,14 @@
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const Footer = ({showSecFooter}) => {
+    const [ year, setYear ] = useState('');
+
+    useEffect(() => {
+        const d = new Date();
+        setYear(d.getFullYear());
+    }, []); 
+
     return (
         <>
             {
@@ -48,7 +56,7 @@ const Footer = ({showSecFooter}) => {
                                 </ul>
                         </div>
                         <div className="col-md-4 text-center">
-                            <p>Copyright 2020 Kilimanjaro Restaurants</p>
+                            <p>Copyright {year} Kilimanjaro Restaurants</p>
                         </div>
 
                         <div className="col-md-4">

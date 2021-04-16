@@ -45,6 +45,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     const [ value, setValue ] = useState(0);
     const [ inlineLoading, setInlineLoading ] = useState(0);
     const [ restaurantName, setRestaurantName ] = useState(null);
+    const [ selectedCityName, setSelectedCityName ] = useState(null);
     const [ selectedVariableProducts, setSelectedVariableProducts ] = useState([]);
     const [ quantitiesArray, setQuantitiesArray ] = useState([]);
     const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
@@ -55,9 +56,15 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     const [ resId, setResId ] = useState(restaurantId);
     const [ couponListData, setCouponListData ] = useState(couponData);
 
-    console.log(couponIsUpdated, 'live');
     
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
+
+    useEffect(() => {
+        const selCityName = JSON.parse(Cookies.get('cityFocused'));
+        const selResName = JSON.parse(Cookies.get('resFocused'));
+        setSelectedCityName(selCityName);
+        setRestaurantName(selResName);
+    }, []);
 
     useEffect(() => {
         const fetchProductCategories = async () => {
@@ -97,7 +104,6 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                 setCouponListData(data); 
                 dispatch(loader());
                 setInlineLoading(0);
-                console.log(data, 'couponData');
                 dispatch(couponUpdated(false));
                 setProductCart([]);
                 dispatch(addToCart([]));
@@ -286,14 +292,16 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         setTimeout(() => setDisableScrollEvent(false), 500);
     }
 
-    const handleMenuRestaurantCItyChange = ({value: restaurantId}) => {
+    const handleMenuRestaurantCItyChange = (val) => {
         dispatch(loader());
-        let newRestaurants = allCities.find(city => city.id === restaurantId).restaurants;
+        let newRestaurants = allCities.find(city => city.id === val.value).restaurants;
         newRestaurants = newRestaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurantName( null )
         setNewRestaurants(newRestaurants);
+        setSelectedCityName(val);
         dispatch(saveRestaurants(newRestaurants));
         Cookies.set('setRestaurants', JSON.stringify(newRestaurants));
+        Cookies.set('cityFocused', JSON.stringify(val));
         setTimeout(() => {
             dispatch(loader());
         }, 1500);      
@@ -328,6 +336,11 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
             dispatch(loader());
             console.log(error);
         }
+        const selectedRes = {
+            label: value.label,
+            value: value.id
+        }
+        Cookies.set('resFocused', JSON.stringify(selectedRes));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
         setValue(value => ++value);
     };
@@ -435,13 +448,6 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         {allCart.map((cart, index) => {
             return <>
                 <div key={cart.product.id} className="product-list">
-                    {/* <img className="img-fluid" src={cart.product.image_url} alt="" />
-                    <p>{cart.product.product}</p>
-                    <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' defaultValue={cart.quantity} /> */}
-                    {/* <p>{cart.quantity}</p> */}
-                    {/* {cart.salePrice ? <p className="bold">{'₦'+cart.salePrice}</p> : <p className="bold">{'₦'+cart.price}</p>} */}
-                    {/* <p className="bold">{'₦'+cart.totalPrice}</p>
-                    <button onClick={() => deleteProductCartHandler(index)}>X</button> */}
                     <div className="row text-md-left text-center">
                         <div className="col-md-3">
                             <img className="img-fluid" src={cart.product.image_url} alt="" />
@@ -570,10 +576,10 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                 <div className="d-flex flex-wrap align-items-center">
                                     <p>Change Location</p>
                                     <form className="select-state mb-md-0 mb-2">
-                                        <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
+                                        <Select value={selectedCityName} onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
                                     </form>
                                     <form className="select-state">
-                                        <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
+                                        <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled-2"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
                                     </form>
                                     {loadingState && inlineLoading === 0 ? <form className="select-state">
                                         <div className="inline-loading-css-menu-page"><InlineLoading /></div>
@@ -610,15 +616,15 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                                         variationName = prod.product_variations[0].variable_name;
                                                         variations = variations ? JSON.parse(variations) : [];
                                                         variations = variations.map(v => {
-                                                            variablePrice = v.sale_price || v.price;
-                                                            return { ...v, value: variablePrice , label: v.name + " — " + "₦" + variablePrice }
+                                                            variablePrice =  v.sale_price || v.price;
+                                                            return { ...v, value: variablePrice , label: v.name + " — " + "₦" + new Intl.NumberFormat().format(variablePrice) }
                                                         });
-                                                    };
+                                                    }; 
 
                                                     const newVarBtn = addVariationClass.active && varId.productId === prod.id ? 'btn' : 'btn disabled';
 
-                                                    let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${prod.price}`}</s></p> : <p className="amount">{`₦${prod.price}`}</p>
-                                                    let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' + prod.sale_price}</p>
+                                                    let productPrices = prod.sale_price ? <p className="amount"><s>{`₦${new Intl.NumberFormat().format(prod.price)}`}</s></p> : <p className="amount">{`₦${new Intl.NumberFormat().format(prod.price)}`}</p>
+                                                    let productSalePrice = prod.sale_price === null ? null : <p className="amount sale">{'₦' +  new Intl.NumberFormat().format(prod.sale_price)}</p>
                                                     // let btn = <button onClick={() => addtoCartHandler(prod)} className='btn'>Add to cart</button>;
                                                     let btn = <button onClick={() => addtoCartHandler(prod)} className="btn"><span className="text">Add to cart</span></button>;
                                                     if (prod.product_type === 'variable') {
@@ -715,6 +721,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                         </div>
                         <div className="cart-product-list">
                             <div className={allCart.length > 2 ? "cart-listing-container" :  "cart-listing-container cart-listing-height"}>
+                            {!allCart.length > 0 || allTotalPrice < minOrderAmount && <p>A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>}
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">

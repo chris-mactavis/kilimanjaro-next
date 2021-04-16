@@ -333,7 +333,9 @@ const Checkout = () => {
                         callback: async (data) => {
                             try {
                                 await submitOrder(orderData);
-                                await updateUnUsedBalance();
+                                if (isLoggedIn) {
+                                    await updateUnUsedBalance();
+                                }
                                 trans.close();
                             } catch (error) {
                                 console.log(error);
@@ -382,7 +384,9 @@ const Checkout = () => {
                              if (paymentResponse.resp == '00') {
                                 try {
                                     await submitOrder(orderData);
-                                    await updateUnUsedBalance();
+                                    if (isLoggedIn) {
+                                        await updateUnUsedBalance();
+                                    }
                                 } catch (error) {
                                     console.log(error);
                                     dispatch(loader());
@@ -404,7 +408,9 @@ const Checkout = () => {
             } else {
                 try {
                     await submitOrder(orderData);
-                    await updateUnUsedBalance();
+                    if (isLoggedIn) {
+                        await updateUnUsedBalance();
+                    }
                 } catch (error) {
                     console.log(error);
                     dispatch(loader());

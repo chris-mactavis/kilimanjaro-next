@@ -43,6 +43,35 @@ form {
             }
         }
 
+        .select-disabled-2 {
+            pointer-events: none;
+
+            .css-yk16xz-control {
+                // border-color: #a5a5a5 !important;
+                // border: 1.2px solid #a5a5a5 !important;
+                // background: #f5f5f5 !important;
+
+                &:hover {
+                    border-color: #a5a5a5 !important;
+                }
+            }
+
+            .css-1wa3eu0-placeholder {
+                color: #a5a5a5 !important;
+                font-size: 15px;
+            }
+
+            .css-tlfecz-indicatorContainer {
+                svg {
+                    fill: #a5a5a5 !important;
+                }
+            }
+
+            .css-g1d714-ValueContainer {
+                padding: 0 8px;
+            }
+        }
+
         .css-1wa3eu0-placeholder {
             color: $primary;
         }

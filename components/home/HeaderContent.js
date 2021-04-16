@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Cookies from 'js-cookie';
@@ -13,13 +13,21 @@ const HeaderContent = ({cities}) => {
     const [ restaurants, setRestaurants ] = useState([]);
     const [ restaurantName, setRestaurantName ] = useState(null);
     const [ inlineLoading, setInlineLoading ] = useState(0);
+
+    // console.log(restaurantName, 'resName');
+    // console.log(restaurants, 'res')
    
     const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
 
     const dispatch = useDispatch();
     const loadingState = useSelector(state => state.loader.loading);
 
-    const handleCityInputChange = ({value: restaurantId}) => {
+    useEffect(() => {
+        Cookies.remove('cityFocused');
+        Cookies.remove('resFocused');
+    }, []);
+
+    const handleCityInputChange = (val) => {
         dispatch(loader());
         setInlineLoading(1);
         setTimeout(() => {
@@ -27,11 +35,12 @@ const HeaderContent = ({cities}) => {
             setInlineLoading(0);
         }, 1000);
         setRestaurantName( null );
-        let restaurants = cities.find(city => city.id === restaurantId).restaurants;
+        let restaurants = cities.find(city => city.id === val.value).restaurants;
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
         setRestaurants(restaurants);
         dispatch(saveRestaurants(restaurants));
-        Cookies.set('setRestaurants', JSON.stringify(restaurants))
+        Cookies.set('setRestaurants', JSON.stringify(restaurants));
+        Cookies.set('cityFocused', JSON.stringify(val));
     };
 
     const handleRestaurantInputChange = (value) => {
@@ -44,10 +53,16 @@ const HeaderContent = ({cities}) => {
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
-        if (Router.push('/menu')) {
+        setTimeout(() => {
             dispatch(loader());
             setInlineLoading(0);
+        }, 6000);
+     
+        const selectedRes = {
+            label: value.label,
+            value: value.id
         }
+        Cookies.set('resFocused', JSON.stringify(selectedRes));
         Router.push('/menu');
         // setTimeout(() => {
             // dispatch(loader());

@@ -79,7 +79,7 @@ const Career = () => {
                                 </p>
                             </div>
                             <div className="col-md-6">
-                                <img className="img-fluid" src="/images/recruitment-pics.png" alt=""/>
+                                <img className="img-fluid" src="/images/recruitment-pics.jpg" alt=""/>
                             </div>
                         </div>
                     </div>
