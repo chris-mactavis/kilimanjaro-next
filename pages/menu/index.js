@@ -570,7 +570,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                 <div className="d-flex flex-wrap align-items-center">
                                     <p>Change Location</p>
                                     <form className="select-state mb-md-0 mb-2">
-                                        <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
+                                        <Select onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a state' instanceId="menuCities" />
                                     </form>
                                     <form className="select-state">
                                         <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />

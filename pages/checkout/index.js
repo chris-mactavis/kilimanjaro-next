@@ -927,7 +927,7 @@ const Checkout = () => {
                                                     <p>Order Total </p>
                                                     <p>{'₦' + total}</p>
                                                 </div>
-                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
+                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a state and restaurant close to you before you can place your order.</p>}
                                                 <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={(deliveryPrice === null || minOrderActive === false) ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
