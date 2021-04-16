@@ -629,7 +629,7 @@ const Checkout = () => {
                     }
 
                 } else {
-                    couponErrorMessageHandler("Sorry, this coupon is not available in your city.");
+                    couponErrorMessageHandler("Sorry, this coupon is not available in your state.");
                 }
             } 
             

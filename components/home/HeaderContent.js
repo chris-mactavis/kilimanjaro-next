@@ -82,7 +82,7 @@ const HeaderContent = ({cities}) => {
 
                             <p>Ordering from:</p>
                             <form className="select-state">
-                                <Select options={mappedCities} className="select-tool" placeholder='Select a city' instanceId="cityId" onChange={handleCityInputChange} />
+                                <Select options={mappedCities} className="select-tool" placeholder='Select a state' instanceId="cityId" onChange={handleCityInputChange} />
                                 <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
                                 { (loadingState && inlineLoading === 1 ) && <div className="inline-loading-css"><InlineLoading /></div>  }
                             </form>
