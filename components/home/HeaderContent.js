@@ -25,7 +25,7 @@ const HeaderContent = ({cities}) => {
         setTimeout(() => {
             dispatch(loader());
             setInlineLoading(0);
-        }, 1000)
+        }, 1000);
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === restaurantId).restaurants;
         restaurants = restaurants.map(restaurant => ({...restaurant, value: restaurant.city_id, label: restaurant.name}));
@@ -44,12 +44,16 @@ const HeaderContent = ({cities}) => {
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
-        Router.push('/menu');
-        setTimeout(() => {
+        if (Router.push('/menu')) {
             dispatch(loader());
             setInlineLoading(0);
-        }, 1500)
-    }
+        }
+        Router.push('/menu');
+        // setTimeout(() => {
+            // dispatch(loader());
+            // setInlineLoading(0);
+        // }, 1500);
+    };
  
 
     return (

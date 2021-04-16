@@ -21,3 +21,9 @@
 .notificaton-close {
     top: 16px;
 }
+   
+html body section  {
+    &.siqembed {
+        // opacity: 1 !important;
+    }
+}

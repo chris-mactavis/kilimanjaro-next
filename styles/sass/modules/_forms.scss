@@ -98,6 +98,21 @@ form {
             height: 55px;
             text-align: center;
         }
+
+        .star-icon {
+            font-size: 30px;
+            color: #fff;
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: $primary;
+
+            &:not(:last-child) {  
+                margin-right: 5px;
+            }
+        }
+
+        .checked {
+            color: $primary;
+        }
     }
 
     &.signup-form {

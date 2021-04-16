@@ -75,7 +75,7 @@ const TestPay = () => {
             currency: "NGN",
             hash,
             onComplete : function (paymentResponse){
-                submitOrder();
+                // submitOrder();
                 console.log('i got here', paymentResponse);
             }
         };
@@ -98,11 +98,19 @@ const TestPay = () => {
 
             </Head>
 
-            <h1>
-                Test Pay Page
-            </h1>
-            <p>This is a test page for interswitch payment gateway</p>
-            <button type="submit" className="btn" onClick={payNowHandler} value="PAY NOW"><span className="text"> PAY NOW</span></button>
+            <section className="pb-5">
+                <div className="container">                                                                                                                                             
+                    <div className="row">
+                        <div className="col-md-10 mx-auto">  
+                            <h1>
+                                Test Pay Page
+                            </h1>
+                            <p>This is a test page for interswitch payment gateway</p>
+                            <button type="submit" className="btn" onClick={payNowHandler} value="PAY NOW"><span className="text"> PAY NOW</span></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* <form id="myform"  > */}
                 {/* <input name="product_id" type="hidden" value={`${paymentInfoInterswitch.product_id}`} />

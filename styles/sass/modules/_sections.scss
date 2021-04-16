@@ -1676,8 +1676,7 @@ section {
 
         .modal-header {
             border-bottom: none;
-            display: none;
-
+            // display: none;
             @media only screen and (max-width: $mobile_width) {
                 display: block;
             }
@@ -1736,6 +1735,23 @@ section {
                 margin-bottom: 10px;
              }
         }
+    }
+
+    &.topLoader {
+        position: relative;
+        height: 54px;
+        transition: all 5s;
+
+        .topLoader-container {
+            position: absolute;
+            top: 78%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &.siqembed {
+        opacity: 1 !important;
     }
 
 }

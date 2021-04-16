@@ -10,21 +10,25 @@ import 'react-notifications/lib/notifications.css';
 import toggleLoading from '../store/reducers/loader';
 import shop from '../store/reducers/shop';
 import auth from '../store/reducers/auth';
+import liveEvent from "../store/reducers/liveEvents";
+import ComponentWrapper from "../components/hoc/ComponentsWrapper";
 
 
 const reducers = combineReducers({
   loader: toggleLoading,
   shop: shop,
-  auth: auth
+  auth: auth,
+  liveEvent: liveEvent
 });
 
 // const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware)));
 const store = process.env.environment === 'dev' ? createStore(reducers, composeWithDevTools(applyMiddleware(thunkMiddleware))) : createStore(reducers, applyMiddleware(thunkMiddleware));
 
 function MyApp({ Component, pageProps }) {
+
   return  <Provider
               store={store}>
-              <Component {...pageProps} />
+              <ComponentWrapper Component={Component} pageProps={pageProps} />
               <NotificationContainer/>
           </Provider>
 }

@@ -39,12 +39,13 @@ const ContactUs = () => {
     };
 
     const openingHours = [
-        {day: "Monday", time: "8:00a.m - 9:00pm", id: 0},
-        {day: "Tuesday", time: "8:00a.m - 9:00pm", id: 1},
-        {day: "Wednesday", time: "8:00a.m - 9:00pm", id: 2},
-        {day: "Thursday", time: "8:00a.m - 9:00pm", id: 3},
-        {day: "Friday", time: "8:00a.m - 9:00pm", id: 4},
-        {day: "Saturday", time: "8:00a.m - 9:00pm", id: 5}
+        {day: "Monday", time: "7:00a.m - 10:00pm", id: 0},
+        {day: "Tuesday", time: "7:00a.m - 10:00pm", id: 1},
+        {day: "Wednesday", time: "7:00a.m - 10:00pm", id: 2},
+        {day: "Thursday", time: "7:00a.m - 10:00pm", id: 3},
+        {day: "Friday", time: "7:00a.m - 10:00pm", id: 4},
+        {day: "Saturday", time: "7:00a.m - 10:00pm", id: 5},
+        {day: "Sunday", time: "7:00a.m - 10:00pm", id: 6}
     ]
 
     return (
@@ -101,10 +102,16 @@ const ContactUs = () => {
                                     <p>{hours.time}</p>
                                 </div>
                             })}
-                            <h4 className="mt-3">Careers</h4>
-                            <p>If you think you will fit into our team and you love to serve friends,
-                            then visit our current openings or send your resume along with a cover
-                                      letter telling us about yourself and your interests to <a className="link-to-hr" href="mailto:hr@sundryfood.com">hr@sundryfood.com</a> to get things started.</p>
+                            <h4 className="mt-3 mb-2">Head Office</h4>
+                            <p> 23 Nzimiro Street, Old GRA. Port Harcourt </p>
+                            <h4 className="mt-3 mb-2">Phone no</h4>
+                            <div className="d-flex align-items-center">
+                                <p className="mb-0"> <a className="link-to-hr" href="tel:070054543663">0700 54543663, </a> </p> &nbsp;
+                                <p className="mb-0"> <a className="link-to-hr" href="tel:08100393579">+2348100393579</a> </p>
+                            </div>
+                              
+                            <h4 className="mt-3 mb-2">Email</h4>
+                            <p> <a className="link-to-hr" href="mailto:hr@sundryfood.com">hr@sundryfood.com</a> </p>
                         </div>
                     </div>
                 </div>

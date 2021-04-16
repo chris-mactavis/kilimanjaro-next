@@ -40,7 +40,6 @@ export const storeAuth = data => {
     Cookies.set('token', data.token);
     Cookies.set('user', JSON.stringify(data.user));
     
-
     return {
         type: LOGIN,
         data

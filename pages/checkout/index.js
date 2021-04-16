@@ -47,6 +47,7 @@ const Checkout = () => {
     const balanceUnsused = useSelector(state => state.shop.balance); 
     const newUnusedBal = useSelector(state => state.shop.theNewBalance)
 
+    // All state
     const [streetAddress, setStreetAddress] = useState('');
     const [latLng, setLatLng] = useState(null);
     const [paymentOption, setPaymentOption] = useState('delivery');
@@ -64,20 +65,28 @@ const Checkout = () => {
     const [ theCouponCodeName, setTheCouponCodeName ] = useState(couponCode);
     const [ unusedBalance, setUnusedBalance ] = useState(balanceUnsused);
 
-    const [ paymentInfoInterswitch, setPaymentInfoInterwitch ] = useState({});
-    const [ stringHash, setStringHash ] = useState(null);
-    const [ theProId, setTheProId ] = useState(null);
     const [ newBal, setNewBal ] = useState(newUnusedBal);
-    const [ paymmentType, setPaymentType ] = useState('flutterwave');
+    const [ paymentType, setPaymentType ] = useState('flutterwave');
     const [localCart, setLocalCart] = useState([]);
+    const [ minOrderAmount, setMinOrderAmount ] = useState(null);
+    const [ minOrderActive, setMinOrderActive ] = useState(false);
 
     const dispatch = useDispatch();
 
 
-    const paymentTypeList = [
-        { value: 'flutterwave', label: 'Flutterwave' },
-        { value: 'interswitch', label: 'Interswitch' },
-    ];
+    useEffect(() => {
+        const fetchMinPrice = async () => {
+            try {
+                const {data: {data : res}} = await axiosInstance.get('settings/get-min-order-amount');
+                setMinOrderAmount(+res.min_order_amount);
+                setMinOrderActive(true);  
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchMinPrice();
+    }, []);
+ 
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -201,25 +210,33 @@ const Checkout = () => {
                 // if logged in
                 if (paymentOption === 'delivery') {
                     // delivery (online and on delivery)
-                    orderData = {
-                        email: user.email,
-                        phone: data.phone,
-                        signup_device: 'web',
-                        restaurant_id : selectedRestaurant.id,
-                        street_address: streetAddress,
-                        house_number: data.houseNumber,
-                        longitude: latLng.lng,
-                        latitude: latLng.lat,
-                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
-                        quantity: localCart.length,
-                        subtotal: allTotalPrice,
-                        delivery: deliveryPrice,
-                        total: total,
-                        order_type: paymentOption,
-                        ordered_from: 'web',
-                        delivery_note: data.message,
-                        order_items: cartItems
+                    if (latLng) {
+                        orderData = {
+                            email: user.email,
+                            phone: data.phone,
+                            signup_device: 'web',
+                            restaurant_id : selectedRestaurant.id,
+                            street_address: streetAddress,
+                            house_number: data.houseNumber,
+                            longitude: latLng.lng,
+                            latitude: latLng.lat,
+                            payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                            payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
+                            quantity: localCart.length,
+                            subtotal: allTotalPrice,
+                            delivery: deliveryPrice,
+                            total: total,
+                            order_type: paymentOption,
+                            ordered_from: 'web',
+                            delivery_note: data.message,
+                            order_items: cartItems
+                        }
+                    } else {
+                        NotificationManager.error('Please a street/estate address', '', 6000);
+                        dispatch(loader());
+                        return;
                     }
+                    
                 } else if (paymentOption === 'pickup') {
                     // if pickup
                     orderData = {
@@ -228,6 +245,7 @@ const Checkout = () => {
                         signup_device: 'web',
                         restaurant_id : selectedRestaurant.id,
                         payment_method: 'webPay',
+                        payment_gateway: paymentType,
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         total: total,
@@ -241,27 +259,35 @@ const Checkout = () => {
                 //  if not logged in
                 if (paymentOption === 'delivery') {
                     // If delivery (both online and pay on delivery)
-                    orderData = {
-                        first_name: data.first_name,
-                        last_name: data.last_name,
-                        email: data.email,
-                        phone: data.phone,
-                        signup_device: 'web',
-                        restaurant_id: selectedRestaurant.id,
-                        street_address: streetAddress,
-                        house_number: data.houseNumber,
-                        longitude: latLng.lng,
-                        latitude: latLng.lat,
-                        payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
-                        quantity: localCart.length,
-                        subtotal: allTotalPrice,
-                        delivery: deliveryPrice,
-                        total: total,
-                        order_type: paymentOption,
-                        ordered_from: 'web',
-                        delivery_note: data.message,
-                        order_items: cartItems
+                    if (latLng) {
+                        orderData = {
+                            first_name: data.first_name,
+                            last_name: data.last_name,
+                            email: data.email,
+                            phone: data.phone,
+                            signup_device: 'web',
+                            restaurant_id: selectedRestaurant.id,
+                            street_address: streetAddress,
+                            house_number: data.houseNumber,
+                            longitude: latLng.lng,
+                            latitude: latLng.lat,
+                            payment_method: paymentMethod === 'payment online' ? 'webPay' : 'Pay on delivery',
+                            payment_gateway: paymentMethod === 'payment online' ? paymentType : '',
+                            quantity: localCart.length,
+                            subtotal: allTotalPrice,
+                            delivery: deliveryPrice,
+                            total: total,
+                            order_type: paymentOption,
+                            ordered_from: 'web',
+                            delivery_note: data.message,
+                            order_items: cartItems
+                        }
+                    } else {
+                        NotificationManager.error('Please a street/estate address', '', 6000);
+                        dispatch(loader());
+                        return;
                     }
+                    
                 } else if (paymentOption === 'pickup') {
                     // if pickup
                     orderData = {
@@ -272,6 +298,7 @@ const Checkout = () => {
                         signup_device: 'web',
                         restaurant_id: selectedRestaurant.id,
                         payment_method: 'webPay',
+                        payment_gateway: paymentType,
                         quantity: localCart.length,
                         subtotal: allTotalPrice,
                         total: total,
@@ -284,7 +311,7 @@ const Checkout = () => {
             }
 
             if ((paymentOption === 'delivery' && paymentMethod === 'payment online') || (paymentOption === 'pickup'  && paymentMethod === 'payment online')) {
-               if (paymmentType === 'flutterwave') {
+               if (paymentType === 'flutterwave') {
                     /** FLUTTERWAVE PAYMENT HANDLER */
                     setPaymentType('flutterwave');
                     const trans = FlutterwaveCheckout({
@@ -327,8 +354,6 @@ const Checkout = () => {
                         },
                     });
                }  else {
-                    // NotificationManager.error('Sorry this payment type is not available at the moment.', '', 6000);
-                    // setPaymentType('flutterwave');
                     /** INTERSWITCH PAYMENT HANDLER */
                         setPaymentType('interswitch');
                         let transRef = 'Killi-' + parseInt(Math.random() * 10000000);
@@ -342,7 +367,6 @@ const Checkout = () => {
                         let hashString = transRef + productId +  itemId + +amount + siteRedirectUrl + macKey;
                         let hash = sha512(hashString).toString('hex').toUpperCase();
             
-                
                     const obj = {
                         postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
                         amount,
@@ -355,9 +379,7 @@ const Checkout = () => {
                         currency: "NGN",
                         hash,
                         onComplete : async (paymentResponse) => {
-                            if (paymentResponse.resp == 'Z6') {
-                               return;
-                            } else {
+                             if (paymentResponse.resp == '00') {
                                 try {
                                     await submitOrder(orderData);
                                     await updateUnUsedBalance();
@@ -366,9 +388,11 @@ const Checkout = () => {
                                     dispatch(loader());
                                     setInlineLoader(false); 
                                     NotificationManager.error(error.response.data.message, '', 3000);
-                                }  
+                                } 
+                            } else {
+                                return;
                             }
-                            // console.log(paymentResponse);
+                            console.log(paymentResponse, 'response');
                         }
                     };
                     new IswPay(obj);
@@ -624,6 +648,15 @@ const Checkout = () => {
         setPaymentType(e.target.value);
     };
 
+    const verifyPhoneHandler = async phone => {
+        try {
+            const { data: {data: {phone_exists}} } = await axiosInstance.post('verify-phone', {phone});
+            return !phone_exists || 'Phone number already exists. Kindly use another number'
+        } catch (error) {
+
+        }
+    }
+
 
     return (
         <>
@@ -701,7 +734,7 @@ const Checkout = () => {
                                             
                                         { paymentMethod === 'payment online' && <>
                                         <h4>Payment Type</h4>
-                                        <select onChange={onchangePaymentType} value={paymmentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                        <select onChange={onchangePaymentType} value={paymentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
                                             <option value="flutterwave">Flutterwave</option>
                                             <option value="interswitch">Interswitch</option>
                                         </select>
@@ -711,7 +744,7 @@ const Checkout = () => {
 
                                         
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login</a></p>}
+                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login,</a> or fill the form below to Sign up.</p>}
 
                                         {/* Contact Details */}
                                         {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}
@@ -759,26 +792,33 @@ const Checkout = () => {
                                                 </div>
                                                 {errors.password && <p className="error">{errors.password.message}</p>}
                                             </div>
-                                            {paymentOption === 'pickup' && <FormInput
+
+                                            <FormInput
                                                 type="number"
                                                 name="phone"
                                                 placeholder="+234 80 1234 5678*"
                                                 label="Mobile Number"
-                                                register={register({ required: 'This field is required.' })}
+                                                register={register({ 
+                                                    required: 'This field is required.',
+                                                    validate: async value => verifyPhoneHandler(value)
+                                                })}
                                                 error={errors.phone && errors.phone.message}
-                                            />}
+                                                defaultValue={user && user.phone}
+                                            />
+                                            
                                         </div>
                                         }
 
-                                        {isLoggedIn && <FormInput
+                                        {(paymentOption === 'pickup' && isLoggedIn) && <FormInput
                                             type="number"
                                             name="phone"
                                             placeholder="+234 80 1234 5678*"
                                             label="Mobile Number"
                                             register={register({ required: 'This field is required.' })}
                                             error={errors.phone && errors.phone.message}
-                                            defaultValue={user && user.phone}
                                         />}
+
+                                        {/* {!isLoggedIn && } */}
 
                                         {paymentOption === 'delivery' && <div>
                                             <PlacesAutocomplete
@@ -829,8 +869,8 @@ const Checkout = () => {
                                                 name="houseNumber"
                                                 placeholder="House Number*"
                                                 label="House Number"
-                                                register={register({ required: true })}
-                                                error={errors.houseNumber && 'This field is required'}
+                                                register={register}
+                                                // error={errors.houseNumber && 'This field is required'}
                                             />
                                         </div>}
 
@@ -865,13 +905,13 @@ const Checkout = () => {
                                                 </div> }
                                                 {(unusedBalance > total  && unusedBalance > 0) &&
                                                     <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Unused Balance </p>
+                                                        <p>Balance </p>
                                                         <p>{'₦' + newBal }</p>
                                                     </div>
                                                 }
                                                 {(unusedBalance < total && unusedBalance > 0) && 
                                                     <div className="total-order-details d-flex align-items justify-content-between flex-wrap">
-                                                        <p>Unused Balance </p>
+                                                        <p>Balance </p>
                                                         <p>- {'₦' + unusedBalance}[Removed]</p>
                                                     </div>
                                                 }
@@ -888,7 +928,7 @@ const Checkout = () => {
                                                     <p>{'₦' + total}</p>
                                                 </div>
                                                 {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a city and restaurant close to you before you can place your order.</p>}
-                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={deliveryPrice === null ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
+                                                <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={(deliveryPrice === null || minOrderActive === false) ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
                                         </div>
@@ -915,5 +955,33 @@ const Checkout = () => {
     );
 
 };
+
+Checkout.getInitialProps = async ({ req, res }) => {   
+    const isClient = typeof document !== 'undefined';
+    
+    try {
+        const { data : {data} } = await axiosInstance.get(`settings/get-order-times`);
+
+        const currentTime = new Date().getHours();
+        const openingHour = +data.opening_time;
+        const closingHour = +data.closing_time;
+        
+        if (currentTime >= openingHour && currentTime < closingHour) {
+            return {data}; 
+        } else {
+            if (isClient) {
+                window.location.href = '/menu';
+                return {data: null};
+            } else {
+                // const isClosed = req.cookies.closed;
+                res.redirect("/menu");
+            }
+        }
+        
+    } catch (error) {
+        console.log(error)
+        return {data: null} ;
+    }
+}
 
 export default Checkout;
