@@ -5,14 +5,16 @@ import Router from 'next/router';
 import Cookies from 'js-cookie';
 
 import { loader } from '../../store/actions/loader';
-import InlineLoading from '../../components/UI/inlineLoader';
+import HomepageLoader from '../../components/UI/HomepageLoader';
 import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
+import Loader from '../../components/UI/loader';
 
 
 const HeaderContent = ({cities}) => {
     const [ restaurants, setRestaurants ] = useState([]);
     const [ restaurantName, setRestaurantName ] = useState(null);
-    const [ inlineLoading, setInlineLoading ] = useState(0);
+    const [ inlineLoad, setInlineLoad ] = useState(0);
+    const [ isLoading, setIsLoading ] = useState(false)
 
     // console.log(restaurantName, 'resName');
     // console.log(restaurants, 'res')
@@ -28,11 +30,11 @@ const HeaderContent = ({cities}) => {
     }, []);
 
     const handleCityInputChange = (val) => {
-        dispatch(loader());
-        setInlineLoading(1);
+        setIsLoading(true);
+        setInlineLoad(1);
         setTimeout(() => {
-            dispatch(loader());
-            setInlineLoading(0);
+            setIsLoading(false);
+            setInlineLoad(0);
         }, 1000);
         setRestaurantName( null );
         let restaurants = cities.find(city => city.id === val.value).restaurants;
@@ -44,8 +46,8 @@ const HeaderContent = ({cities}) => {
     };
 
     const handleRestaurantInputChange = (value) => {
-        dispatch(loader());
-        setInlineLoading(1);
+        setIsLoading(true);
+        setInlineLoad(1);
         Cookies.remove('totalPrice');
         Cookies.remove('setCart');
         Cookies.remove('orderItem');
@@ -53,10 +55,10 @@ const HeaderContent = ({cities}) => {
         setRestaurantName( value );
         dispatch(selectedRestaurant(value));
         Cookies.set('selectedRestaurant', JSON.stringify(value));
-        setTimeout(() => {
-            dispatch(loader());
-            setInlineLoading(0);
-        }, 6000);
+        // setTimeout(() => {
+        //     dispatch(loader());
+        //     setInlineLoading(0);
+        // }, 6000);
      
         const selectedRes = {
             label: value.label,
@@ -99,7 +101,7 @@ const HeaderContent = ({cities}) => {
                             <form className="select-state">
                                 <Select options={mappedCities} className="select-tool" placeholder='Select a state' instanceId="cityId" onChange={handleCityInputChange} />
                                 <Select value={restaurantName} options={restaurants.length > 0 ? restaurants : [] } className={restaurants.length > 0 ? 'select-tool' : 'select-tool select-disabled'} placeholder='Select Restaurant' instanceId="restaurantId" onChange={handleRestaurantInputChange} />
-                                { (loadingState && inlineLoading === 1 ) && <div className="inline-loading-css"><InlineLoading /></div>  }
+                                { (isLoading && inlineLoad === 1 ) && <div className="inline-loading-css"><HomepageLoader /></div>  }
                             </form>
                         </div>
                     </div>

@@ -39,13 +39,13 @@ const ContactUs = () => {
     };
 
     const openingHours = [
-        {day: "Monday", time: "7:00a.m - 10:00pm", id: 0},
-        {day: "Tuesday", time: "7:00a.m - 10:00pm", id: 1},
-        {day: "Wednesday", time: "7:00a.m - 10:00pm", id: 2},
-        {day: "Thursday", time: "7:00a.m - 10:00pm", id: 3},
-        {day: "Friday", time: "7:00a.m - 10:00pm", id: 4},
-        {day: "Saturday", time: "7:00a.m - 10:00pm", id: 5},
-        {day: "Sunday", time: "7:00a.m - 10:00pm", id: 6}
+        {day: "Monday", time: "8:00a.m - 7:00pm", id: 0},
+        {day: "Tuesday", time: "8:00a.m - 7:00pm", id: 1},
+        {day: "Wednesday", time: "8:00a.m - 7:00pm", id: 2},
+        {day: "Thursday", time: "8:00a.m - 7:00pm", id: 3},
+        {day: "Friday", time: "8:00a.m - 7:00pm", id: 4},
+        {day: "Saturday", time: "8:00a.m - 7:00pm", id: 5},
+        {day: "Sunday", time: "8:00a.m - 7:00pm", id: 6}
     ]
 
     return (

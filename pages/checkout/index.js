@@ -740,24 +740,32 @@ const Checkout = () => {
                                                 <>
                                                     <label className="payment">
                                                         <input type="radio" value="payment online" onChange={onchangePaymentMethod} name="radio" defaultChecked key={'PayOnline-2'} />Pay Online
-                                                        </label>
+                                                    </label>
                                                 </>
                                             }
                                         </div>
                                             
                                         { paymentMethod === 'payment online' && <>
                                         <h4>Payment Type</h4>
-                                        <select onChange={onchangePaymentType} value={paymentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
+                                        {/* <select onChange={onchangePaymentType} value={paymentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
                                             <option value="flutterwave">Flutterwave</option>
                                             <option value="interswitch">Interswitch</option>
-                                        </select>
-                                        {errors.ptype && <p className="error">{errors.ptype.message}</p>}
+                                        </select> */}
+                                        <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
+                                            <label className="payment">
+                                                <input type="radio" value="flutterwave" onChange={onchangePaymentType} name="paymentType" defaultChecked key={'PayType'} />Flutterwave
+                                            </label>
+                                            <label className="payment">
+                                                <input type="radio" value="interswitch" onChange={onchangePaymentType} name="paymentType" key={'PayOnline'} />Interswitch
+                                            </label>
+                                        </div>
+                                        {/* {errors.ptype && <p className="error">{errors.ptype.message}</p>} */}
                                         </>
                                         }
 
                                         
 
-                                        {!isLoggedIn && <p>Already a member? <a onClick={loginRedirect} className="red-colored">Login,</a> or fill the form below to Sign up.</p>}
+                                        {!isLoggedIn && <p><b></b>Already a member?<b></b> <a onClick={loginRedirect} className="red-colored">Login,</a> or fill the form below to Sign up.</p>}
 
                                         {/* Contact Details */}
                                         {paymentOption === 'pickup' && isLoggedIn ? '' : <h4 className="mt-5">Billing Details</h4>}

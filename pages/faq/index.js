@@ -5,7 +5,6 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Link from 'next/link';
 
 import axiosInstance from '../../config/axios';
 import Layout from "../../components/Layout";
@@ -26,8 +25,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Faq = ({faqs}) => {
-    console.log(faqs);
     const classes = useStyles();
+
+    const createMarkup = (html) => ({__html: html});
 
     return (
         <Layout>
@@ -54,7 +54,7 @@ const Faq = ({faqs}) => {
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>
-                                                {faq.answer}
+                                                <div  dangerouslySetInnerHTML={createMarkup(faq.answer)}></div>
                                             </Typography>
                                         </AccordionDetails>
                                     </Accordion>
