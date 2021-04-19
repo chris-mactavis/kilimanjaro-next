@@ -13,8 +13,7 @@ const CompleteOrder = () => {
     const [ completeOrderItem, setCompleteOrderItem ] = useState({});
     const [ selRestaurant, setSelRestaurant ] = useState({});
     const [ lastCartItem, setLastCartItem ] = useState([]);
-    console.log(completeOrderItem);
-    console.log(selRestaurant);
+    console.log(completeOrderItem, 'orders');
 
     useEffect(() => {
         const orderCompleteItem = JSON.parse(Cookies.get('orderItem'));
@@ -63,8 +62,8 @@ const CompleteOrder = () => {
                                                     </>
                                                 }
                                                 <p className="mb-1"><strong>Order List</strong></p>
-                                                {lastCartItem.map((lastCart) => {
-                                                    return <p>{lastCart.quantity}x {lastCart.product.product} - {'₦' + lastCart.totalPrice}</p>
+                                                {lastCartItem.map((lastCart, i) => {
+                                                    return <p key={i}>{lastCart.quantity}x {lastCart.product.product} - {'₦' + lastCart.totalPrice}</p>
                                                 })}
                                             </div>
                                             <div className="col-md-4 text-center">

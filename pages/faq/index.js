@@ -55,7 +55,7 @@ const Faq = ({faqs}) => {
                                         <AccordionDetails>
                                             <Typography>
                                                 {faq.answer}
-                                        </Typography>
+                                            </Typography>
                                         </AccordionDetails>
                                     </Accordion>
                                 })}

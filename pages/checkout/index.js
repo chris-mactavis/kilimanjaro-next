@@ -19,6 +19,7 @@ import { addToCart, setCouponAmount, setTotalPriceWithCoupon, updateTotalPrice, 
 import { loader } from '../../store/actions/loader';
 import InlineLoadingWhite from '../../components/UI/inlineLoaderWhite';
 import InlineLoading from '../../components/UI/inlineLoader';
+import { storeAuth } from '../../store/actions/auth';
 
 
 
@@ -429,8 +430,14 @@ const Checkout = () => {
 
     const submitOrder = async (orderData) => {
         const data = await axiosInstance.post('orders', orderData);
-        const orderItem = data.data.data;
+        console.log(data, 'submit');
+        const orderItem = data.data.data.order;
         Cookies.set('orderItem', JSON.stringify(orderItem));
+        const setUser = {
+            user: data.data.data.user,
+            token: data.data.data.token
+        };
+        dispatch(storeAuth(setUser));
         dispatch(loader());
         setInlineLoader(false); 
         NotificationManager.success('Order added successfully', '', 3000);
