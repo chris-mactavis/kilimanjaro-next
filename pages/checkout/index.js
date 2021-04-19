@@ -266,6 +266,7 @@ const Checkout = () => {
                             last_name: data.last_name,
                             email: data.email,
                             phone: data.phone,
+                            password: data.password,
                             signup_device: 'web',
                             restaurant_id: selectedRestaurant.id,
                             street_address: streetAddress,
@@ -296,6 +297,7 @@ const Checkout = () => {
                         last_name: data.last_name,
                         email: data.email,
                         phone: data.phone,
+                        password: data.password,
                         signup_device: 'web',
                         restaurant_id: selectedRestaurant.id,
                         payment_method: 'webPay',
@@ -888,7 +890,7 @@ const Checkout = () => {
                                             <FormInput
                                                 type="text"
                                                 name="houseNumber"
-                                                placeholder="House Number*"
+                                                placeholder="House Number"
                                                 label="House Number"
                                                 register={register}
                                                 // error={errors.houseNumber && 'This field is required'}
