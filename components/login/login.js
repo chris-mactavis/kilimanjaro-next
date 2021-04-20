@@ -39,7 +39,6 @@ const Login = () => {
         NotificationManager.success('Logged in Successfully', '', 3000);
         let redirectTo = localStorage.getItem('checkoutToLogin');
         // checkoutCookies = String(checkoutCookies);
-        console.log(redirectTo, 'true');
         if (redirectTo) {
             Router.push(redirectTo);
             localStorage.removeItem('checkoutToLogin');

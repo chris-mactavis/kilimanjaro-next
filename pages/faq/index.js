@@ -71,7 +71,6 @@ const Faq = ({faqs}) => {
 Faq.getInitialProps = async() => {
     try {
         const {data: {data}} = await axiosInstance.get('faqs');
-         console.log(data);
          return {faqs: data};
         
     } catch  (error) {

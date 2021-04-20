@@ -34,7 +34,7 @@ const Home = ({ cities }) => {
     $(window).scroll(function() {    
       var scroll = $(window).scrollTop();
 
-      console.log(scroll);
+      // console.log(scroll);
   
       if (scroll >= 900) {
           $(".app-img-1").addClass("animate-1");

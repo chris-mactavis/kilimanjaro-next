@@ -28,7 +28,6 @@ const ContactUs = () => {
                 const {data} = await axiosInstance.post('contact', newData);
                 dispatch(loader());
                 NotificationManager.success(data.message, '', 3000);
-                console.log(data);
             } catch (error) {
                 dispatch(loader());
                 NotificationManager.error(error.response.data.message, '', 3000);

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import { loader } from '../../store/actions/loader';
 import HomepageLoader from '../../components/UI/HomepageLoader';
 import { saveRestaurants, selectedRestaurant } from '../../store/actions/shop';
-import Loader from '../../components/UI/loader';
+// import Loader from '../../components/UI/loader';
 
 
 const HeaderContent = ({cities}) => {
@@ -22,7 +22,7 @@ const HeaderContent = ({cities}) => {
     const mappedCities = cities.map(city => ({value: city.id, label: city.city}));
 
     const dispatch = useDispatch();
-    const loadingState = useSelector(state => state.loader.loading);
+    // const loadingState = useSelector(state => state.loader.loading);
 
     useEffect(() => {
         Cookies.remove('cityFocused');

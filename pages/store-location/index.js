@@ -54,6 +54,7 @@ const StoreLocation = ({storeLocations}) => {
                                         <div className="modal-content">
                                             <div className="modal-header">
                                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
+                                                <h4 className="modal-title">Locations</h4>
                                             </div>
                                             <div className="modal-body">
                                                 {restaurants.map((res) => {
@@ -80,7 +81,6 @@ const StoreLocation = ({storeLocations}) => {
 StoreLocation.getInitialProps = async() => {
     try {
         const {data: {data}} = await axiosInstance.get('store-locations');
-        console.log(data);
         return {storeLocations: data}
     } catch (error) {
         console.log(error);

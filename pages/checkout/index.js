@@ -399,7 +399,7 @@ const Checkout = () => {
                             } else {
                                 return;
                             }
-                            console.log(paymentResponse, 'response');
+                            // console.log(paymentResponse, 'response');
                         }
                     };
                     new IswPay(obj);

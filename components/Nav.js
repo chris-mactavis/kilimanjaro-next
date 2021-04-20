@@ -23,7 +23,6 @@ const Nav = () => {
 
     const signupHandle = () => {
         localStorage.removeItem('checkoutToLogin');
-        console.log('hello');
     };
 
     return (

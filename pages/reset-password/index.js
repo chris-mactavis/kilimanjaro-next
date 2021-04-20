@@ -31,7 +31,6 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
     const dispatch = useDispatch();
 
     const resetPasswordHandler = async (data) => {
-        console.log(data);
         const userToken = Cookies.get('token');
         const resetData = {
             code: code,
@@ -156,7 +155,6 @@ const ResetPassword = ({token, tokenIsValid, reason, code}) => {
 };
 
 ResetPassword.getInitialProps = async ({query}) => {
-    console.log(query);
     if (!query.hasOwnProperty('code')) {
         return {
             tokenIsValid: false,

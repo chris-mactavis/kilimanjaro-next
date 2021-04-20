@@ -14,8 +14,6 @@ import { auth } from '../../components/hoc/auth';
 
 
 const Account = ({orders}) => {
-    console.log(orders);
-
     useEffect(() => {
         Cookies.set('orders', JSON.stringify(orders));
         localStorage.setItem('orders', JSON.stringify(orders));
@@ -88,23 +86,8 @@ const Account = ({orders}) => {
                                                     <Td><button onClick={() => ViewSingleOrderHandler(order.id)} className="btn mt-3 mb-3"><span className="text">View</span></button></Td>
                                                 </Tr>
                                             })}
-                                             {/* <Tr>
-                                                 <Td>#16430</Td>
-                                                 <Td>9 April 2019</Td>
-                                                 <Td>Processing</Td>
-                                                 <Td>N1000 for 1 items</Td>
-                                                 <button className="btn mt-3 mb-3">View</button>
-                                             </Tr>
-                                             <Tr>
-                                                 <Td>#16430</Td>
-                                                 <Td>9 April 2019</Td>
-                                                 <Td>Processing</Td>
-                                                 <Td>N1000 for 1 items</Td>
-                                                 <button className="btn mt-3 mb-3">View</button>
-                                             </Tr> */}
                                         </Tbody>
                                     </Table>
-
                                 </div>}
                             </div>
                         </div>

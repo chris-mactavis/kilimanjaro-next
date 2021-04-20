@@ -1577,6 +1577,8 @@ section {
         .MuiAccordionDetails-root {
             text-align: left;
             padding: 8px 16px 6px;
+            background: #FFE6EA;
+            margin-top: 15px;
         }
 
         .MuiAccordionSummary-root {
@@ -1591,6 +1593,11 @@ section {
 
         .MuiAccordionSummary-content {
             margin: 0 !important;
+
+            .makeStyles-heading-2 {
+                font-size: 17px !important;
+                font-weight: 600;
+            }
         }
 
         .MuiAccordionSummary-root.Mui-expanded {
@@ -1677,9 +1684,17 @@ section {
 
         .modal-header {
             border-bottom: none;
+            padding-left: 5rem;
+            flex-direction: row-reverse;
+
             // display: none;
             @media only screen and (max-width: $mobile_width) {
                 display: block;
+                padding-left: 2rem;
+            }
+
+            .modal-title {
+                color: $primary;
             }
               
             .close {
@@ -1688,10 +1703,10 @@ section {
         }
 
         .modal-body {
-            padding: 5rem;
+            padding: 2rem 5rem;
 
             @media only screen and (max-width: $mobile_width) {
-                padding: 0 5rem;
+                padding: 0 2rem;
             }
 
             .restaurants {
