@@ -60,6 +60,10 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
 
     useEffect(() => {
+        setCategoryActiveName(restaurantCategories[0].category);
+    }, []);
+
+    useEffect(() => {
         const selCityName = JSON.parse(Cookies.get('cityFocused'));
         const selResName = JSON.parse(Cookies.get('resFocused'));
         setSelectedCityName(selCityName);
