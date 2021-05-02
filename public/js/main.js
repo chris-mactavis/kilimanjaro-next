@@ -18,3 +18,9 @@ var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq ||
 {widgetcode:"c3155e4eadce57ed269504aea515660ad959bfccbe310bb294634a329ed62c021a2010ab7b6727677d37b27582c0e9c4", values:{},ready:function(){}};
 var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;
 s.src="https://salesiq.zoho.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);d.write("<div id='zsiqwidget'></div>");
+
+// Add class to the Zoho chat app
+setTimeout(() => {
+  var el = document.querySelector("#siqiframe");
+  console.log({el});
+}, 5000);

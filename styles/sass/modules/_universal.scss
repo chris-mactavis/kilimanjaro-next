@@ -22,8 +22,10 @@
     top: 16px;
 }
    
-html body section  {
-    &.siqembed {
-        // opacity: 1 !important;
+
+.win_close_widget {
+    background: #fff !important;
+    &::before {
+        color: $primary !important;
     }
 }
