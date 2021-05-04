@@ -21,11 +21,23 @@
 .notificaton-close {
     top: 16px;
 }
-   
 
-.win_close_widget {
-    background: #fff !important;
-    &::before {
-        color: $primary !important;
+.button-float {
+    position: fixed;
+    background: $primary;
+    border-radius: 50%;
+    left: 1%;
+    bottom: 11px;
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+
+    .float-arrow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
     }
 }

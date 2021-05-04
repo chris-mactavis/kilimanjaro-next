@@ -142,6 +142,55 @@ form {
         .checked {
             color: $primary;
         }
+
+        .search-container {
+            display: flex;
+            position: relative;
+
+            &::before {
+                content: "";
+                position: absolute;
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+                right: 7px;
+                top: 10px;
+                background: url(/images/icon/search-icon.svg) no-repeat 50%;
+                background-size: contain;            
+            }
+
+            input {
+                padding: 8px;
+                width: 100%;
+                border: 1px solid $primary;
+                font-size: 15px;
+                border-radius: 5px;
+            }
+
+            .active {
+                display: block !important;
+            }
+
+            ul.results {
+                position: absolute;
+                width: 100%;
+                top: 41px;
+                border-top: none;
+                background: #fff;
+                list-style: none;
+                padding-left: 0;
+                z-index: 9999;
+                display: none;
+
+                li {
+                    font-size: 15px;
+                    border-bottom: 1px solid;
+                    padding: 0 8px;
+                    margin-bottom: 15px;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 
     &.signup-form {
