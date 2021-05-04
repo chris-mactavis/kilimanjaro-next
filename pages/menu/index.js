@@ -5,7 +5,8 @@ import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { NotificationManager } from 'react-notifications';
-import nookies from 'nookies';
+import debounce from 'lodash.debounce';
+
 // import { useForm } from "react-hook-form";
 
 
@@ -48,7 +49,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     const [ selectedCityName, setSelectedCityName ] = useState(null);
     const [ selectedVariableProducts, setSelectedVariableProducts ] = useState([]);
     const [ quantitiesArray, setQuantitiesArray ] = useState([]);
-    const [ categoryActiveName, setCategoryActiveName ] = useState('Combo Deals');
+    const [ categoryActiveName, setCategoryActiveName ] = useState('');
     const [ disableScrollEvent, setDisableScrollEvent ] = useState(false);
     const [ varId, setVarId ] = useState({});
     const [ closedHour, setClosedHour ] = useState('');
@@ -56,8 +57,61 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     const [ resId, setResId ] = useState(restaurantId);
     const [ couponListData, setCouponListData ] = useState(couponData);
 
-    
+    const [ searchvalue, setSearchValue ] = useState('');
+	const [ dbValue, saveToDb ] = useState([]);
+    const [ showSearchBar, setShowSearchBar ] = useState(false);
+    const [ allProductList, setAllProductList ] = useState([]);
+
+    // console.log({searchvalue});
+    // console.log({allProductList});
+
+
     const mappedCities = allCities.map(city => ({value: city.id, label: city.city}));
+
+    // Search product list 
+    const handleSearch = async event => {
+		const { value: nextValue } = event.target;
+		setSearchValue(nextValue);
+        console.log({nextValue});
+        try {
+            // // highlight-starts
+            if (nextValue.length > 2) {
+                // const debouncedSave = debounce( async () => {
+                    // const {data: {data: response}} = await axiosInstance.get(`products/search?product=${nextValue}&restaurant_id=${resId}`);
+                    const response = allProductList.filter(x => x.product.toLowerCase().includes(nextValue.toLowerCase()));
+                    console.log({response});
+                    if (nextValue.length > 2) {
+                        setShowSearchBar(true);
+                        saveToDb(response);
+                        setValue(value => ++value);
+                    } else {
+                        setShowSearchBar(false);
+                        saveToDb([]);
+                        setValue(value => ++value);
+                    }
+                // }, 1000);
+                // debouncedSave();
+            } else {
+                setShowSearchBar(false);
+                saveToDb([]);
+                setValue(value => ++value);
+            }
+            // highlight-ends
+        } catch(e) {
+            console.log(e.response);
+            setShowSearchBar(false);
+            saveToDb([]);
+            setValue(value => ++value);
+        }
+	};
+
+    useEffect(() => {
+        const prodList = [];
+        restaurantCategories.forEach(restCat => {
+            restCat.category_products.forEach(prod => prodList.push(prod));
+        });
+        setAllProductList(prodList);
+    }, []); 
 
     useEffect(() => {
         setCategoryActiveName(restaurantCategories[0].category);
@@ -180,7 +234,6 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         
             for (var i = 0, len = elements.length; i < len; i++) {
                 elements[i].addEventListener("click", function () {
-
                     var firstEl = $(this).find("a")[0];
                     firstEl.addEventListener("click", function (e) { e.preventDefault() });
                     $(this).find(".subcats").slideToggle();
@@ -235,28 +288,39 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
 
     useEffect(() => {
         window.$ = $;
-            $(window).ready(function () {
-                const $el = $("html, body");
-                $el.css({'overflow-x': 'unset'});
-                document.body.scrollTop = 0; // For Safari
-                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-            });
+        $(window).ready(function () {
+            const $el = $("html, body");
+            $el.css({'overflow-x': 'unset'});
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        });
     }, []);
 
     useEffect(() => {
-    
         if ($(window).width() > 768) {
             $(window).scroll(function (e) {
                 const $el = $('#category-top');
+                const $el2 = $('.button-float');
                 const isPositionFixed = ($el.css('position') === 'sticky');
                 if ($(this).scrollTop() > 140 && !isPositionFixed) {
                     $el.css({'position': 'sticky', 'top': '79px'});
+                    $el2.css({'display': 'block'});
                 }
                 if ($(this).scrollTop() < 140 && isPositionFixed) {
                     $el.css({'position': 'static', 'top': '0'});
+                    $el2.css({'display': 'none'});
                 }
             })
         }
+        $(window).scroll(function (e) {
+            const $el2 = $('.button-float');
+            if ($(this).scrollTop() > 140) {
+                $el2.css({'display': 'block'});
+            }
+            if ($(this).scrollTop() < 140) {
+                $el2.css({'display': 'none'});
+            }
+        })
     }, []);
 
     const toggleActiveClass = () => {
@@ -324,6 +388,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
             dispatch(loader());
             const { data: { data } } = await axiosInstance.get(`product-categories?restaurant_id=${value.id}`);
             const productCategories = data.filter(cat => cat.category_products.length > 0);
+            // console.log({productCategories});
             if (productCategories.length > 0) {
                 const prods = productCategories[0].category_products;
                 setAllProductCategory(productCategories[0]);
@@ -334,7 +399,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
             dispatch(loader());
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-            setTimeout(() => setCategoryActiveName('Combo Deals'), 500);
+            setTimeout(() => setCategoryActiveName(productCategories[0].category), 500);
             setResId(value.id);
         } catch (error) {
             dispatch(loader());
@@ -379,7 +444,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
             const prodInCart = prevCart[prodInCartIndex];
 
             if (productType === 'variable') {
-                const productVariation = selectedVariableProducts.find(x => x.productId === prod.id);
+                const productVariation = selectedVariableProducts.find(x => x.productId === prod.id  && x.product_variation == varId.product_variation);
                 prevCart[prodInCartIndex] = {
                     product: prod,
                     quantity: +prodInCart.quantity + parseInt(quantitySelected),
@@ -451,7 +516,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         cartDisplay =  <>
         {allCart.map((cart, index) => {
             return <>
-                <div key={cart.product.id} className="product-list">
+                <div key={`Prod-cart${cart.product.id}`} className="product-list">
                     <div className="row text-md-left text-center">
                         <div className="col-md-3">
                             <img className="img-fluid" src={cart.product.image_url} alt="" />
@@ -485,9 +550,6 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     }
 
     const handleVariationChange = (value, prod) =>  {
-        // remove if this gives problem
-        // selectedVariableProducts.pop();
-        // console.log(selectedVariableProducts, 'array');
         changeVariationClass({
             active: true
         });
@@ -559,8 +621,27 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
         } else if (closedHour == 'false') {
             Router.push('/checkout');
         }
+    };
+
+    const scrollTopHandler = () => {
+        window.$ = $;
+        $(window).ready(function () {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        });
+    };
+
+    const scrollToProduct = (prod) => {
+        let prodTab = document.getElementById(prod.product);
+        const itemHeight = prodTab.offsetTop;
+        window.scroll({
+            top: itemHeight,
+            left: 0,
+            behaviour: 'smooth'
+        });
+        setShowSearchBar(false);
     }
-        
+  
 
     return (
         <>
@@ -582,16 +663,28 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                     <form className="select-state mb-md-0 mb-2">
                                         <Select value={selectedCityName} onChange={handleMenuRestaurantCItyChange} className="select-tool" options={mappedCities} placeholder='Select a city' instanceId="menuCities" />
                                     </form>
-                                    <form className="select-state">
-                                        <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled-2"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
+                                    <form className="select-state mb-md-0 mb-2">
+                                        {/* <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className={newRestaurants.length > 0 ? "select-tool" : "select-tool select-disabled-2"} options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" /> */}
+                                        <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" />
                                     </form>
-                                    {loadingState && inlineLoading === 0 ? <form className="select-state">
+                                    <form className="select-state mr-0">
+                                        <div className="search-container">
+                                            <input onChange={handleSearch} type="text" placeholder="Search for a meal..."/>
+                                            <ul className={showSearchBar ? "results active" : "results"}>
+                                               {dbValue.map(serachRes => {
+                                                   return <li onClick={() => scrollToProduct(serachRes)} key={`SEARCH-RESULT${serachRes.id}`} className="result">{serachRes.product}</li>
+                                               })} 
+                                            </ul>
+                                        </div>
+                                        {/* <Select value={restaurantName} onChange={handleMenuRestaurantInputChange} className="select-tool" options={allRestaurants} placeholder='Select a restaurant' instanceId="menuCategories" /> */}
+                                    </form>
+                                    {loadingState && inlineLoading === 0 ? <form className="select-state w-100 mt-1">
                                         <div className="inline-loading-css-menu-page"><InlineLoading /></div>
                                     </form> : null}
                                 </div>
                                 <ul className="product-cat">
                                     {restaurantCategories.map((productCategory) => {
-                                        return <a onClick={() => categoryListHandler(productCategory.category)} key={productCategory.id}><li className={categoryActiveName === productCategory.category ? 'product-cat-list active' : 'product-cat-list'}>{productCategory.category}</li></a>
+                                        return <a onClick={() => categoryListHandler(productCategory.category)} key={`Prod-Category${productCategory.id}`}><li className={categoryActiveName === productCategory.category ? 'product-cat-list active' : 'product-cat-list'}>{productCategory.category}</li></a>
                                     })}
                                 </ul>
                             </div>
@@ -609,7 +702,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                 <div className="col-md-8">
                                     {restaurantCategories.map((restaurantCategory) => {
                                         return <>
-                                            <div key={restaurantCategory.id}>
+                                            <div key={`Res-Category${restaurantCategory.id}`}>
                                                 <h4 id={restaurantCategory.category} className="category-header">{restaurantCategory.category}</h4>
                                                 {restaurantCategory.category_products.map((prod) => {
                                                     let variations = [];
@@ -639,7 +732,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                                                     }
 
                                                     return <>
-                                                        <div key={prod.id} className="single-product">
+                                                        <div id={prod.product} key={`Product-Id${prod.id}`} className="single-product">
                                                             <div className="row">
                                                                 <div className="col-md-4 text-center text-sm-left mb-5 mb-sm-0">
                                                                     <div>
@@ -707,7 +800,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                             <div className="col-md-4">
                                 <div className="coupon-on-menu">
                                     { couponListData.map(prodCoupon => {
-                                        return <a key={prodCoupon.id} onClick={() => addCouponToCart(prodCoupon.value, prodCoupon.restaurant_products)} key={prodCoupon.id}>
+                                        return <a key={`Coupon-Id${prodCoupon.id}`} onClick={() => addCouponToCart(prodCoupon.value, prodCoupon.restaurant_products)}>
                                             <img className="img-fluid" src={prodCoupon.image_url} alt="" />
                                         </a>
                                     }) }
@@ -725,21 +818,13 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                         </div>
                         <div className="cart-product-list">
                             <div className={allCart.length > 2 ? "cart-listing-container" :  "cart-listing-container cart-listing-height"}>
-                            {!allCart.length > 0 || allTotalPrice < minOrderAmount && <p>A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>}
+                            {!allCart.length > 0 || allTotalPrice < minOrderAmount && <p>A minimum order of ₦{minOrderAmount} is required before checking out. Current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>}
                                 {cartDisplay}
                             </div>
                             <div className="cart-button-actions d-flex align-items-center justify-content-between flex-wrap">
-                                {/* <div className="d-flex mb-xl-0 mb-3">
-                                    <label className="contain">Save Basket
-                                        <input type="checkbox" key={'save-basket'} />
-                                        <span className="checkmark"></span>
-                                    </label>
-                                </div> */}
                                 <div className="d-flex align-items-center flex-wrap">
                                     <button className="btn mr-4 mb-xl-0 mb-3"  onClick={() => Router.push('/cart')}><span className="text">View/Edit Cart</span></button>
                                     <button className={allTotalPrice >= minOrderAmount ?  'btn mb-xl-0 mb-3' : 'btn disabled mb-xl-0 mb-3'} onClick={gotoCheckoutHandler}><span className="text">Proceed to Checkout</span></button>
-                                    {/* <button className='btn btn-grey mr-4' onClick={() => Router.push('/cart')}>View/Edit Cart</button>
-                                    <button className={allTotalPrice >= 1000 ?  'btn' : 'btn disabled'} onClick={() => Router.push('/checkout')}>Proceed to Checkout</button> */}
                                 </div>
                             </div>
                         </div>
@@ -754,6 +839,10 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                         </div>
                     </div>
                 </section>
+                <div onClick={scrollTopHandler} className="button-float">
+                    <i className="fa fa-chevron-up float-arrow"></i>
+                    {/* <img src="/images/icon/arrow-up.svg" alt="" className="float-arrow"/>    */}
+                </div>
             </Layout>
         </>
     );

@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import { useEffect } from 'react';
 
 
 import NavBar from '../components/NavBar';
@@ -17,7 +18,11 @@ Router.onRouteChangeComplete = ()  => NProgress.done();
 
 Router.onRouteChangeError = ()  => NProgress.done();
 
+
 const Layout = ({children, showSecFooter}) => {
+
+     
+
     return (
         <> 
             <Head>

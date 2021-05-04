@@ -441,6 +441,7 @@ section {
 
             @media only screen and (max-width: $mobile_width) {
                 width: 100%;
+                margin-right: 0;
             }
 
             .css-tlfecz-indicatorContainer {
@@ -1119,9 +1120,17 @@ section {
                 padding: 10px 20px;
                 border-radius: 3px;
                 font-weight: normal;
+
+                @media only screen and (max-width: $mobile_width) {
+                   font-size: 16px;
+                }
     
                 &:not(:last-child) {
                     margin-right: 30px;
+
+                    @media only screen and (max-width: $mobile_width) {
+                        margin-right: 5px;
+                    }
                 }
             }
 

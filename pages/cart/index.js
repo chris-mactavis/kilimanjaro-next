@@ -176,7 +176,7 @@ const ShoppingCart = ({data}) => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="empty-cart-container">
-                                        <p className="text-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
+                                        <p className="text-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. Current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice }</p>
                                         <p>Your cart is currently empty</p>
                                         <Link href="/"><button className="btn"><span className="text">Return to homepage</span></button></Link>
                                     </div>
@@ -191,7 +191,7 @@ const ShoppingCart = ({data}) => {
                             <OrderingStepsMobile activeTabs={[1]}/>
                             <div className="row">
                                 <div className="col-md-8 mx-auto">
-                                    {allTotalPrice >= minOrderAmount ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. current cart's total is: ₦{allTotalPrice}</p>}
+                                    {allTotalPrice >= minOrderAmount ? '' : <p className="d-flex align-items-center mb-5"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦{minOrderAmount} is required before checking out. Current cart's total is: ₦{allTotalPrice}</p>}
                                     <h4>Review Your Order</h4>
                                     {cartDisplay}
                                     <div className="d-flex justify-content-end mt-4 mb-3">

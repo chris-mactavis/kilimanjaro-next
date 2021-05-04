@@ -688,7 +688,7 @@ const Checkout = () => {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="empty-cart-container">
-                                    <p className="d-flex align-items-center justify-content-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
+                                    <p className="d-flex align-items-center justify-content-center"><img className="pr-2 img-fluid" src="/images/icon/exclamation-mark.svg" alt="" />A minimum order of ₦1000 is required before checking out. Current cart's total is: ₦{allTotalPrice === null ? '0' : allTotalPrice}</p>
                                     {!localCart.length > 0 && <p>Your cart is currently empty.</p>}
                                     {localCart.length > 0
                                         ?
@@ -711,7 +711,7 @@ const Checkout = () => {
                         <div className="checkout-section">
                             <div className="row">
                                 <div className="col-md-7">
-                                    <h4>Payment Option</h4>
+                                    <h4>Delivery Method</h4>
                                     <div className="d-flex align-items-center flex-wrap coupon-delivery-sect">
                                         <label className="payment">
                                             <input type="radio" value="delivery" name="radio" onChange={onchangePaymentOption} key={'Delivery'} defaultChecked />Delivery
@@ -748,7 +748,7 @@ const Checkout = () => {
                                         </div>
                                             
                                         { paymentMethod === 'payment online' && <>
-                                        <h4>Payment Type</h4>
+                                        <h4>Payment Channel</h4>
                                         {/* <select onChange={onchangePaymentType} value={paymentType} name="pType" ref={register({ required: 'Please select a paymet type if you are paying online' })} className="form-select" aria-label="Default select example">
                                             <option value="flutterwave">Flutterwave</option>
                                             <option value="interswitch">Interswitch</option>
