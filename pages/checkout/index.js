@@ -233,7 +233,7 @@ const Checkout = () => {
                             order_items: cartItems
                         }
                     } else {
-                        NotificationManager.error('Please a street/estate address', '', 6000);
+                        NotificationManager.error('Please select a street/estate address', '', 6000);
                         dispatch(loader());
                         return;
                     }
@@ -487,6 +487,7 @@ const Checkout = () => {
   
     const handleChange = (streetAddress) => {
         setStreetAddress(streetAddress);
+        console.log('change');
     };
 
     const handleSelect = streetAddress => {
@@ -523,7 +524,8 @@ const Checkout = () => {
                         setInlineLoader(false);
                     }, 1000);
                 } catch(error) {
-                    console.log(error);
+                    console.log(error, 'the error');
+                    console.log('address error');
                     dispatch(loader());
                     setInlineLoader(false);
                 }
@@ -950,7 +952,7 @@ const Checkout = () => {
                                                     <p>Order Total </p>
                                                     <p>{'₦' + total}</p>
                                                 </div>
-                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="d-flex align-items-center mt-4">Please select a state and restaurant close to you before you can place your order.</p>}
+                                                {deliveryPrice === null && <p style={{ "fontSize": "14px" }} className="mt-4">Your order cannot be completed because you are currently too far from the selected restaurant. please select another restaurant closer to you or call us on <a href="tel:070054543663">0700 54543663,</a> <a href="tel:08100393579">08100393579</a> to assist you. Thank you.</p>}
                                                 <div className="d-flex justify-content-center">{loadingState && inlineLoader ? <InlineLoadingWhite /> : <button type="submit" className={(deliveryPrice === null || minOrderActive === false) ? "btn-white btn-place-order disabled-white" : "btn-white btn-place-order"}><span className="text">Place Order</span></button>}</div>
                                                 {/* <button className="btn btn-place-order " type="button" onClick={makePayment}>Pay Now</button> */}
                                             </div>
