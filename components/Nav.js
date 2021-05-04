@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { NotificationManager } from 'react-notifications';
 
 import { logout } from '../store/actions/auth'
@@ -14,11 +14,14 @@ const Nav = () => {
     user =  typeof user === 'object' ? user : JSON.parse(user);
 
     const dispatch = useDispatch();
+    const router = useRouter();
     
     const logoutHandler = () => {
         dispatch(logout());
         !loggedIn ? null : NotificationManager.success('Logged out', '', 3000);
-        Router.push('/');  
+        if (router.pathname === '/account') {
+            Router.push('/signup');  
+        }
     } 
 
     const signupHandle = () => {

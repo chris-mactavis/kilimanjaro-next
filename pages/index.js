@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+// import { useDispatch, useSelector } from 'react-redux';
 // import ScrollReveal from 'scrollreveal';
 
 
@@ -12,6 +13,10 @@ import axiosInstance from '../config/axios';
 
 
 const Home = ({ cities }) => {
+
+  // const router = useRouter();
+
+  // console.log(router.pathname, 'pathname');
 
   useEffect(() => {
     localStorage.setItem('setAllCities', JSON.stringify(cities));

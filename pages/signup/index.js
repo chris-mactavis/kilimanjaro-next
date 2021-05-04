@@ -1,9 +1,9 @@
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 import Head from 'next/head';
 
-import Login from '../components/login/login';
-import Signup from '../components/signup/signup';
-import { withoutAuth } from '../components/hoc/auth';
+import Login from '../../components/login/login';
+import Signup from '../../components/signup/signup';
+import { withoutAuth } from '../../components/hoc/auth';
 
 const Signin = () => {
         return (
