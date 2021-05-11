@@ -50,7 +50,7 @@ const Career = () => {
                             </div>
                         </div>
                         <div className="row mt-5 pb-5">
-                            <div className="col-md-6">``
+                            <div className="col-md-6">
                                 <h4>Recruitment</h4>
                                 <p>
                                     If you think you will fit into our team and you love to serve friends, then visit our current
