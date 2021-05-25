@@ -54,7 +54,7 @@ const Faq = ({faqs}) => {
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>
-                                                <div  dangerouslySetInnerHTML={createMarkup(faq.answer)}></div>
+                                                <div dangerouslySetInnerHTML={createMarkup(faq.answer)}></div>
                                             </Typography>
                                         </AccordionDetails>
                                     </Accordion>

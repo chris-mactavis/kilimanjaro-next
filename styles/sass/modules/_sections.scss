@@ -1544,8 +1544,9 @@ section {
                 height: 75%;
             }
         }
+        
 
-        a.link-to-hr {
+        a {
             color: $primary;
         }
     }
@@ -1649,15 +1650,17 @@ section {
     &.tandc {
         p {
             color: #7F7F7F;
+            margin-top: 20px;
         }
-        .head-text {
+
+        h5 {
             color: $light-black;
             margin: 20px 0 20px;
         }
 
-        .desc-text {
-            margin-top: 20px;
-        }
+        // .desc-text {
+           
+        // }
 
         a {
             color: #DC042A;

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ContactUs from '../../components/contactUs/contactUs';
 import axiosInstance from '../../config/axios';
 
-const StoreLocation = ({storeLocations}) => {
+const StoreLocation = ({storeLocations, contact_banner, head_office_address, email}) => {
     const [ restaurants, setRestaurants ] = useState([]);
 
     const viewOuletHandler = (id) => {
@@ -72,7 +72,9 @@ const StoreLocation = ({storeLocations}) => {
                         </div>
                     </div>
                 </section>
-                <ContactUs />
+                <ContactUs 
+                 headOfficeAddress={head_office_address} 
+                 email={email} />
             </Layout>
         </>
     );
@@ -81,7 +83,9 @@ const StoreLocation = ({storeLocations}) => {
 StoreLocation.getInitialProps = async() => {
     try {
         const {data: {data}} = await axiosInstance.get('store-locations');
-        return {storeLocations: data}
+        const {data: {data: {contact_banner, head_office_address, email}}} = await axiosInstance.get('settings');
+
+        return {storeLocations: data, contact_banner, head_office_address, email}
     } catch (error) {
         console.log(error);
         return {storeLocations : []};

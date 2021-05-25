@@ -1,9 +1,16 @@
-import Layout from "../../components/Layout";
+
 import Head from "next/head";
 import Slider from 'react-slick';
 
+import Layout from "../../components/Layout";
+import axiosInstance from '../../\/config/axios';
 
-const About = () => {
+
+
+const About = ({about_banner, about_content, about_gallery}) => {
+    console.log({about_banner});
+    console.log({about_content});
+    console.log({about_gallery});
 
     const settings = {
         autoplay: true,
@@ -48,7 +55,10 @@ const About = () => {
             <Head>
                 <title>About | Kilimanjaro</title>
             </Head>
-            <header className="store-header about-us"></header>
+            {/* <header className="store-header about-us"></header> */}
+            <header className="store-header about-us" style={{backgroundImage: `url(${about_banner})`}}>
+                {/* <img src="/images/about-slide-img-1.jpg" alt="" className="img-fluid" /> */}
+            </header>
             <section className="contact-us store-location about">
                 <div className="container">
                     <div className="row">
@@ -92,5 +102,15 @@ const About = () => {
         </Layout>
     );
 };
+
+About.getInitialProps = async() => {
+    try {
+        const {data: {data: {about_banner, about_content, about_gallery}}} = await axiosInstance.get('settings');
+        return {about_banner, about_content, about_gallery};
+    } catch(e) {
+        console.log(e);
+        return {};
+    }
+}
 
 export default About;

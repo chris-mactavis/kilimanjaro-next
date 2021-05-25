@@ -913,10 +913,10 @@ const Checkout = () => {
                                             <h4>Order Details</h4>
                                             <div className="order-details-list">
                                                 <div className="order-prod mb-5">
-                                                    {localCart.map((cart, id) => {
+                                                    {localCart.map((cart) => {
                                                         return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
                                                             <p>{cart.quantity}x <span>{cart.product.product}</span></p>
-                                                            <p key={cart}>{'₦' + cart.totalPrice}</p>
+                                                            <p>{'₦' + cart.totalPrice}</p>
                                                         </div>
                                                     })}
                                                 </div>

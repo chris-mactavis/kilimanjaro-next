@@ -7,7 +7,7 @@ import axiosInstance from '../../config/axios';
 import { loader } from '../../store/actions/loader';
 import InlineLoading from '../../components/UI/inlineLoader';
 
-const ContactUs = () => {
+const ContactUs = ({headOfficeAddress, email}) => {
 
     const { register, handleSubmit, errors, reset } = useForm();
 
@@ -102,7 +102,7 @@ const ContactUs = () => {
                                 </div>
                             })}
                             <h4 className="mt-3 mb-2">Head Office</h4>
-                            <p> 23 Nzimiro Street, Old GRA. Port Harcourt </p>
+                            <p>{headOfficeAddress}</p>
                             <h4 className="mt-3 mb-2">Phone no</h4>
                             <div className="d-flex align-items-center">
                                 <p className="mb-0"> <a className="link-to-hr" href="tel:070054543663">0700 54543663, </a> </p> &nbsp;
@@ -110,7 +110,7 @@ const ContactUs = () => {
                             </div>
                               
                             <h4 className="mt-3 mb-2">Email</h4>
-                            <p> <a className="link-to-hr" href="mailto:hr@sundryfood.com">hr@sundryfood.com</a> </p>
+                            <p> <a className="link-to-hr" href={`mailto:${email}`}>{email}</a> </p>
                         </div>
                     </div>
                 </div>
