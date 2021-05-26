@@ -515,6 +515,12 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
     if (allCart.length > 0) {
         cartDisplay =  <>
         {allCart.map((cart, index) => {
+            let productName = "";
+            if (cart.product_variation) {
+                productName =  <p>{cart.product.product} ({cart.product_variation})</p>
+            } else {
+                productName =  <p>{cart.product.product}</p>
+            }
             return <>
                 <div key={`Prod-cart${cart.product.id}`} className="product-list">
                     <div className="row text-md-left text-center">
@@ -523,7 +529,7 @@ const Menu = ({ productCategories, couponData, time, restaurantId }) => {
                         </div>
                         <div className="col-md-6">
                             <div className="align-items-center justify-content-around flex-wrap">
-                                <p>{cart.product.product}</p>
+                               {productName}
                             </div>
                             <p className="bold">{'₦'+cart.totalPrice}</p> 
                             <input onChange={(e) => updateQuantityChangeHandle(e, index)} type='number' value={cart.quantity} defaultValue={cart.quantity}   min={'1'} />

@@ -138,10 +138,16 @@ const ShoppingCart = ({data}) => {
         cartDisplay = <>
             {localCart.map((cart, index) => {
                 let price = cart.salePrice ? +cart.salePrice : +cart.price;
+                let productName = "";
+                    if (cart.product_variation) {
+                        productName =  <p className="product-name">{cart.product.product} ({cart.product_variation})</p>
+                    } else {
+                        productName =  <p className="product-name">{cart.product.product}</p>
+                    }
                 return <div key={cart.product.id} className="order-review d-flex align-items-center justify-content-between flex-wrap">
                     <button onClick={() => deleteProductCartHandler(index)}><span>X</span>Remove</button>
                     <img src={cart.product.image_url} alt="" />
-                    <p className="product-name">{cart.product.product} </p>
+                    {productName}
                     <div className="d-flex">
                         <p className="product-qty">Quantity</p>
                         {/* <input onChange={(e) => updateQuantityChangeHandle(e, cart)} defaultValue={cart.quantity} type='number' /> */}

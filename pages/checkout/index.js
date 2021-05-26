@@ -72,8 +72,18 @@ const Checkout = () => {
     const [ minOrderAmount, setMinOrderAmount ] = useState(null);
     const [ minOrderActive, setMinOrderActive ] = useState(false);
 
+
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (paymentOption === 'pickup') {
+            setDeliveryPrice(0);
+            setTheDeliveryPrice(0);
+            setLatLng(null);
+            setStreetAddress('');
+        }
+
+    }, [paymentOption]);
 
     useEffect(() => {
         const fetchMinPrice = async () => {
@@ -704,7 +714,7 @@ const Checkout = () => {
                     </div>
                 </section>
                 }
-                {(localCart.length > 0 || allTotalPrice > 1000)  &&
+                {(localCart.length > 0 && allTotalPrice > 1000)  &&
                 <section className="shopping-cart">
                     <div className="container">
                         <OrderingSteps activeTabs={[1, 2]} />
@@ -858,6 +868,7 @@ const Checkout = () => {
                                                             type="text"
                                                             name='streetAddress'
                                                             label="Street/Estate Address"
+                                                            value={streetAddress}
                                                             {...getInputProps({
                                                                 placeholder: 'Manually type your street/estate address',
                                                                 className: 'location-search-input',
@@ -914,8 +925,14 @@ const Checkout = () => {
                                             <div className="order-details-list">
                                                 <div className="order-prod mb-5">
                                                     {localCart.map((cart) => {
+                                                        let productName = "";
+                                                        if (cart.product_variation) {
+                                                            productName =  <span>{cart.product.product} ({cart.product_variation})</span>
+                                                        } else {
+                                                            productName = <span>{cart.product.product}</span>
+                                                        }
                                                         return <div className="d-flex align-items-center justify-content-between flex-wrap w-100" key={cart.product.id}>
-                                                            <p>{cart.quantity}x <span>{cart.product.product}</span></p>
+                                                            <p>{cart.quantity}x {productName}</p>
                                                             <p>{'₦' + cart.totalPrice}</p>
                                                         </div>
                                                     })}
